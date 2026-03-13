@@ -15,6 +15,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let currentCarData = null;
 
+    // Register event listeners immediately so they work regardless of data source
+    [basePriceInput, distanceInput, regInput].forEach(input => {
+        input.addEventListener('input', calculate);
+    });
+    const recalculateBtn = document.getElementById('recalculate-btn');
+    if (recalculateBtn) {
+        recalculateBtn.addEventListener('click', calculate);
+    }
+
     // Try to load data from localStorage first (pushed by Agent 1)
     try {
         const storedData = localStorage.getItem('lastExtractedCar');
@@ -114,13 +123,4 @@ document.addEventListener('DOMContentLoaded', async () => {
         return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
     }
 
-    // Event Listeners
-    [basePriceInput, distanceInput, regInput].forEach(input => {
-        input.addEventListener('input', calculate);
-    });
-
-    const recalculateBtn = document.getElementById('recalculate-btn');
-    if (recalculateBtn) {
-        recalculateBtn.addEventListener('click', calculate);
-    }
 });
