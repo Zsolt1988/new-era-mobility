@@ -122,12 +122,12 @@ document.addEventListener('DOMContentLoaded', async () => {
              let kmMatch = car.carMileage.match(/\d+/g);
              if(kmMatch) {
                  let km = parseInt(kmMatch.join(''));
-                 mileageFromInput.value = Math.max(0, km - 5000); // e.g. 5000 km below current
-                 mileageInput.value = km < 10000 ? 15000 : km + 10000;
+                 mileageFromInput.value = Math.max(0, Math.floor((km - 10000) / 10000) * 10000);
+                 mileageInput.value = Math.ceil((km + 10000) / 10000) * 10000;
              }
         } else {
              mileageFromInput.value = 0;
-             mileageInput.value = 25000; // default
+             mileageInput.value = 30000; // default
         }
 
         // 5. Map Equipment (Searching the features block)
