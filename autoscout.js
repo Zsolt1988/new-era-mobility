@@ -112,8 +112,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const yearMatch = car.carRegistration.match(/\d{4}/);
             if (yearMatch) {
                 const year = parseInt(yearMatch[0]);
-                regFromInput.value = year - 1; // Range
-                regToInput.value = year + 1;
+                regFromInput.value = year;
+                regToInput.value = year;
             }
         }
 
