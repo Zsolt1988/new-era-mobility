@@ -10,6 +10,9 @@ import re
 PORT = 8080
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+class ThreadingSimpleServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    pass
+
 class MyHandler(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
@@ -98,6 +101,7 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 return
 
             try:
+                print(f"DEBUG: Fetching AutoScout24 URL: {search_url}")
                 # Fetch AutoScout24 with a browser-like User-Agent to avoid bot blocks
                 req = urllib.request.Request(
                     search_url,
@@ -105,10 +109,15 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
                         'Accept-Language': 'de-AT,de;q=0.9,en;q=0.8',
                         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
                     }
                 )
                 with urllib.request.urlopen(req, timeout=10) as resp:
+                    status = resp.getcode()
                     html = resp.read().decode('utf-8', errors='replace')
+                    print(f"DEBUG: Response status: {status}")
+                    print(f"DEBUG: HTML Snippet (first 500 chars): {html[:500]}")
 
                 print(f"Fetched AutoScout24 page ({len(html)} bytes)")
 
@@ -152,7 +161,7 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
             # Default: serve static files
             super().do_GET()
 
-with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
+with ThreadingSimpleServer(("", PORT), MyHandler) as httpd:
     print(f"Backend Server running at http://localhost:{PORT}")
     print("Keep this terminal open, and use the UI to trigger extractions.")
     httpd.serve_forever()
