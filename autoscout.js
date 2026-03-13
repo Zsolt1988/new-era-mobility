@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const modelInput = document.getElementById('model');
     const regFromInput = document.getElementById('reg-from');
     const regToInput = document.getElementById('reg-to');
+    const mileageFromInput = document.getElementById('mileage-from');
     const mileageInput = document.getElementById('mileage');
     const fuelSelect = document.getElementById('fuel-type');
     
@@ -25,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     ];
 
     // Event Listeners for live updates
-    const allInputs = [brandInput, modelInput, regFromInput, regToInput, mileageInput, fuelSelect, ...eqCheckboxes];
+    const allInputs = [brandInput, modelInput, regFromInput, regToInput, mileageFromInput, mileageInput, fuelSelect, ...eqCheckboxes];
     allInputs.forEach(input => {
         if(input) input.addEventListener('change', generateUrl);
         if(input && input.type === 'text' || input.type === 'number') input.addEventListener('keyup', generateUrl);
@@ -121,10 +122,11 @@ document.addEventListener('DOMContentLoaded', async () => {
              let kmMatch = car.carMileage.match(/\d+/g);
              if(kmMatch) {
                  let km = parseInt(kmMatch.join(''));
-                 // Set max mileage slightly higher than current
+                 mileageFromInput.value = Math.max(0, km - 5000); // e.g. 5000 km below current
                  mileageInput.value = km < 10000 ? 15000 : km + 10000;
              }
         } else {
+             mileageFromInput.value = 0;
              mileageInput.value = 25000; // default
         }
 
@@ -177,6 +179,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const fuel = fuelSelect.value;
         if (fuel) url += `&fuel=${fuel}`;
+
+        const kmfrom = mileageFromInput.value;
+        if (kmfrom) url += `&kmfrom=${kmfrom}`;
 
         const kmto = mileageInput.value;
         if (kmto) url += `&kmto=${kmto}`;
