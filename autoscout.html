@@ -47,7 +47,72 @@
             font-family: monospace;
             color: var(--primary-light);
         }
-        
+
+        /* Cheapest Prices Section */
+        .cheapest-section {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .cheapest-section h3 {
+            font-size: 1.05rem;
+            margin-bottom: 0.3rem;
+        }
+        .cheapest-section .section-sub {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 1.2rem;
+        }
+        .price-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-bottom: 1.2rem;
+        }
+        .price-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.85rem 1.1rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+        }
+        .price-row .price-rank {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: rgba(255,255,255,0.35);
+            min-width: 28px;
+        }
+        .price-row .price-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #a78bfa, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .price-row .price-label {
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.35);
+            margin-left: auto;
+        }
+        .price-row.loading .price-value {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.4);
+            -webkit-text-fill-color: rgba(255,255,255,0.4);
+            font-weight: 400;
+            font-style: italic;
+            animation: pulse 1.4s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+        .price-status-msg {
+            font-size: 0.8rem;
+            color: rgba(255,100,100,0.75);
+            margin-top: 0.5rem;
+        }
         @media (max-width: 768px) {
             .calc-grid { grid-template-columns: 1fr; }
         }
@@ -152,6 +217,19 @@
                     <a href="#" id="open-link-btn" target="_blank" class="primary-btn" style="text-decoration: none; padding: 1rem 3rem; font-size: 1.1rem; display: inline-block;">
                         Open in AutoScout24 ↗
                     </a>
+                </div>
+
+                <!-- 3 Cheapest Retail Prices -->
+                <div class="cheapest-section">
+                    <h3>🏷️ 3 Cheapest Retail Dealer Prices</h3>
+                    <p class="section-sub">Dealer sellers only — sorted by price ascending</p>
+                    <div class="price-list" id="price-list">
+                        <div class="price-row loading"><span class="price-rank">#1</span><span class="price-value">—</span><span class="price-label">Dealer · Austria</span></div>
+                        <div class="price-row loading"><span class="price-rank">#2</span><span class="price-value">—</span><span class="price-label">Dealer · Austria</span></div>
+                        <div class="price-row loading"><span class="price-rank">#3</span><span class="price-value">—</span><span class="price-label">Dealer · Austria</span></div>
+                    </div>
+                    <div id="price-status-msg" class="price-status-msg"></div>
+                    <button id="fetch-prices-btn" class="primary-btn" style="padding:0.6rem 1.8rem;font-size:0.9rem;">🔍 Fetch Prices</button>
                 </div>
             </div>
         </section>

@@ -191,4 +191,70 @@ document.addEventListener('DOMContentLoaded', async () => {
         urlOutput.innerText = url;
         openLinkBtn.href = url;
     }
+
+    // ---- Fetch Prices from backend ----
+    const fetchPricesBtn = document.getElementById('fetch-prices-btn');
+    const priceList = document.getElementById('price-list');
+    const priceStatusMsg = document.getElementById('price-status-msg');
+
+    function setPriceRowsLoading() {
+        const rows = priceList.querySelectorAll('.price-row');
+        rows.forEach(row => {
+            row.classList.add('loading');
+            row.querySelector('.price-value').textContent = 'Fetching…';
+        });
+        priceStatusMsg.textContent = '';
+    }
+
+    function setPriceRows(prices) {
+        const rows = priceList.querySelectorAll('.price-row');
+        rows.forEach((row, i) => {
+            row.classList.remove('loading');
+            const valEl = row.querySelector('.price-value');
+            if (prices[i]) {
+                valEl.textContent = prices[i].formatted;
+            } else {
+                valEl.textContent = '—';
+                row.classList.add('loading');
+            }
+        });
+    }
+
+    if (fetchPricesBtn) {
+        fetchPricesBtn.addEventListener('click', async () => {
+            const searchUrl = urlOutput.innerText.trim();
+            if (!searchUrl || searchUrl.startsWith('https://www.autoscout24.at/lst/...')) {
+                priceStatusMsg.textContent = '⚠️ Please configure the search first.';
+                return;
+            }
+
+            // Append dealer-only filter
+            const dealerUrl = searchUrl + '&offer_type=D';
+
+            setPriceRowsLoading();
+            fetchPricesBtn.disabled = true;
+            fetchPricesBtn.textContent = 'Fetching…';
+
+            try {
+                const apiUrl = `/api/autoscout-prices?url=${encodeURIComponent(dealerUrl)}`;
+                const resp = await fetch(apiUrl);
+                const data = await resp.json();
+
+                if (data.status === 'ok' && data.prices && data.prices.length > 0) {
+                    setPriceRows(data.prices);
+                    priceStatusMsg.textContent = '';
+                } else {
+                    setPriceRows([]);
+                    priceStatusMsg.textContent = '⚠️ ' + (data.message || 'No prices found. AutoScout24 may require JavaScript rendering.');
+                }
+            } catch (err) {
+                setPriceRows([]);
+                priceStatusMsg.textContent = '⚠️ Could not reach backend. Is the server running?';
+            }
+
+            fetchPricesBtn.disabled = false;
+            fetchPricesBtn.textContent = '🔍 Fetch Prices';
+        });
+    }
 });
+

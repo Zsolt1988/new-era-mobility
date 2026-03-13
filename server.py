@@ -2,10 +2,13 @@ import http.server
 import socketserver
 import json
 import urllib.parse
+import urllib.request
 import subprocess
 import os
+import re
 
 PORT = 8080
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class MyHandler(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
@@ -36,14 +39,16 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                             ['python', 'extract_cars.py', url],
                             check=True,
                             capture_output=True,
-                            text=True
+                            text=True,
+                            cwd=BASE_DIR
                         )
                         print("Extraction script completed.")
                         print(result.stdout)
                         
                         # Read the newly generated json file
-                        if os.path.exists('extracted_cars.json'):
-                            with open('extracted_cars.json', 'r', encoding='utf-8') as f:
+                        json_path = os.path.join(BASE_DIR, 'extracted_cars.json')
+                        if os.path.exists(json_path):
+                            with open(json_path, 'r', encoding='utf-8') as f:
                                 json_result = json.load(f)
                                 
                             self.send_response(200)
@@ -77,6 +82,75 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 
         else:
             self.send_error(404, "Endpoint not found")
+
+    def do_GET(self):
+        # Handle the autoscout price scraping endpoint
+        if self.path.startswith('/api/autoscout-prices'):
+            parsed = urllib.parse.urlparse(self.path)
+            params = urllib.parse.parse_qs(parsed.query)
+            search_url = params.get('url', [None])[0]
+
+            if not search_url:
+                self.send_response(400)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": "No url param provided"}).encode('utf-8'))
+                return
+
+            try:
+                # Fetch AutoScout24 with a browser-like User-Agent to avoid bot blocks
+                req = urllib.request.Request(
+                    search_url,
+                    headers={
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+                        'Accept-Language': 'de-AT,de;q=0.9,en;q=0.8',
+                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                    }
+                )
+                with urllib.request.urlopen(req, timeout=10) as resp:
+                    html = resp.read().decode('utf-8', errors='replace')
+
+                print(f"Fetched AutoScout24 page ({len(html)} bytes)")
+
+                # Try to extract prices from JSON-LD or inline price data
+                # AutoScout24 embeds listing data in <script type="application/json"> or window.__INITIAL_STATE__
+                prices = []
+
+                # Pattern 1: JSON price fields like "price":12500 or "priceRaw":12500
+                raw_prices = re.findall(r'"price(?:Raw)?"\s*:\s*(\d{3,7})', html)
+                if raw_prices:
+                    prices = list(sorted(set(int(p) for p in raw_prices)))[:3]
+
+                # Pattern 2: Fallback — price text like "12.500 €" or "12,500 €"
+                if not prices:
+                    text_prices = re.findall(r'(\d{1,3}(?:[.,]\d{3})+)\s*€', html)
+                    def parse_price(p: str) -> int:
+                        return int(p.replace('.', '').replace(',', ''))
+                    prices = list(sorted(set(parse_price(p) for p in text_prices if 1000 < parse_price(p) < 500000)))[:3]
+
+                if prices:
+                    result = {
+                        "status": "ok",
+                        "prices": [{"rank": i+1, "price": p, "formatted": f"€ {p:,}".replace(',', '.')} for i, p in enumerate(prices)]
+                    }
+                else:
+                    result = {"status": "no_prices", "message": "No prices could be extracted from the page. AutoScout24 may require JavaScript."}
+
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps(result).encode('utf-8'))
+
+            except Exception as e:
+                print(f"AutoScout scrape error: {e}")
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
+
+        else:
+            # Default: serve static files
+            super().do_GET()
 
 with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
     print(f"Backend Server running at http://localhost:{PORT}")
