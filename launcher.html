@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control | Car Homepage Creator</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <main class="dashboard-container">
+        <header class="header">
+            <h1>Mission Control</h1>
+            <p>Select your agent tool to begin the workflow.</p>
+        </header>
+
+        <div class="cards-grid">
+            <!-- Agent 1: Data Acquisition -->
+            <a href="index.html" class="card">
+                <div>
+                    <span class="badge">Part 1</span>
+                    <div class="icon-placeholder">🔍</div>
+                    <h2>Data Acquisition</h2>
+                    <p>Enter a car listing URL to extract technical details, pricing, and features using Agent 1's smart parsing logic.</p>
+                </div>
+                <div class="card-footer">
+                    <span>Launch Tool</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </div>
+            </a>
+
+            <!-- Agent 2: Creator -->
+            <div class="card" style="opacity: 0.6; cursor: not-allowed;">
+                <div>
+                    <span class="badge">Part 2 (Coming Soon)</span>
+                    <div class="icon-placeholder" style="background: grey;">🎨</div>
+                    <h2>Homepage Creator</h2>
+                    <p>Take your extracted JSON data and transform it into a stunning, premium website landing page instantly.</p>
+                </div>
+                <div class="card-footer">
+                    <span>Locked</span>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

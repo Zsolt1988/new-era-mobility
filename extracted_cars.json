@@ -1,0 +1,124 @@
+{
+    "source": "https://www.auto-mega-store.com/de/details?wgID=:31475&backlink=TDJSbEwyWmhhSEo2WlhWblpTOW1ZV2h5ZW1WMVp5MXJZWFZtWlc0L1pqMHhKbTFoYmw5cFpEMHhPREUwSm0xdlpGOXBaRDB5TVRreE9qSXhPRGttYldsc1BUQTZPVGs1T1RrNUptOXlaR1Z5UFRVPQ==&man_id=1814&mod_id=2191:2189&mil=0:999999&order=5",
+    "cars": [
+        {
+            "carReference": "31475",
+            "carBrand": "BYD",
+            "carModel": "SEAL U DM-i 18.3 kWh FWD Boost",
+            "carColor": "Weiss",
+            "carDrive": "Automatik",
+            "carFuel": "Plug-in-Hybrid/Benzin",
+            "carPower": "160",
+            "carMileage": "100",
+            "carRegistration": "2025/04",
+            "carCategory": "SUV/Geländewagen/Pickup",
+            "carPrice": "29797",
+            "specs": {
+                "Ref-Nr.": "LA88351",
+                "Erstzulassung": "29.04.2025",
+                "KM": "100 km",
+                "Leistung": "160 KW / 218 PS",
+                "Getriebe": "Automatik",
+                "Antriebsart": "Frontantrieb",
+                "Motor": "Plug-in-Hybrid/Benzin",
+                "Hubraum": "1498 ccm",
+                "Bauart": "SUV",
+                "Anzahl der Sitze": "5",
+                "Anzahl der Türen": "5",
+                "Schadstoffklasse": "Euro 6d",
+                "Vorbesitzer": "1",
+                "Farbe": "Weiss Metallic",
+                "Farbe (Hersteller)": "SNOW WHITE",
+                "Innenausstattung": "Kunstleder, BLACK + BROWN",
+                "CO2 WLTP": "16 g/km",
+                "Verbrauch kombiniert": "21.00  KW/h",
+                "Effizienzklasse": "A_3",
+                "Umweltplakette": "Grün"
+            },
+            "highlights": [
+                "1000 Fzg. im Bestand",
+                "Kaufabwicklung Digital",
+                "Gutachten"
+            ],
+            "co2_details": "21,0 kWh/100km + 1,1 l/100km (gew. komb.), 5,5 l/100km (entladen, komb.) • 26 g CO₂/km (gew. komb.), 125 g CO₂/km (gew. komb.) • CO₂-Klasse B (gew. komb.), D (entladen, komb.)",
+            "features": {
+                "mega einfach - einfach mega": [
+                    "Vor Ort oder Digital",
+                    "Online Kauf und Finanzierung",
+                    "Zustandsbericht Verfügbar"
+                ],
+                "Außen": [
+                    "Colorvergl.",
+                    "Dachreling",
+                    "elektr. Heckklappe",
+                    "Panoramadach",
+                    "Schiebedach",
+                    "Wärmeschutz/Getönte Scheiben"
+                ],
+                "Innen": [
+                    "beheizb. Lenkrad",
+                    "elektr. Fenster vorn",
+                    "Elektronische Parkbremse",
+                    "Keyless Entry",
+                    "Lederlenkrad",
+                    "Lenkrad Multifunktion",
+                    "Servo"
+                ],
+                "Sitze": [
+                    "El. verstellbare Sitze - vorne",
+                    "Isofix hinten",
+                    "Lordosenstütze",
+                    "Memory-Funktion (Fahrer)",
+                    "Rücksitzbank geteilt"
+                ],
+                "Technologie": [
+                    "Abstandstempomat",
+                    "Android Auto",
+                    "Apple CarPlay",
+                    "Autonomes Fahren Level 2",
+                    "Berganfahrassistent",
+                    "Bluetooth",
+                    "Bordcomputer",
+                    "Einparkhilfe - 360°-Kamera",
+                    "Einparkhilfe hinten",
+                    "Einparkhilfe vorne",
+                    "Geschw.begrenzer",
+                    "HeadUpDisplay",
+                    "HiFi System",
+                    "Müdigkeitswarner",
+                    "Musikstreaming",
+                    "Navigationssystem",
+                    "Notbremsassistent",
+                    "Radio - DAB",
+                    "Regensensor",
+                    "Rückfahrkamera",
+                    "Sprachsteuerung",
+                    "Spurhalteassistent",
+                    "Tempomat",
+                    "Totwinkelassistent",
+                    "Uhr &amp; Drehzahlmesser",
+                    "Verkehrszeichenerkennung"
+                ],
+                "Beleuchtung": [
+                    "Ambiente-Licht",
+                    "Fernlichtassistent",
+                    "LED-Tagfahrlicht"
+                ],
+                "Sicherheit": [
+                    "ABS",
+                    "Abstandswarner",
+                    "Beifahrerairbag",
+                    "ESP",
+                    "Fahrerairbag",
+                    "Notrufsystem",
+                    "Reifendruckkontrollsystem",
+                    "Seitenairbag",
+                    "Traktionskontrolle",
+                    "Wegfahrsperre"
+                ]
+            }
+        }
+    ],
+    "extraction_status": "success",
+    "method": "dataLayer"
+}

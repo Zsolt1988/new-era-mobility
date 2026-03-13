@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent 1 | Data Acquisition</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-blob blob-1"></div>
+    <div class="background-blob blob-2"></div>
+    <div class="background-blob blob-3"></div>
+
+    <main class="container">
+        <header class="glass-hero">
+            <a href="launcher.html" class="back-link">← Back to Dashboard</a>
+            <h1 class="gradient-text">Data Acquisition</h1>
+            <p class="subtitle">Extract structured car data from any listing</p>
+        </header>
+
+        <section class="extraction-card glass">
+            <div class="card-header">
+                <h2>Website Data Extraction</h2>
+                <div class="status-indicator">
+                    <span class="dot"></span>
+                    <span id="status-text">Ready for task</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="url-input">Enter Website URL</label>
+                <div class="input-wrapper">
+                    <input type="url" id="url-input" placeholder="https://www.cars.com/listing/..." required>
+                    <button id="extract-btn" class="primary-btn">
+                        <span>Start Extraction</span>
+                        <div class="loader-icon hidden"></div>
+                    </button>
+                </div>
+                <p class="helper-text">Enter a URL or type <code>car_listing.html</code> to test with the local example.</p>
+            </div>
+
+            <div id="results-container" class="hidden">
+                <div class="divider"></div>
+                <h3>Extracted Details</h3>
+                <div id="data-view" class="glass-inner">
+                    <pre id="json-output">Generating result...</pre>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Powered by Antigravity Multi-Agent Environment</p>
+        </footer>
+    </main>
+
+    <script src="main.js"></script>
+</body>
+</html>
