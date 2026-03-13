@@ -118,4 +118,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     [basePriceInput, distanceInput, regInput].forEach(input => {
         input.addEventListener('input', calculate);
     });
+
+    const recalculateBtn = document.getElementById('recalculate-btn');
+    if (recalculateBtn) {
+        recalculateBtn.addEventListener('click', calculate);
+    }
 });
