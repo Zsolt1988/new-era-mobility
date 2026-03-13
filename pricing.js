@@ -11,13 +11,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     const displayReg = document.getElementById('display-reg');
     const displayInternal = document.getElementById('display-internal');
     const displayMargin = document.getElementById('display-margin');
+    const displayVatAt = document.getElementById('display-vat-at');
+    const displayNova = document.getElementById('display-nova');
     const displayTotal = document.getElementById('display-total');
+
+    // New inputs for NoVA
+    const regYearInput = document.getElementById('reg-year');
+    const co2Input = document.getElementById('co2-value');
 
     let currentCarData = null;
 
     // Register event listeners immediately so they work regardless of data source
-    [basePriceInput, distanceInput, regInput].forEach(input => {
-        input.addEventListener('input', calculate);
+    [basePriceInput, distanceInput, regInput, regYearInput, co2Input].forEach(input => {
+        if(input) input.addEventListener('input', calculate);
     });
     const recalculateBtn = document.getElementById('recalculate-btn');
     if (recalculateBtn) {
@@ -75,6 +81,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         const status = (car.price_status || 'brutto').toLowerCase();
         statusBadge.innerText = status;
         statusBadge.className = `badge-status badge-${status}`;
+
+        // Attempt to parse Registration Year
+        if (car.carRegistration) {
+            const yearMatch = car.carRegistration.match(/\d{4}/);
+            if (yearMatch) regYearInput.value = yearMatch[0];
+        }
+
+        // Attempt to parse CO2 (often looks like "110 g/km" or "60")
+        if (car.specs && car.specs["CO2 WLTP"]) {
+            const co2Match = car.specs["CO2 WLTP"].match(/\d+/);
+            if (co2Match) co2Input.value = co2Match[0];
+        }
         
         calculate();
     }
@@ -83,6 +101,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const basePrice = parseFloat(basePriceInput.value) || 0;
         const distance = parseFloat(distanceInput.value) || 0;
         const regFee = parseFloat(regInput.value) || 0;
+        const regYear = parseInt(regYearInput.value) || 2025;
+        const co2 = parseInt(co2Input.value) || 0;
         
         const isBrutto = statusBadge.innerText.toLowerCase() === 'brutto';
         
@@ -105,8 +125,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         // 6. Austrian VAT (20%)
         const atVat = subtotal * 0.20;
         
-        // 7. Final Selling Price (Brutto AT)
-        const finalPrice = subtotal + atVat;
+        // --- NoVA Calculation (M1 Logic for 2025/2026) ---
+        const pkw_abzug = 94 - (regYear - 2025) * 3;
+        const malus_grenze = 150 - (regYear - 2025) * 5;
+        const malus_pro_gramm = 90 + (regYear - 2025) * 10;
+        
+        let nova_prozent = (co2 - pkw_abzug) / 5;
+        nova_prozent = Math.min(Math.max(0, Math.round(nova_prozent)), 80);
+        
+        let malus_euro = 0;
+        if (co2 > malus_grenze) {
+            malus_euro = (co2 - malus_grenze) * malus_pro_gramm;
+        }
+
+        // NoVA is calculated from the Netto Selling Price (Subtotal), plus any fixed malus
+        const novaTotal = (subtotal * (nova_prozent / 100)) + malus_euro;
+        
+        // 7. Final Selling Price (Brutto AT + NoVA)
+        const finalPrice = subtotal + atVat + novaTotal;
 
         // UI Updates
         displayOriginal.innerText = formatEuro(basePrice);
@@ -115,7 +151,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         displayReg.innerText = formatEuro(regFee);
         displayInternal.innerText = formatEuro(internalCosts);
         displayMargin.innerText = formatEuro(margin);
-        document.getElementById('display-vat-at').innerText = formatEuro(atVat);
+        displayVatAt.innerText = formatEuro(atVat);
+        if(displayNova) displayNova.innerText = formatEuro(novaTotal) + ` (${nova_prozent}%)`;
         displayTotal.innerText = formatEuro(finalPrice);
     }
 

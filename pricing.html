@@ -95,6 +95,15 @@
                             <label for="registration">Registration Fee (€)</label>
                             <input type="number" id="registration" value="150">
                         </div>
+                        <div class="input-group">
+                            <label for="reg-year">Registration Year</label>
+                            <input type="number" id="reg-year" placeholder="e.g. 2025" value="2025">
+                            <p class="helper-text">For NoVA calculation (M1, 2025/2026 rules)</p>
+                        </div>
+                        <div class="input-group">
+                            <label for="co2-value">CO2 Emissions (g/km)</label>
+                            <input type="number" id="co2-value" placeholder="e.g. 110" value="0">
+                        </div>
                         <div style="margin-top: 1.5rem;">
                             <button id="recalculate-btn" class="primary-btn" style="width: 100%;">
                                 Recalculate Price
@@ -131,6 +140,10 @@
                         <div class="result-row">
                             <span>Austrian Taxes (20%)</span>
                             <span id="display-vat-at">0 €</span>
+                        </div>
+                        <div class="result-row" style="color: #ff9900;">
+                            <span>NoVA (Tax + Malus)</span>
+                            <span id="display-nova">0 €</span>
                         </div>
                         <div class="result-row total">
                             <span>Total Selling Price (AT)</span>
