@@ -15,7 +15,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let currentCarData = null;
 
-    // Load data from extracted_cars.json
+    // Try to load data from localStorage first (pushed by Agent 1)
+    try {
+        const storedData = localStorage.getItem('lastExtractedCar');
+        if (storedData) {
+            const data = JSON.parse(storedData);
+            console.log('Loaded data from localStorage');
+            // Data from localStorage might already be the single car object from main.js logic, 
+            // but let's handle both in case it's the full API response
+            currentCarData = data.cars && data.cars.length > 0 ? data.cars[0] : data;
+            
+            // Check if it's a valid car object before proceeding
+            if (currentCarData && !currentCarData.status && (currentCarData.price || currentCarData.carPrice)) {
+                initCalculator(currentCarData);
+                return; // Exit early if we successfully loaded from localStorage
+            }
+        }
+    } catch (e) {
+        console.warn('Could not load data from localStorage:', e);
+    }
+
+    // Fallback: Load data from extracted_cars.json via API/fetch
     try {
         const response = await fetch('extracted_cars.json?nc=' + new Date().getTime());
         if (!response.ok) throw new Error('No data');
@@ -28,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             showNoData();
         }
     } catch (e) {
-        console.warn('Could not load data:', e);
+        console.warn('Could not load data from fetch:', e);
         showNoData();
     }
 

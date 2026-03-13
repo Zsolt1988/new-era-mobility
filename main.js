@@ -85,6 +85,26 @@ document.addEventListener('DOMContentLoaded', () => {
         statusText.innerText = 'Task Completed';
         jsonOutput.innerText = JSON.stringify(data, null, 4);
         
+        const btnGotoPricing = document.getElementById('btn-goto-pricing');
+        if (data && data.status !== 'error') {
+            // Save to localStorage for Agent 2
+            try {
+                localStorage.setItem('lastExtractedCar', JSON.stringify(data));
+                console.log('Saved extracted data to localStorage for Agent 2');
+            } catch (e) {
+                console.warn('Failed to save to localStorage', e);
+            }
+            // Show the next step button
+            if (btnGotoPricing) {
+                btnGotoPricing.classList.remove('hidden');
+            }
+        } else {
+            // Hide button if error
+            if (btnGotoPricing) {
+                btnGotoPricing.classList.add('hidden');
+            }
+        }
+
         // Scroll to results
         resultsContainer.scrollIntoView({ behavior: 'smooth' });
     };
