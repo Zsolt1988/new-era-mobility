@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent 2 | Austria Price Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        .input-card {
+            padding: 1.5rem;
+        }
+        .result-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px border rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+        .result-row.total {
+            border-bottom: none;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-light);
+        }
+        .badge-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .badge-brutto { background: rgba(255, 100, 0, 0.2); color: #ff6400; }
+        .badge-netto { background: rgba(0, 255, 100, 0.2); color: #00ff64; }
+        
+        @media (max-width: 768px) {
+            .calc-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-blob blob-1"></div>
+    <div class="background-blob blob-2"></div>
+
+    <main class="container">
+        <header class="glass-hero">
+            <a href="launcher.html" class="back-link">← Back to Dashboard</a>
+            <h1 class="gradient-text">Austria Price Calculator</h1>
+            <p class="subtitle">Agent 2: Calculate final selling costs for the Austrian market</p>
+        </header>
+
+        <section class="extraction-card glass">
+            <div id="no-data-warning" class="hidden" style="padding: 2rem; text-align: center;">
+                <p>⚠️ No car data found. Please run <strong>Agent 1: Data Acquisition</strong> first.</p>
+                <a href="index.html" class="primary-btn" style="display: inline-block; margin-top: 1rem; text-decoration: none;">Launch Agent 1</a>
+            </div>
+
+            <div id="calculator-ui" class="">
+                <div class="card-header">
+                    <h2 id="car-name">Loading car data...</h2>
+                    <div class="status-indicator">
+                        <span id="price-status-badge" class="badge-status">Checking...</span>
+                    </div>
+                </div>
+
+                <div class="calc-grid">
+                    <div class="input-section">
+                        <div class="input-group">
+                            <label for="base-price">Base Price (€)</label>
+                            <input type="number" id="base-price" placeholder="e.g. 28799">
+                        </div>
+                        <div class="input-group">
+                            <label for="distance">Distance from Seller to Pfaffstätt (km)</label>
+                            <input type="number" id="distance" placeholder="e.g. 500" value="500">
+                            <p class="helper-text">Transport cost: 1.20€ per km</p>
+                        </div>
+                        <div class="input-group">
+                            <label for="registration">Registration Fee (€)</label>
+                            <input type="number" id="registration" value="150">
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>Price Breakdown</h3>
+                        <div class="result-row">
+                            <span>Original Price</span>
+                            <span id="display-original">0 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Netto Value (DE)</span>
+                            <span id="display-netto">0 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Transport Costs</span>
+                            <span id="display-transport">0 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Registration</span>
+                            <span id="display-reg">0 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Internal Costs Total</span>
+                            <span id="display-internal">0 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Revenue Margin (7%)</span>
+                            <span id="display-margin">0 €</span>
+                        </div>
+                        <div class="result-row total">
+                            <span>Selling Price Austria</span>
+                            <span id="display-total">0 €</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Powered by Antigravity Multi-Agent Environment</p>
+        </footer>
+    </main>
+
+    <script src="pricing.js"></script>
+</body>
+</html>

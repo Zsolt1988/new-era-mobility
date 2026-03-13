@@ -133,13 +133,24 @@ def extract_car_info(source):
     title = title_match.group(1).strip() if title_match else "Unknown Car"
     
     # Simple regex for finding price pattern like 28.799 €
+    # And check for brutto/netto labels nearby
     price_match = re.search(r"(\d+[\.,]\d+)\s*&nbsp;&euro;", html_content)
     price = price_match.group(1).replace(".", "") if price_match else "N/A"
     
+    price_status = "unknown"
+    if price_match:
+        # Search for (brutto) or (netto) within 50 chars of the price
+        context = html_content[max(0, price_match.start()-50) : min(len(html_content), price_match.end()+50)]
+        if "brutto" in context.lower():
+            price_status = "brutto"
+        elif "netto" in context.lower():
+            price_status = "netto"
+
     # Build a simple result
     fallback_data = {
         "title": title,
         "price": price,
+        "price_status": price_status,
         "source": source,
         "extraction_status": "success",
         "method": "fallback_regex"
