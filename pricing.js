@@ -70,8 +70,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         // 4. Revenue Margin (7%)
         const margin = internalCosts * 0.07;
         
-        // 5. Final Selling Price
-        const finalPrice = internalCosts + margin;
+        // 5. Margin Price (Subtotal before AT VAT)
+        const subtotal = internalCosts + margin;
+        
+        // 6. Austrian VAT (20%)
+        const atVat = subtotal * 0.20;
+        
+        // 7. Final Selling Price (Brutto AT)
+        const finalPrice = subtotal + atVat;
 
         // UI Updates
         displayOriginal.innerText = formatEuro(basePrice);
@@ -80,6 +86,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         displayReg.innerText = formatEuro(regFee);
         displayInternal.innerText = formatEuro(internalCosts);
         displayMargin.innerText = formatEuro(margin);
+        document.getElementById('display-vat-at').innerText = formatEuro(atVat);
         displayTotal.innerText = formatEuro(finalPrice);
     }
 
