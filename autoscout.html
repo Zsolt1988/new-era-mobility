@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent 3 | AutoScout24 Configurator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        .input-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .url-result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            word-break: break-all;
+            font-family: monospace;
+            color: var(--primary-light);
+        }
+        
+        @media (max-width: 768px) {
+            .calc-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-blob blob-1"></div>
+    <div class="background-blob blob-2"></div>
+
+    <main class="container">
+        <header class="glass-hero">
+            <a href="launcher.html" class="back-link">← Back to Dashboard</a>
+            <h1 class="gradient-text">AutoScout24 Market Search</h1>
+            <p class="subtitle">Agent 3: Generate search URLs for comparable vehicles in Austria</p>
+        </header>
+
+        <section class="extraction-card glass">
+            <div id="no-data-warning" class="hidden" style="padding: 2rem; text-align: center;">
+                <p>⚠️ No car data found. Please run <strong>Agent 1: Data Acquisition</strong> first.</p>
+                <a href="index.html" class="primary-btn" style="display: inline-block; margin-top: 1rem; text-decoration: none;">Launch Agent 1</a>
+            </div>
+
+            <div id="configurator-ui" class="">
+                <div class="card-header">
+                    <h2 id="car-name">Configurator...</h2>
+                    <button id="generate-btn" class="primary-btn" style="padding: 0.5rem 1rem;">Update Link</button>
+                </div>
+
+                <div class="calc-grid">
+                    <!-- Left Column: Basic Info -->
+                    <div class="input-section">
+                        <h3>Vehicle Identity</h3>
+                        <div class="input-group">
+                            <label for="brand">Marke (Brand)</label>
+                            <input type="text" id="brand" placeholder="e.g. bmw">
+                        </div>
+                        <div class="input-group">
+                            <label for="model">Modell (Model)</label>
+                            <input type="text" id="model" placeholder="e.g. 320">
+                        </div>
+                        
+                        <h3 style="margin-top: 1.5rem;">Parameters</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="input-group">
+                                <label for="reg-from">EZ Von (Year)</label>
+                                <input type="number" id="reg-from" placeholder="e.g. 2024">
+                            </div>
+                            <div class="input-group">
+                                <label for="reg-to">EZ Bis (Year)</label>
+                                <input type="number" id="reg-to" placeholder="e.g. 2025">
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="mileage">Max KM (Laufleistung)</label>
+                            <input type="number" id="mileage" placeholder="e.g. 50000">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="fuel-type">Fuel Type</label>
+                            <select id="fuel-type" style="width: 100%; padding: 0.8rem; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1);">
+                                <option value="">Any</option>
+                                <option value="B">Benzin</option>
+                                <option value="D">Diesel</option>
+                                <option value="E">Elektro</option>
+                                <option value="2">PHEV (Plug-in Hybrid)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Equipment -->
+                    <div class="input-card">
+                        <h3>Equipment (Extras)</h3>
+                        <p class="helper-text">Select features to require in the search</p>
+                        
+                        <div class="checkbox-group">
+                            <label class="checkbox-item"><input type="checkbox" id="eq-11" value="11"> Allrad</label>
+                            <label class="checkbox-item"><input type="checkbox" id="eq-20" value="20"> Anhängerkupplung</label>
+                            <label class="checkbox-item"><input type="checkbox" id="eq-34" value="34"> Sitzheizung</label>
+                            <label class="checkbox-item"><input type="checkbox" id="eq-50" value="50"> Panoramadach</label>
+                            <label class="checkbox-item"><input type="checkbox" id="eq-133" value="133"> ACC (Abstandstempomat)</label>
+                            <label class="checkbox-item"><input type="checkbox" id="eq-140" value="140"> Matrix LED</label>
+                            <label class="checkbox-item"><input type="checkbox" id="eq-123" value="123"> HUD (HeadUpDisplay)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider" style="margin: 2rem 0;"></div>
+                
+                <h3>Generated Search Link</h3>
+                <div class="url-result" id="url-output">
+                    https://www.autoscout24.at/lst/...
+                </div>
+                
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <a href="#" id="open-link-btn" target="_blank" class="primary-btn" style="text-decoration: none; padding: 1rem 3rem; font-size: 1.1rem; display: inline-block;">
+                        Open in AutoScout24 ↗
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Powered by Antigravity Multi-Agent Environment</p>
+        </footer>
+    </main>
+
+    <script src="autoscout.js"></script>
+</body>
+</html>
