@@ -195,21 +195,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    const createHomepageBtn = document.getElementById('create-homepage-btn');
-    if (createHomepageBtn) {
-        createHomepageBtn.addEventListener('click', () => {
-             // Ensure we have current data
-             if (!currentCarData) {
-                 alert("No car data found!");
-                 return;
-             }
-             // Final price is already in localStorage as 'lastCalculatedFinalPrice'
-             console.log("Triggering Agent 4: Homepage Generation");
-             // Redirect to the generator view
-             window.location.href = 'homepage_preview.html';
-        });
-    }
-
     function formatEuro(value) {
         return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
     }

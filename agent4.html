@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent 4 | Homepage Creator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .preview-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .data-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .data-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.8rem;
+        }
+        .data-label { color: var(--text-secondary); font-size: 0.9rem; }
+        .data-value { font-weight: 600; color: #fff; }
+        
+        .cta-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .info-pill {
+            background: rgba(1, 253, 119, 0.1);
+            color: #01fd77;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(1, 253, 119, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .preview-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-blob blob-1"></div>
+    <div class="background-blob blob-2"></div>
+    <div class="background-blob blob-3"></div>
+
+    <main class="container">
+        <header class="glass-hero">
+            <a href="launcher.html" class="back-link">← Back to Dashboard</a>
+            <h1 class="gradient-text">Homepage Creator</h1>
+            <p class="subtitle">Agent 4: Instant Premium Vehicle Landing Page</p>
+        </header>
+
+        <section id="no-data-view" class="glass hidden" style="text-align: center; padding: 4rem;">
+            <p style="font-size: 1.2rem; margin-bottom: 2rem;">⚠️ Missing required data. Please follow the workflow:</p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="index.html" class="primary-btn">Agent 1: Scrape</a>
+                <a href="pricing.html" class="primary-btn">Agent 2: Price</a>
+            </div>
+        </section>
+
+        <section id="main-ui" class="glass">
+            <div class="card-header">
+                <h2 id="car-display-name">Assembling Data...</h2>
+                <div class="status-indicator">
+                    <div class="dot"></div>
+                    <span>Ready for Generation</span>
+                </div>
+            </div>
+
+            <div class="preview-grid">
+                <div class="data-card">
+                    <h3>Vehicle Specification</h3>
+                    <div class="data-item">
+                        <span class="data-label">Brand & Model</span>
+                        <span id="label-model" class="data-value">—</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Laufleistung</span>
+                        <span id="label-mileage" class="data-value">—</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Erstzulassung</span>
+                        <span id="label-reg" class="data-value">—</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Farbe</span>
+                        <span id="label-color" class="data-value">—</span>
+                    </div>
+                </div>
+
+                <div class="data-card">
+                    <div class="cta-section" style="height: 100%;">
+                        <div class="info-pill">Calculated by Agent 2</div>
+                        <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Target Sales Price (AT)</p>
+                        <h2 id="label-price" style="font-size: 3rem; margin-bottom: 2rem;" class="gradient-text">0€</h2>
+                        
+                        <button id="generate-btn" class="primary-btn" style="width: 100%; padding: 1.5rem; background: linear-gradient(135deg, #01fd77 0%, #0c7dff 100%);">
+                            Assemble & Launch Homepage ✨
+                        </button>
+                        <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-secondary);">Your landing page will use the premium dark-glass template</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Powered by Antigravity Multi-Agent Environment</p>
+        </footer>
+    </main>
+
+    <script src="agent4.js"></script>
+</body>
+</html>
