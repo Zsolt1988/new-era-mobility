@@ -44,10 +44,6 @@
                     <div class="icon-placeholder" style="background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);">💰</div>
                     <h2>Price Calculator</h2>
                     <p>Calculate the possible selling price in Austria, including transport from Germany, registration, and revenue margins.</p>
-                    <div id="launcher-buy-indicator" class="buy-indicator" style="display: none;">
-                        <div id="launcher-status-light" class="status-light"></div>
-                        <span id="launcher-status-text" class="status-text">Recommendation Ready</span>
-                    </div>
                 </div>
                 <div class="card-footer">
                     <span>Launch Tool</span>
@@ -82,30 +78,81 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </div>
             </a>
+
+            <!-- Dedicated Buy Recommendation Card -->
+            <div id="buy-status-card" class="card status-card">
+                <div>
+                    <span class="badge">Live Status</span>
+                    <div class="icon-placeholder" style="background: #1a1a1a; border: 1px solid #333;">🚥</div>
+                    <h2>Buy Recommendation</h2>
+                    <p id="status-desc">Calculating market position...</p>
+                    
+                    <div id="launcher-buy-indicator" class="buy-indicator large" style="display: none;">
+                        <div id="launcher-status-light" class="status-light"></div>
+                        <div class="status-details">
+                            <span id="launcher-status-text" class="status-text">Ready</span>
+                            <span id="launcher-status-diff" class="status-diff">0.00%</span>
+                        </div>
+                    </div>
+                    
+                    <div id="waiting-indicator" class="buy-indicator" style="background: rgba(255,255,255,0.05);">
+                        <span style="color: var(--text-secondary); font-size: 0.9rem;">Waiting for Agent 2 & 3 data...</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const status = localStorage.getItem('lastBuyStatus');
             const indicator = document.getElementById('launcher-buy-indicator');
             const light = document.getElementById('launcher-status-light');
             const text = document.getElementById('launcher-status-text');
+            const diffText = document.getElementById('launcher-status-diff');
+            const waiting = document.getElementById('waiting-indicator');
+            const desc = document.getElementById('status-desc');
 
-            if (status && indicator && light && text) {
-                indicator.style.display = 'flex';
-                light.classList.add(status);
-                
-                if (status === 'green') {
-                    text.innerText = 'Kaufempfehlung: JA';
-                    text.style.color = '#00ff64';
-                } else if (status === 'red') {
-                    text.innerText = 'Kaufempfehlung: NEIN';
-                    text.style.color = '#ff3e3e';
+            function updateRecommendation() {
+                const finalPriceStr = localStorage.getItem('lastCalculatedFinalPrice');
+                const marketPriceStr = localStorage.getItem('lastMarketCheapestPrice');
+
+                if (finalPriceStr && marketPriceStr) {
+                    const finalPrice = parseFloat(finalPriceStr);
+                    const marketPrice = parseFloat(marketPriceStr);
+                    
+                    const diff = (marketPrice - finalPrice) / marketPrice;
+                    const diffPercent = (diff * 100).toFixed(2);
+                    
+                    waiting.style.display = 'none';
+                    indicator.style.display = 'flex';
+                    
+                    light.classList.remove('green', 'orange', 'red');
+                    
+                    if (diff >= 0.02) {
+                        light.classList.add('green');
+                        text.innerText = 'Kaufempfehlung: JA';
+                        text.style.color = '#00ff64';
+                        desc.innerText = 'Das Fahrzeug liegt deutlich unter dem Marktpreis.';
+                    } else if (diff <= -0.02) {
+                        light.classList.add('red');
+                        text.innerText = 'Kaufempfehlung: NEIN';
+                        text.style.color = '#ff3e3e';
+                        desc.innerText = 'Das Fahrzeug ist teurer als der günstigste Marktpreis.';
+                    } else {
+                        light.classList.add('orange');
+                        text.innerText = 'Kaufempfehlung: NEUTRAL';
+                        text.style.color = '#ffa500';
+                        desc.innerText = 'Der Preis entspricht dem aktuellen Marktniveau.';
+                    }
+                    
+                    diffText.innerText = (diff > 0 ? '+' : '') + diffPercent + '% vs. Markt';
                 } else {
-                    text.innerText = 'Kaufempfehlung: NEUTRAL';
-                    text.style.color = '#ffa500';
+                    indicator.style.display = 'none';
+                    waiting.style.display = 'flex';
+                    desc.innerText = 'Bitte fülle zuerst Agent 2 (Preis) und Agent 3 (Markt) aus.';
                 }
             }
+
+            updateRecommendation();
 
             const resetBtn = document.getElementById('reset-query-btn');
             if (resetBtn) {
