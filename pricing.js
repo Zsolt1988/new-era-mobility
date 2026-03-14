@@ -50,6 +50,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
+    // NEW: Load freshly extracted car data from localStorage if no manual state exists
+    try {
+        const storedData = localStorage.getItem('lastExtractedCar');
+        if (storedData) {
+            const data = JSON.parse(storedData);
+            console.log('Detected fresh car data from Agent 1');
+            currentCarData = data.cars && data.cars.length > 0 ? data.cars[0] : data;
+            
+            if (currentCarData && !currentCarData.status && (currentCarData.price || currentCarData.carPrice)) {
+                initCalculator(currentCarData);
+                return;
+            }
+        }
+    } catch (e) {
+        console.warn('Could not load data from localStorage:', e);
+    }
+
     // Fallback: Load data from extracted_cars.json via API/fetch
     try {
         const response = await fetch('extracted_cars.json?nc=' + new Date().getTime());
