@@ -180,12 +180,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (diff >= 0.02) {
                 ampelContainer.classList.add('green');
                 recommendationText.innerText = 'Kaufempfehlung: JA (Günstiger als Markt)';
+                localStorage.setItem('lastBuyStatus', 'green');
             } else if (diff <= -0.02) {
                 ampelContainer.classList.add('red');
                 recommendationText.innerText = 'Kaufempfehlung: NEIN (Teurer als Markt)';
+                localStorage.setItem('lastBuyStatus', 'red');
             } else {
                 ampelContainer.classList.add('orange');
                 recommendationText.innerText = 'Kaufempfehlung: NEUTRAL (Marktniveau)';
+                localStorage.setItem('lastBuyStatus', 'orange');
             }
         } else {
             // Reset to default waiting state if no data

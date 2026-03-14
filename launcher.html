@@ -41,6 +41,10 @@
                     <div class="icon-placeholder" style="background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);">💰</div>
                     <h2>Price Calculator</h2>
                     <p>Calculate the possible selling price in Austria, including transport from Germany, registration, and revenue margins.</p>
+                    <div id="launcher-buy-indicator" class="buy-indicator" style="display: none;">
+                        <div id="launcher-status-light" class="status-light"></div>
+                        <span id="launcher-status-text" class="status-text">Recommendation Ready</span>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <span>Launch Tool</span>
@@ -77,5 +81,29 @@
             </a>
         </div>
     </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const status = localStorage.getItem('lastBuyStatus');
+            const indicator = document.getElementById('launcher-buy-indicator');
+            const light = document.getElementById('launcher-status-light');
+            const text = document.getElementById('launcher-status-text');
+
+            if (status && indicator && light && text) {
+                indicator.style.display = 'flex';
+                light.classList.add(status);
+                
+                if (status === 'green') {
+                    text.innerText = 'Kaufempfehlung: JA';
+                    text.style.color = '#00ff64';
+                } else if (status === 'red') {
+                    text.innerText = 'Kaufempfehlung: NEIN';
+                    text.style.color = '#ff3e3e';
+                } else {
+                    text.innerText = 'Kaufempfehlung: NEUTRAL';
+                    text.style.color = '#ffa500';
+                }
+            }
+        });
+    </script>
 </body>
 </html>

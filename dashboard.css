@@ -142,3 +142,32 @@ body {
 
 .blob-1 { top: -100px; right: -100px; background: #6366f1; }
 .blob-2 { bottom: -100px; left: -100px; background: #ec4899; }
+
+/* Dashboard Status Light */
+.status-light {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    background: #333;
+    display: inline-block;
+}
+
+.status-light.green { background: #00ff64; box-shadow: 0 0 8px #00ff64; }
+.status-light.orange { background: #ffa500; box-shadow: 0 0 8px #ffa500; }
+.status-light.red { background: #ff3e3e; box-shadow: 0 0 8px #ff3e3e; }
+
+.status-text {
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.buy-indicator {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    width: fit-content;
+}
