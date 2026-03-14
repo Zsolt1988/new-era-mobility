@@ -24,13 +24,4 @@ document.addEventListener('DOMContentLoaded', () => {
     const formattedPrice = new Intl.NumberFormat('de-DE').format(parseInt(finalPrice)) + '€';
     document.getElementById('label-price').innerText = formattedPrice;
 
-    // Handle Generation
-    const generateBtn = document.getElementById('generate-btn');
-    if (generateBtn) {
-        generateBtn.addEventListener('click', () => {
-            console.log("Launching Homepage Generation...");
-            // Reuse the existing generator logic via the proxy
-            window.location.href = 'homepage_preview.html';
-        });
-    }
 });
