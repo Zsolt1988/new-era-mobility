@@ -93,6 +93,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (data.status === 'ok' && data.prices && data.prices.length > 0) {
                 setPriceRows(data.prices);
                 if(priceStatusMsg) priceStatusMsg.textContent = '';
+                
+                // Save the cheapest price (rank 1) for Agent 2 consumption
+                const cheapest = data.prices[0].price;
+                localStorage.setItem('lastMarketCheapestPrice', cheapest);
+                console.log("Saved cheapest market price to localStorage:", cheapest);
             } else {
                 setPriceRows([]);
                 if(priceStatusMsg) priceStatusMsg.textContent = '⚠️ ' + (data.message || 'No prices found.');

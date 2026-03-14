@@ -149,6 +149,24 @@
                             <span>Total Selling Price (AT)</span>
                             <span id="display-total">0 €</span>
                         </div>
+                        
+                        <!-- Market Comparison Section -->
+                        <div id="comparison-section" class="hidden" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                            <h4 style="margin-bottom: 1rem;">Market Comparison (Agent 3)</h4>
+                            <div class="result-row">
+                                <span>Cheapest Market Price</span>
+                                <span id="display-market-price">0 €</span>
+                            </div>
+                            <div class="result-row">
+                                <span>Price Difference</span>
+                                <span id="display-diff">0%</span>
+                            </div>
+                            <div class="recommendation-box" style="margin-top: 1rem; padding: 1rem; border-radius: 12px; text-align: center; font-weight: 600;">
+                                <div id="traffic-light-dot" style="width: 24px; height: 24px; border-radius: 50%; margin: 0 auto 0.5rem; border: 2px solid rgba(255,255,255,0.2);"></div>
+                                <span id="recommendation-text">No Market Data</span>
+                            </div>
+                        </div>
+
                         <div style="margin-top: 2rem; text-align: center;">
                             <a href="autoscout.html" class="primary-btn" style="text-decoration: none; display: inline-block;">Go To Market Search →</a>
                         </div>
@@ -156,6 +174,17 @@
                 </div>
             </div>
         </section>
+        
+        <style>
+            .recommendation-box.green { background: rgba(0, 255, 100, 0.1); color: #00ff64; border: 1px solid rgba(0, 255, 100, 0.2); }
+            .recommendation-box.green #traffic-light-dot { background: #00ff64; box-shadow: 0 0 10px #00ff64; }
+            
+            .recommendation-box.orange { background: rgba(255, 165, 0, 0.1); color: #ffa500; border: 1px solid rgba(255, 165, 0, 0.2); }
+            .recommendation-box.orange #traffic-light-dot { background: #ffa500; box-shadow: 0 0 10px #ffa500; }
+            
+            .recommendation-box.red { background: rgba(255, 50, 50, 0.1); color: #ff3232; border: 1px solid rgba(255, 50, 50, 0.2); }
+            .recommendation-box.red #traffic-light-dot { background: #ff3232; box-shadow: 0 0 10px #ff3232; }
+        </style>
 
         <footer>
             <p>Powered by Antigravity Multi-Agent Environment</p>
