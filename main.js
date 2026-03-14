@@ -93,7 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Clear stale market/buy data for the new car
                 localStorage.removeItem('lastMarketCheapestPrice');
                 localStorage.removeItem('lastBuyStatus');
-                console.log('Saved extracted data and cleared stale market data');
+                localStorage.removeItem('pricingState');
+                localStorage.removeItem('autoscoutState');
+                console.log('Saved extracted data and cleared all stale states');
             } catch (e) {
                 console.warn('Failed to save to localStorage', e);
             }
