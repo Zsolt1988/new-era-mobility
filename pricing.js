@@ -143,6 +143,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // 7. Final Selling Price (Brutto AT + NoVA)
         const finalPrice = subtotal + atVat + novaTotal;
+        localStorage.setItem('lastCalculatedFinalPrice', finalPrice);
 
         // UI Updates
         displayOriginal.innerText = formatEuro(basePrice);
@@ -192,6 +193,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             if(ampelContainer) ampelContainer.classList.remove('green', 'orange', 'red');
             if(recommendationText) recommendationText.innerText = 'Please fetch prices in Agent 3 first';
         }
+    }
+
+    const createHomepageBtn = document.getElementById('create-homepage-btn');
+    if (createHomepageBtn) {
+        createHomepageBtn.addEventListener('click', () => {
+             // Ensure we have current data
+             if (!currentCarData) {
+                 alert("No car data found!");
+                 return;
+             }
+             // Final price is already in localStorage as 'lastCalculatedFinalPrice'
+             console.log("Triggering Agent 4: Homepage Generation");
+             // Redirect to the generator view
+             window.location.href = 'homepage_preview.html';
+        });
     }
 
     function formatEuro(value) {
