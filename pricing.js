@@ -157,36 +157,40 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // --- Market Comparison Logic ---
         const marketPriceStr = localStorage.getItem('lastMarketCheapestPrice');
-        const comparisonSection = document.getElementById('comparison-section');
+        const comparisonData = document.getElementById('comparison-data');
         const displayMarketPrice = document.getElementById('display-market-price');
         const displayDiff = document.getElementById('display-diff');
-        const recommendationBox = document.querySelector('.recommendation-box');
+        const ampelContainer = document.querySelector('.ampel-container');
         const recommendationText = document.getElementById('recommendation-text');
 
-        if (marketPriceStr && comparisonSection) {
+        if (marketPriceStr && comparisonData) {
             const marketPrice = parseFloat(marketPriceStr);
-            comparisonSection.classList.remove('hidden');
+            comparisonData.classList.remove('hidden');
             displayMarketPrice.innerText = formatEuro(marketPrice);
 
             // Difference logic: (Market - Calculated) / Market
-            // If Market is 100 and Calculated is 90, diff is 10% (positive = good)
             const diff = (marketPrice - finalPrice) / marketPrice;
             const diffPercent = (diff * 100).toFixed(2);
             displayDiff.innerText = (diff > 0 ? '+' : '') + diffPercent + '%';
 
             // Reset classes
-            recommendationBox.classList.remove('green', 'orange', 'red');
+            ampelContainer.classList.remove('green', 'orange', 'red');
 
             if (diff >= 0.02) {
-                recommendationBox.classList.add('green');
+                ampelContainer.classList.add('green');
                 recommendationText.innerText = 'Kaufempfehlung: JA (Günstiger als Markt)';
             } else if (diff <= -0.02) {
-                recommendationBox.classList.add('red');
+                ampelContainer.classList.add('red');
                 recommendationText.innerText = 'Kaufempfehlung: NEIN (Teurer als Markt)';
             } else {
-                recommendationBox.classList.add('orange');
+                ampelContainer.classList.add('orange');
                 recommendationText.innerText = 'Kaufempfehlung: NEUTRAL (Marktniveau)';
             }
+        } else {
+            // Reset to default waiting state if no data
+            if(comparisonData) comparisonData.classList.add('hidden');
+            if(ampelContainer) ampelContainer.classList.remove('green', 'orange', 'red');
+            if(recommendationText) recommendationText.innerText = 'Please fetch prices in Agent 3 first';
         }
     }
 

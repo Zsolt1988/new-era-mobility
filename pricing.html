@@ -151,19 +151,29 @@
                         </div>
                         
                         <!-- Market Comparison Section -->
-                        <div id="comparison-section" class="hidden" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div id="comparison-section" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
                             <h4 style="margin-bottom: 1rem;">Market Comparison (Agent 3)</h4>
-                            <div class="result-row">
-                                <span>Cheapest Market Price</span>
-                                <span id="display-market-price">0 €</span>
+                            
+                            <div id="comparison-data" class="hidden">
+                                <div class="result-row">
+                                    <span>Cheapest Market Price</span>
+                                    <span id="display-market-price">0 €</span>
+                                </div>
+                                <div class="result-row">
+                                    <span>Price Difference</span>
+                                    <span id="display-diff">0%</span>
+                                </div>
                             </div>
-                            <div class="result-row">
-                                <span>Price Difference</span>
-                                <span id="display-diff">0%</span>
-                            </div>
-                            <div class="recommendation-box" style="margin-top: 1rem; padding: 1rem; border-radius: 12px; text-align: center; font-weight: 600;">
-                                <div id="traffic-light-dot" style="width: 24px; height: 24px; border-radius: 50%; margin: 0 auto 0.5rem; border: 2px solid rgba(255,255,255,0.2);"></div>
-                                <span id="recommendation-text">No Market Data</span>
+
+                            <div class="ampel-container" style="display: flex; gap: 1.5rem; align-items: center; margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 12px;">
+                                <div class="traffic-light">
+                                    <div id="light-red" class="light"></div>
+                                    <div id="light-orange" class="light"></div>
+                                    <div id="light-green" class="light"></div>
+                                </div>
+                                <div style="flex: 1;">
+                                    <p id="recommendation-text" style="font-weight: 600; font-size: 0.95rem;">Please fetch prices in Agent 3 first</p>
+                                </div>
                             </div>
                         </div>
 
@@ -176,14 +186,36 @@
         </section>
         
         <style>
-            .recommendation-box.green { background: rgba(0, 255, 100, 0.1); color: #00ff64; border: 1px solid rgba(0, 255, 100, 0.2); }
-            .recommendation-box.green #traffic-light-dot { background: #00ff64; box-shadow: 0 0 10px #00ff64; }
+            .traffic-light {
+                background: #1a1a1a;
+                padding: 10px;
+                border-radius: 15px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                border: 2px solid #333;
+            }
+            .light {
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: #333;
+                transition: all 0.3s ease;
+            }
             
-            .recommendation-box.orange { background: rgba(255, 165, 0, 0.1); color: #ffa500; border: 1px solid rgba(255, 165, 0, 0.2); }
-            .recommendation-box.orange #traffic-light-dot { background: #ffa500; box-shadow: 0 0 10px #ffa500; }
+            /* States */
+            .ampel-container.red #light-red { background: #ff3e3e; box-shadow: 0 0 15px #ff3e3e; }
+            .ampel-container.red { border: 1px solid rgba(255, 62, 62, 0.3); }
             
-            .recommendation-box.red { background: rgba(255, 50, 50, 0.1); color: #ff3232; border: 1px solid rgba(255, 50, 50, 0.2); }
-            .recommendation-box.red #traffic-light-dot { background: #ff3232; box-shadow: 0 0 10px #ff3232; }
+            .ampel-container.orange #light-orange { background: #ffa500; box-shadow: 0 0 15px #ffa500; }
+            .ampel-container.orange { border: 1px solid rgba(255, 165, 0, 0.3); }
+            
+            .ampel-container.green #light-green { background: #00ff64; box-shadow: 0 0 15px #00ff64; }
+            .ampel-container.green { border: 1px solid rgba(0, 255, 100, 0.3); }
+            
+            .ampel-container.red p { color: #ff3e3e; }
+            .ampel-container.orange p { color: #ffa500; }
+            .ampel-container.green p { color: #00ff64; }
         </style>
 
         <footer>
