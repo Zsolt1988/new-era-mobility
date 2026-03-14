@@ -17,6 +17,9 @@
         <header class="header">
             <h1>Mission Control</h1>
             <p>Select your agent tool to begin the workflow.</p>
+            <button id="reset-query-btn" class="primary-btn" style="margin-top: 1.5rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); font-size: 0.9rem; padding: 0.6rem 1.2rem;">
+                🔄 New Query (Reset All)
+            </button>
         </header>
 
         <div class="cards-grid">
@@ -102,6 +105,21 @@
                     text.innerText = 'Kaufempfehlung: NEUTRAL';
                     text.style.color = '#ffa500';
                 }
+            }
+
+            const resetBtn = document.getElementById('reset-query-btn');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                    if (confirm('Are you sure you want to start a new query? This will clear all manual changes and extracted data.')) {
+                        localStorage.removeItem('lastExtractedCar');
+                        localStorage.removeItem('lastCalculatedFinalPrice');
+                        localStorage.removeItem('lastMarketCheapestPrice');
+                        localStorage.removeItem('lastBuyStatus');
+                        localStorage.removeItem('pricingState');
+                        localStorage.removeItem('autoscoutState');
+                        window.location.reload();
+                    }
+                });
             }
         });
     </script>

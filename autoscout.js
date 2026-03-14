@@ -123,6 +123,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Load Data Phase
+    if (loadState()) {
+        console.log('Loaded saved autoscout state');
+        const storedData = localStorage.getItem('lastExtractedCar');
+        if (storedData) {
+            try {
+                const data = JSON.parse(storedData);
+                currentCarData = data.cars && data.cars.length > 0 ? data.cars[0] : data;
+                if (currentCarData && carNameTitle) {
+                    carNameTitle.innerText = currentCarData.title || `${currentCarData.carBrand} ${currentCarData.carModel}`;
+                }
+            } catch(e) {}
+        }
+        generateUrl();
+        return;
+    }
+
     try {
         const storedData = localStorage.getItem('lastExtractedCar');
         if (storedData) {
@@ -279,7 +295,42 @@ document.addEventListener('DOMContentLoaded', async () => {
         urlOutput.innerText = url;
         openLinkBtn.href = url;
         
+        saveState();
         return url;
+    }
+
+    function saveState() {
+        const state = {
+            brand: brandInput ? brandInput.value : '',
+            model: modelInput ? modelInput.value : '',
+            regFrom: regFromInput ? regFromInput.value : '',
+            regTo: regToInput ? regToInput.value : '',
+            mileageFrom: mileageFromInput ? mileageFromInput.value : '',
+            mileageTo: mileageInput ? mileageInput.value : '',
+            fuel: fuelSelect ? fuelSelect.value : '',
+            equipment: eqCheckboxes.map(cb => ({ id: cb.id, checked: cb.checked }))
+        };
+        localStorage.setItem('autoscoutState', JSON.stringify(state));
+    }
+
+    function loadState() {
+        const stored = localStorage.getItem('autoscoutState');
+        if (stored) {
+            const state = JSON.parse(stored);
+            if(brandInput) brandInput.value = state.brand;
+            if(modelInput) modelInput.value = state.model;
+            if(regFromInput) regFromInput.value = state.regFrom;
+            if(regToInput) regToInput.value = state.regTo;
+            if(mileageFromInput) mileageFromInput.value = state.mileageFrom;
+            if(mileageInput) mileageInput.value = state.mileageTo;
+            if(fuelSelect) fuelSelect.value = state.fuel;
+            state.equipment.forEach(eq => {
+                const cb = document.getElementById(eq.id);
+                if (cb) cb.checked = eq.checked;
+            });
+            return true;
+        }
+        return false;
     }
 
     if(generateBtn) {

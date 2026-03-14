@@ -31,24 +31,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         recalculateBtn.addEventListener('click', calculate);
     }
 
-    // Try to load data from localStorage first (pushed by Agent 1)
-    try {
+    // Try to load saved manual state first
+    if (loadState()) {
+        console.log('Loaded saved pricing state');
+        // We still need to load the car title if possible
         const storedData = localStorage.getItem('lastExtractedCar');
         if (storedData) {
             const data = JSON.parse(storedData);
-            console.log('Loaded data from localStorage');
-            // Data from localStorage might already be the single car object from main.js logic, 
-            // but let's handle both in case it's the full API response
             currentCarData = data.cars && data.cars.length > 0 ? data.cars[0] : data;
-            
-            // Check if it's a valid car object before proceeding
-            if (currentCarData && !currentCarData.status && (currentCarData.price || currentCarData.carPrice)) {
-                initCalculator(currentCarData);
-                return; // Exit early if we successfully loaded from localStorage
+            if (currentCarData && carNameTitle) {
+                carNameTitle.innerText = currentCarData.title || `${currentCarData.carBrand} ${currentCarData.carModel}`;
+                const status = (currentCarData.price_status || 'brutto').toLowerCase();
+                statusBadge.innerText = status;
+                statusBadge.className = `badge-status badge-${status}`;
             }
         }
-    } catch (e) {
-        console.warn('Could not load data from localStorage:', e);
+        calculate();
+        return;
     }
 
     // Fallback: Load data from extracted_cars.json via API/fetch
@@ -98,6 +97,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         calculate();
     }
 
+    function saveState() {
+        const state = {
+            basePrice: basePriceInput.value,
+            distance: distanceInput.value,
+            registration: regInput.value,
+            regYear: regYearInput.value,
+            co2: co2Input.value,
+            marginPercent: marginPercentInput.value
+        };
+        localStorage.setItem('pricingState', JSON.stringify(state));
+    }
+
+    function loadState() {
+        const stored = localStorage.getItem('pricingState');
+        if (stored) {
+            const state = JSON.parse(stored);
+            basePriceInput.value = state.basePrice;
+            distanceInput.value = state.distance;
+            regInput.value = state.registration;
+            regYearInput.value = state.regYear;
+            co2Input.value = state.co2;
+            marginPercentInput.value = state.marginPercent;
+            return true;
+        }
+        return false;
+    }
+
     function calculate() {
         const basePrice = parseFloat(basePriceInput.value) || 0;
         const distance = parseFloat(distanceInput.value) || 0;
@@ -118,8 +144,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const internalCosts = nettoValue + transportCosts + regFee;
         
         // 4. Revenue Margin (Custom %)
-        const marginPercent = (parseFloat(marginPercentInput.value) || 0) / 100;
-        const margin = internalCosts * marginPercent;
+        const marginPercentValue = (parseFloat(marginPercentInput.value) || 0) / 100;
+        const margin = internalCosts * marginPercentValue;
         
         // 5. Margin Price (Subtotal before AT VAT)
         const subtotal = internalCosts + margin;
@@ -157,6 +183,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         displayVatAt.innerText = formatEuro(atVat);
         if(displayNova) displayNova.innerText = formatEuro(novaTotal) + ` (${nova_prozent}%)`;
         displayTotal.innerText = formatEuro(finalPrice);
+
+        saveState();
 
         // --- Market Comparison Logic ---
         const marketPriceStr = localStorage.getItem('lastMarketCheapestPrice');
