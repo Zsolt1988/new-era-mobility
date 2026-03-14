@@ -145,29 +145,31 @@ body {
 
 /* Dashboard Status Light */
 .status-light {
-    width: 12px;
-    height: 12px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    margin-right: 8px;
+    margin-right: 15px;
     background: #333;
     display: inline-block;
 }
 
-.status-light.green { background: #00ff64; box-shadow: 0 0 8px #00ff64; }
-.status-light.orange { background: #ffa500; box-shadow: 0 0 8px #ffa500; }
-.status-light.red { background: #ff3e3e; box-shadow: 0 0 8px #ff3e3e; }
+.status-light.green { background: #00ff64; box-shadow: 0 0 20px rgba(0, 255, 100, 0.6); }
+.status-light.orange { background: #ffa500; box-shadow: 0 0 20px rgba(255, 165, 0, 0.6); }
+.status-light.red { background: #ff3e3e; box-shadow: 0 0 20px rgba(255, 62, 62, 0.6); }
 
 .status-text {
-    font-size: 0.85rem;
-    font-weight: 500;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 .buy-indicator {
     display: flex;
     align-items: center;
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 12px;
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
     width: fit-content;
 }

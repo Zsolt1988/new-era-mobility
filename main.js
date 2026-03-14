@@ -90,7 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Save to localStorage for Agent 2
             try {
                 localStorage.setItem('lastExtractedCar', JSON.stringify(data));
-                console.log('Saved extracted data to localStorage for Agent 2');
+                // Clear stale market/buy data for the new car
+                localStorage.removeItem('lastMarketCheapestPrice');
+                localStorage.removeItem('lastBuyStatus');
+                console.log('Saved extracted data and cleared stale market data');
             } catch (e) {
                 console.warn('Failed to save to localStorage', e);
             }

@@ -18,11 +18,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     // New inputs for NoVA
     const regYearInput = document.getElementById('reg-year');
     const co2Input = document.getElementById('co2-value');
+    const marginPercentInput = document.getElementById('margin-percent');
 
     let currentCarData = null;
 
     // Register event listeners immediately so they work regardless of data source
-    [basePriceInput, distanceInput, regInput, regYearInput, co2Input].forEach(input => {
+    [basePriceInput, distanceInput, regInput, regYearInput, co2Input, marginPercentInput].forEach(input => {
         if(input) input.addEventListener('input', calculate);
     });
     const recalculateBtn = document.getElementById('recalculate-btn');
@@ -116,8 +117,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         // 3. Internal Costs Total
         const internalCosts = nettoValue + transportCosts + regFee;
         
-        // 4. Revenue Margin (7%)
-        const margin = internalCosts * 0.07;
+        // 4. Revenue Margin (Custom %)
+        const marginPercent = (parseFloat(marginPercentInput.value) || 0) / 100;
+        const margin = internalCosts * marginPercent;
         
         // 5. Margin Price (Subtotal before AT VAT)
         const subtotal = internalCosts + margin;
