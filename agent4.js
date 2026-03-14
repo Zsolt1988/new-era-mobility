@@ -24,59 +24,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const formattedPrice = new Intl.NumberFormat('de-DE').format(parseInt(finalPrice)) + '€';
     document.getElementById('label-price').innerText = formattedPrice;
 
-    const generateBtn = document.getElementById('generate-btn');
-    if (generateBtn) {
-        generateBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const brand = car.carBrand || "BYD";
-            const model = car.carModel || "SEAL 6 Boost";
-            const title = car.title || `${brand} ${model}`;
-            const color = car.carColor || "sandstone (grau)";
-            const price = parseInt(finalPrice);
-            const formattedPriceStr = new Intl.NumberFormat('de-DE').format(price) + '€';
-            
-            const kw = car.carPower || "135 kW";
-            const ps = Math.round(parseInt(kw) * 1.36) || "184";
-            const mileage = car.carMileage || "10 km";
-            const firstReg = car.carRegistration || "09/2025";
-            
-            const lowerSpecs = JSON.stringify(car).toLowerCase();
+    function getGeneratedHtml() {
+        const brand = car.carBrand || "BYD";
+        const model = car.carModel || "SEAL 6 Boost";
+        const title = car.title || `${brand} ${model}`;
+        const color = car.carColor || "sandstone (grau)";
+        const price = parseInt(finalPrice);
+        const formattedPriceStr = new Intl.NumberFormat('de-DE').format(price) + '€';
+        
+        const kw = car.carPower || "135 kW";
+        const ps = Math.round(parseInt(kw) * 1.36) || "184";
+        const mileage = car.carMileage || "10 km";
+        const firstReg = car.carRegistration || "09/2025";
+        
+        const lowerSpecs = JSON.stringify(car).toLowerCase();
 
-            // Map Interieur
-            const interieur = [];
-            if (lowerSpecs.includes("klima")) interieur.push("2-Zonen-Klimaautomatik");
-            if (lowerSpecs.includes("sitzheizung") || lowerSpecs.includes("beheizbare sitze")) interieur.push("El. beheizbare Sitze vorne");
-            if (lowerSpecs.includes("verstellbare sitze")) interieur.push("El. verstellbare Sitze vorne");
-            if (lowerSpecs.includes("lederlenkrad")) interieur.push("Lederlenkrad");
-            if (lowerSpecs.includes("keyless") || lowerSpecs.includes("schlüsselloses")) interieur.push("Keyless Entry");
-            if (lowerSpecs.includes("carplay") || lowerSpecs.includes("android auto")) interieur.push("Android Auto / CarPlay");
-            if (lowerSpecs.includes("dachreling")) interieur.push("Dachreling");
-            if (lowerSpecs.includes("heckklappe") && lowerSpecs.includes("elektrisch")) interieur.push("Elektrische Heckklappe");
-            
-            const defaultInterieur = ["Ambientebeleuchtung", "Digitales Cockpit", "Induktives Laden", "Multifunktionslenkrad"];
-            while(interieur.length < 8 && defaultInterieur.length > 0) {
-                const next = defaultInterieur.shift();
-                if(!interieur.includes(next)) interieur.push(next);
-            }
+        // Map Interieur
+        const interieur = [];
+        if (lowerSpecs.includes("klima")) interieur.push("2-Zonen-Klimaautomatik");
+        if (lowerSpecs.includes("sitzheizung") || lowerSpecs.includes("beheizbare sitze")) interieur.push("El. beheizbare Sitze vorne");
+        if (lowerSpecs.includes("verstellbare sitze")) interieur.push("El. verstellbare Sitze vorne");
+        if (lowerSpecs.includes("lederlenkrad")) interieur.push("Lederlenkrad");
+        if (lowerSpecs.includes("keyless") || lowerSpecs.includes("schlüsselloses")) interieur.push("Keyless Entry");
+        if (lowerSpecs.includes("carplay") || lowerSpecs.includes("android auto")) interieur.push("Android Auto / CarPlay");
+        if (lowerSpecs.includes("dachreling")) interieur.push("Dachreling");
+        if (lowerSpecs.includes("heckklappe") && lowerSpecs.includes("elektrisch")) interieur.push("Elektrische Heckklappe");
+        
+        const defaultInterieur = ["Ambientebeleuchtung", "Digitales Cockpit", "Induktives Laden", "Multifunktionslenkrad"];
+        while(interieur.length < 8 && defaultInterieur.length > 0) {
+            const next = defaultInterieur.shift();
+            if(!interieur.includes(next)) interieur.push(next);
+        }
 
-            // Map Technologie
-            const technologie = [];
-            if (lowerSpecs.includes("navig") || lowerSpecs.includes("navi")) technologie.push("Navigationssystem");
-            if (lowerSpecs.includes("head-up") || lowerSpecs.includes("hud")) technologie.push("Head-up display");
-            if (lowerSpecs.includes("led") || lowerSpecs.includes("matrix")) technologie.push("Voll-LED Scheinwerfer");
-            if (lowerSpecs.includes("kamera") || lowerSpecs.includes("360")) technologie.push("Rückfahrkamera");
-            if (lowerSpecs.includes("acc") || lowerSpecs.includes("abstand")) technologie.push("Abstandstempomat");
-            if (lowerSpecs.includes("totwinkel")) technologie.push("Totwinkelassistent");
-            if (lowerSpecs.includes("verkehrszeichen")) technologie.push("Verkehrszeichenerkennung");
-            if (lowerSpecs.includes("autonom") || lowerSpecs.includes("spurhalte")) technologie.push("Autonomes Fahren L2");
-            
-            const defaultTech = ["Einparkhilfe vorne/hinten", "Notbremsassistent", "Müdigkeitswarner", "Berganfahrassistent"];
-            while(technologie.length < 8 && defaultTech.length > 0) {
-                const next = defaultTech.shift();
-                if(!technologie.includes(next)) technologie.push(next);
-            }
+        // Map Technologie
+        const technologie = [];
+        if (lowerSpecs.includes("navig") || lowerSpecs.includes("navi")) technologie.push("Navigationssystem");
+        if (lowerSpecs.includes("head-up") || lowerSpecs.includes("hud")) technologie.push("Head-up display");
+        if (lowerSpecs.includes("led") || lowerSpecs.includes("matrix")) technologie.push("Voll-LED Scheinwerfer");
+        if (lowerSpecs.includes("kamera") || lowerSpecs.includes("360")) technologie.push("Rückfahrkamera");
+        if (lowerSpecs.includes("acc") || lowerSpecs.includes("abstand")) technologie.push("Abstandstempomat");
+        if (lowerSpecs.includes("totwinkel")) technologie.push("Totwinkelassistent");
+        if (lowerSpecs.includes("verkehrszeichen")) technologie.push("Verkehrszeichenerkennung");
+        if (lowerSpecs.includes("autonom") || lowerSpecs.includes("spurhalte")) technologie.push("Autonomes Fahren L2");
+        
+        const defaultTech = ["Einparkhilfe vorne/hinten", "Notbremsassistent", "Müdigkeitswarner", "Berganfahrassistent"];
+        while(technologie.length < 8 && defaultTech.length > 0) {
+            const next = defaultTech.shift();
+            if(!technologie.includes(next)) technologie.push(next);
+        }
 
-            const html = `<!DOCTYPE html>
+        return `<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -247,25 +244,36 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
 </body>
 </html>`;
+    }
 
-            // 1. Open in new tab using Blob
+    const generateBtn = document.getElementById('generate-btn');
+    if (generateBtn) {
+        generateBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const html = getGeneratedHtml();
             const blob = new Blob([html], { type: 'text/html' });
             const url = URL.createObjectURL(blob);
             window.open(url, '_blank');
-            
-            // 2. Also offer download just in case popup is blocked
+        });
+    }
+
+    const downloadBtn = document.getElementById('download-btn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const brand = car.carBrand || "BYD";
+            const model = car.carModel || "SEAL";
+            const html = getGeneratedHtml();
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = `homepage_${brand.toLowerCase()}_${model.toLowerCase().replace(/\s+/g, '_')}.html`;
-            a.style.display = 'none';
-            document.body.appendChild(a);
             a.click();
-            document.body.removeChild(a);
             
-            // Update button text to give feedback
-            const origText = generateBtn.innerHTML;
-            generateBtn.innerHTML = '✅ Homepage Generated & Downloaded!';
-            setTimeout(() => { generateBtn.innerHTML = origText; }, 3000);
+            const origText = downloadBtn.innerHTML;
+            downloadBtn.innerHTML = '✅ Downloaded!';
+            setTimeout(() => { downloadBtn.innerHTML = origText; }, 3000);
         });
     }
 });
