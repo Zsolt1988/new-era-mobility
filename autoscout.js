@@ -26,14 +26,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     ];
 
     // Event Listeners for live updates
+    function generateAndFetch() {
+        const newUrl = generateUrl();
+        triggerPriceFetch(newUrl);
+    }
+
     const allInputs = [brandInput, modelInput, regFromInput, regToInput, mileageFromInput, mileageInput, fuelSelect, ...eqCheckboxes];
     allInputs.forEach(input => {
-        if(input) input.addEventListener('change', generateUrl);
-        if(input && input.type === 'text' || input.type === 'number') input.addEventListener('keyup', generateUrl);
+        if(input) input.addEventListener('change', generateAndFetch);
+        if(input && input.type === 'text' || input.type === 'number') input.addEventListener('keyup', () => {
+             // For text/number inputs on keyup, let's just generate the URL so it feels live, but maybe don't hammer the fetch API.
+             // Actually, user expects fetch when URL changes, so let's debounce or omit fetch on keyup to prevent spam.
+             generateUrl();
+        });
     });
     
-    if(generateBtn) generateBtn.addEventListener('click', generateUrl);
-
     // ---- Fetch Prices from backend ----
     const fetchPricesBtn = document.getElementById('fetch-prices-btn');
     const priceList = document.getElementById('price-list');
@@ -57,49 +64,58 @@ document.addEventListener('DOMContentLoaded', async () => {
                 valEl.textContent = prices[i].formatted;
             } else {
                 valEl.textContent = '—';
-                row.classList.add('loading');
             }
         });
+    }
+
+    async function triggerPriceFetch(overrideUrl = null) {
+        const searchUrl = overrideUrl || urlOutput.innerText.trim();
+        if (!searchUrl || searchUrl.startsWith('https://www.autoscout24.at/lst/...')) {
+            if(priceStatusMsg) priceStatusMsg.textContent = '⚠️ Please configure the search first.';
+            return;
+        }
+
+        // Append dealer-only filter
+        const dealerUrl = searchUrl + '&custtype=D';
+
+        setPriceRowsLoading();
+        if(fetchPricesBtn) {
+            fetchPricesBtn.disabled = true;
+            fetchPricesBtn.textContent = 'Fetching…';
+        }
+
+        try {
+            // Use absolute URL so it works even if the HTML is opened via file://
+            const apiUrl = `http://localhost:8080/api/autoscout-prices?url=${encodeURIComponent(dealerUrl)}`;
+            const resp = await fetch(apiUrl);
+            const data = await resp.json();
+
+            if (data.status === 'ok' && data.prices && data.prices.length > 0) {
+                setPriceRows(data.prices);
+                if(priceStatusMsg) priceStatusMsg.textContent = '';
+            } else {
+                setPriceRows([]);
+                if(priceStatusMsg) priceStatusMsg.textContent = '⚠️ ' + (data.message || 'No prices found.');
+            }
+        } catch (err) {
+            setPriceRows([]);
+            if(priceStatusMsg) priceStatusMsg.textContent = '⚠️ Could not reach backend. Is the server running?';
+        }
+
+        if(fetchPricesBtn) {
+            fetchPricesBtn.disabled = false;
+            fetchPricesBtn.textContent = '🔍 Fetch Prices';
+        }
     }
 
     if (fetchPricesBtn) {
-        fetchPricesBtn.addEventListener('click', async () => {
-            const searchUrl = urlOutput.innerText.trim();
-            if (!searchUrl || searchUrl.startsWith('https://www.autoscout24.at/lst/...')) {
-                priceStatusMsg.textContent = '⚠️ Please configure the search first.';
-                return;
-            }
-
-            // Append dealer-only filter
-            const dealerUrl = searchUrl + '&offer_type=D';
-
-            setPriceRowsLoading();
-            fetchPricesBtn.disabled = true;
-            fetchPricesBtn.textContent = 'Fetching…';
-
-            try {
-                const apiUrl = `/api/autoscout-prices?url=${encodeURIComponent(dealerUrl)}`;
-                const resp = await fetch(apiUrl);
-                const data = await resp.json();
-
-                if (data.status === 'ok' && data.prices && data.prices.length > 0) {
-                    setPriceRows(data.prices);
-                    priceStatusMsg.textContent = '';
-                } else {
-                    setPriceRows([]);
-                    priceStatusMsg.textContent = '⚠️ ' + (data.message || 'No prices found. AutoScout24 may require JavaScript rendering.');
-                }
-            } catch (err) {
-                setPriceRows([]);
-                priceStatusMsg.textContent = '⚠️ Could not reach backend. Is the server running?';
-            }
-
-            fetchPricesBtn.disabled = false;
-            fetchPricesBtn.textContent = '🔍 Fetch Prices';
+        fetchPricesBtn.addEventListener('click', () => {
+            // Read fresh URL directly from the generated field
+            const freshUrl = urlOutput.innerText.trim();
+            console.log("Fetching prices for explicitly read URL:", freshUrl);
+            triggerPriceFetch(freshUrl);
         });
     }
-
-    let currentCarData = null;
 
     // Load Data Phase
     try {
@@ -214,7 +230,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         // HUD (123)
         if (lowerText.includes("headupdisplay") || lowerText.includes("hud") || lowerText.includes("head-up")) document.getElementById('eq-123').checked = true;
 
-        generateUrl();
+        const initialUrl = generateUrl();
+        // Trigger fetch immediately with the guaranteed correct URL
+        triggerPriceFetch(initialUrl);
     }
 
     function formatForUrl(str) {
@@ -255,6 +273,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         urlOutput.innerText = url;
         openLinkBtn.href = url;
+        
+        return url;
+    }
+
+    if(generateBtn) {
+        generateBtn.addEventListener('click', () => {
+            const newUrl = generateUrl();
+            console.log("Auto-fetching with strictly returned URL:", newUrl);
+            triggerPriceFetch(newUrl);
+        });
     }
 });
 

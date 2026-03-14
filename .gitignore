@@ -16,3 +16,11 @@ venv.bak/
 .pydevproject
 .settings/
 *.log
+debug_*.json
+debug_*.html
+parse_*.py
+test_*.py
+test_*.html
+dump_*.py
+reproduce_bug.py
+extracted_cars.json

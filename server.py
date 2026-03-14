@@ -125,12 +125,34 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 # AutoScout24 embeds listing data in <script type="application/json"> or window.__INITIAL_STATE__
                 prices = []
 
-                # Pattern 1: JSON price fields like "price":12500 or "priceRaw":12500
-                raw_prices = re.findall(r'"price(?:Raw)?"\s*:\s*(\d{3,7})', html)
-                if raw_prices:
-                    prices = list(sorted(set(int(p) for p in raw_prices)))[:3]
+                # Find all <article> tags first to isolate valid listings from "similar vehicles"
+                articles = re.findall(r'<article.*?</article>', html, re.DOTALL)
+                
+                valid_prices = []
+                for article in articles:
+                    # STRICT FILTERING: Only consider vehicles from the actual search results
+                    if 'data-source="listpage_search-results"' not in article:
+                        continue
+                        
+                    # Ignore sponsored listings if they bypass sorting
+                    if 'sponsored' in article.lower() or 'promoted' in article.lower():
+                        continue
 
-                # Pattern 2: Fallback — price text like "12.500 €" or "12,500 €"
+                    # Extract the price for this valid article
+                    price_m = re.search(r'data-price="(\d+)"', article)
+                    if price_m:
+                        valid_prices.append(int(price_m.group(1)))
+
+                if valid_prices:
+                    prices = list(sorted(set(valid_prices)))[:3]
+
+                # Fallback: Pattern 2: JSON price fields if articles structure changes completely
+                if not prices:
+                    raw_prices = re.findall(r'"price(?:Raw)?"\s*:\s*(\d{3,7})', html)
+                    if raw_prices:
+                        prices = list(sorted(set(int(p) for p in raw_prices)))[:3]
+
+                # Pattern 3: Fallback — price text like "12.500 €" or "12,500 €"
                 if not prices:
                     text_prices = re.findall(r'(\d{1,3}(?:[.,]\d{3})+)\s*€', html)
                     def parse_price(p: str) -> int:
