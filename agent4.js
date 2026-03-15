@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial Population
     const initialTitle = car.title || `${car.carBrand} ${car.carModel}`;
     document.getElementById('edit-title').value = initialTitle;
+    document.getElementById('edit-execution').value = car.carExecution || '';
     document.getElementById('edit-mileage').value = car.carMileage || '—';
     document.getElementById('edit-reg').value = car.carRegistration || '—';
     document.getElementById('edit-color').value = car.carColor || '—';
@@ -73,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function getGeneratedHtml() {
         // Read from UI inputs instead of car object/localStorage
         const title = document.getElementById('edit-title').value;
+        const execution = document.getElementById('edit-execution').value;
         const mileage = document.getElementById('edit-mileage').value;
         const registration = document.getElementById('edit-reg').value;
         const color = document.getElementById('edit-color').value;
@@ -140,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="space-y-2 w-full md:w-auto">
                 <p class="text-sage-900 font-display font-semibold tracking-widest uppercase text-xs md:text-sm">New Era Mobility</p>
                 <h1 class="text-4xl md:text-6xl font-display font-bold text-gradient">${title}</h1>
+                <p class="text-xl text-sage-200 font-bold italic">${execution}</p>
                 <p class="text-sm md:text-base text-sage-200/70 font-light italic">${color}</p>
             </div>
             <div class="flex flex-col items-start md:items-end gap-4 w-full md:w-auto">
@@ -262,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </html>`;
     }
 
-    const inputs = ['edit-title', 'edit-mileage', 'edit-reg', 'edit-color', 'edit-power', 'edit-price', 'edit-interieur', 'edit-technologie'];
+    const inputs = ['edit-title', 'edit-execution', 'edit-mileage', 'edit-reg', 'edit-color', 'edit-power', 'edit-price', 'edit-interieur', 'edit-technologie'];
     inputs.forEach(id => {
         const el = document.getElementById(id);
         if (el) {

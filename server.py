@@ -39,7 +39,7 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                     # This will overwrite extracted_cars.json
                     try:
                         result = subprocess.run(
-                            ['python', 'extract_cars.py', url],
+                            ['python3', 'extract_cars.py', url],
                             check=True,
                             capture_output=True,
                             text=True,
@@ -70,6 +70,12 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                         self.send_header('Content-Type', 'application/json')
                         self.end_headers()
                         self.wfile.write(json.dumps({"status": "error", "message": f"Extraction failed: {e.stderr}"}).encode('utf-8'))
+                    except Exception as e:
+                        print(f"Unexpected error: {str(e)}")
+                        self.send_response(500)
+                        self.send_header('Content-Type', 'application/json')
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"status": "error", "message": f"Server error: {str(e)}"}).encode('utf-8'))
                 else:
                     self.send_response(400)
                     self.send_header('Content-Type', 'application/json')
@@ -82,6 +88,10 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_header('Content-Type', 'application/json')
                 self.end_headers()
                 self.wfile.write(json.dumps({"status": "error", "message": f"Invalid JSON: {str(e)}"}).encode('utf-8'))
+            except Exception as e:
+                print(f"Generic error in do_POST: {str(e)}")
+                self.send_response(500)
+                self.end_headers()
                 
         else:
             self.send_error(404, "Endpoint not found")
