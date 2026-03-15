@@ -22,16 +22,38 @@
             padding: 2rem;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.2rem;
         }
         .data-item {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 0.4rem;
             border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
             padding-bottom: 0.8rem;
         }
-        .data-label { color: var(--text-secondary); font-size: 0.9rem; }
-        .data-value { font-weight: 600; color: #fff; }
+        .data-label { color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        .data-input { 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 8px; 
+            padding: 0.6rem 1rem; 
+            color: #fff; 
+            font-size: 1rem;
+            width: 100%;
+        }
+        .data-input:focus { border-color: var(--accent); outline: none; background: rgba(255, 255, 255, 0.06); }
+        
+        .feature-textarea {
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 12px; 
+            padding: 1rem; 
+            color: #fff; 
+            font-size: 0.9rem;
+            width: 100%;
+            height: 120px;
+            resize: vertical;
+        }
         
         .cta-section {
             display: flex;
@@ -50,7 +72,7 @@
             font-size: 0.8rem;
             font-weight: 600;
             border: 1px solid rgba(1, 253, 119, 0.2);
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         @media (max-width: 768px) {
@@ -62,10 +84,19 @@
     <div class="background-blob blob-1"></div>
     <div class="background-blob blob-2"></div>
     <div class="background-blob blob-3"></div>
-
+ 
     <main class="container">
+        <nav class="workflow-header">
+            <a href="launcher.html" class="home-link">🚀 Mission Control</a>
+            <div class="nav-links">
+                <a href="index.html">1. Acquisition</a>
+                <a href="pricing.html">2. Pricing</a>
+                <a href="autoscout.html">3. Market</a>
+                <a href="agent4.html" class="active">4. Creator</a>
+            </div>
+        </nav>
+
         <header class="glass-hero">
-            <a href="launcher.html" class="back-link">← Back to Dashboard</a>
             <h1 class="gradient-text">Homepage Creator</h1>
             <p class="subtitle">Agent 4: Instant Premium Vehicle Landing Page</p>
         </header>
@@ -80,10 +111,10 @@
 
         <section id="main-ui" class="glass">
             <div class="card-header">
-                <h2 id="car-display-name">Assembling Data...</h2>
+                <h2 id="car-display-name">Car Editor</h2>
                 <div class="status-indicator">
                     <div class="dot"></div>
-                    <span>Ready for Generation</span>
+                    <span>Editable Mode</span>
                 </div>
             </div>
 
@@ -91,40 +122,57 @@
                 <div class="data-card">
                     <h3>Vehicle Specification</h3>
                     <div class="data-item">
-                        <span class="data-label">Brand & Model</span>
-                        <span id="label-model" class="data-value">—</span>
+                        <label class="data-label">Displayed Title</label>
+                        <input type="text" id="edit-title" class="data-input" placeholder="e.g. BYD SEAL U">
                     </div>
                     <div class="data-item">
-                        <span class="data-label">Laufleistung</span>
-                        <span id="label-mileage" class="data-value">—</span>
+                        <label class="data-label">Mileage</label>
+                        <input type="text" id="edit-mileage" class="data-input">
                     </div>
                     <div class="data-item">
-                        <span class="data-label">Erstzulassung</span>
-                        <span id="label-reg" class="data-value">—</span>
+                        <label class="data-label">Power (kW)</label>
+                        <input type="text" id="edit-power" class="data-input">
                     </div>
                     <div class="data-item">
-                        <span class="data-label">Farbe</span>
-                        <span id="label-color" class="data-value">—</span>
+                        <label class="data-label">First Registration</label>
+                        <input type="text" id="edit-reg" class="data-input">
+                    </div>
+                    <div class="data-item" style="border-bottom: none;">
+                        <label class="data-label">Color</label>
+                        <input type="text" id="edit-color" class="data-input">
                     </div>
                 </div>
 
                 <div class="data-card">
-                    <div class="cta-section" style="height: 100%;">
-                        <div class="info-pill">Calculated by Agent 2</div>
-                        <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Target Sales Price (AT)</p>
-                        <h2 id="label-price" style="font-size: 3rem; margin-bottom: 2rem;" class="gradient-text">0€</h2>
-                        
-                        <button id="generate-btn" class="primary-btn" style="width: 100%; padding: 1.5rem; background: linear-gradient(135deg, #01fd77 0%, #0c7dff 100%);">
-                            Preview Homepage ✨
-                        </button>
-                        <button id="download-btn" class="primary-btn" style="width: 100%; padding: 1rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); font-size: 0.9rem;">
-                            Download Source Code (HTML) 📥
-                        </button>
-                        <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-secondary);">Your landing page will use the premium dark-glass template</p>
+                    <h3>Final Offer Details</h3>
+                    <div class="data-item">
+                        <label class="data-label">Sales Price (AT)</label>
+                        <input type="number" id="edit-price" class="data-input" style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">
+                    </div>
+                    
+                    <div class="data-item">
+                        <label class="data-label">Interieur Features (One per line)</label>
+                        <textarea id="edit-interieur" class="feature-textarea"></textarea>
+                    </div>
+                    
+                    <div class="data-item" style="border-bottom: none;">
+                        <label class="data-label">Technologie Features (One per line)</label>
+                        <textarea id="edit-technologie" class="feature-textarea"></textarea>
                     </div>
                 </div>
             </div>
-        </section>
+
+            <div class="cta-section" style="margin-top: 3rem;">
+                <div style="display: flex; gap: 1rem; width: 100%; max-width: 600px;">
+                    <button id="generate-btn" class="primary-btn" style="flex: 2; padding: 1.5rem; background: linear-gradient(135deg, #01fd77 0%, #0c7dff 100%);">
+                        Preview Homepage ✨
+                    </button>
+                    <button id="download-btn" class="primary-btn" style="flex: 1; padding: 1rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); font-size: 0.9rem;">
+                        Download HTML 📥
+                    </button>
+                </div>
+                <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-secondary);">Manual changes are saved locally for this session.</p>
+            </div>
 
         <footer>
             <p>Powered by Antigravity Multi-Agent Environment</p>

@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Basic Info Inputs
     const brandInput = document.getElementById('brand');
     const modelInput = document.getElementById('model');
+    const versionInput = document.getElementById('version');
     const regFromInput = document.getElementById('reg-from');
     const regToInput = document.getElementById('reg-to');
     const mileageFromInput = document.getElementById('mileage-from');
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         triggerPriceFetch(newUrl);
     }
 
-    const allInputs = [brandInput, modelInput, regFromInput, regToInput, mileageFromInput, mileageInput, fuelSelect, ...eqCheckboxes];
+    const allInputs = [brandInput, modelInput, versionInput, regFromInput, regToInput, mileageFromInput, mileageInput, fuelSelect, ...eqCheckboxes];
     allInputs.forEach(input => {
         if(input) input.addEventListener('change', generateAndFetch);
         if(input && input.type === 'text' || input.type === 'number') input.addEventListener('keyup', () => {
@@ -97,7 +98,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Save the cheapest price (rank 1) for Agent 2 consumption
                 const cheapest = data.prices[0].price;
                 localStorage.setItem('lastMarketCheapestPrice', cheapest);
-                console.log("Saved cheapest market price to localStorage:", cheapest);
+                
+                // Save full price list for persistence in Agent 3 UI
+                localStorage.setItem('autoscoutLastPrices', JSON.stringify(data.prices));
+                console.log("Saved prices to localStorage");
             } else {
                 setPriceRows([]);
                 if(priceStatusMsg) priceStatusMsg.textContent = '⚠️ ' + (data.message || 'No prices found.');
@@ -292,6 +296,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         url += `&powertype=kw&sort=price&ustate=N%2CU`;
 
+        const version = versionInput.value.trim();
+        if (version) url += `&version0=${encodeURIComponent(version)}`;
+
         urlOutput.innerText = url;
         openLinkBtn.href = url;
         
@@ -303,6 +310,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const state = {
             brand: brandInput ? brandInput.value : '',
             model: modelInput ? modelInput.value : '',
+            version: versionInput ? versionInput.value : '',
             regFrom: regFromInput ? regFromInput.value : '',
             regTo: regToInput ? regToInput.value : '',
             mileageFrom: mileageFromInput ? mileageFromInput.value : '',
@@ -319,6 +327,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const state = JSON.parse(stored);
             if(brandInput) brandInput.value = state.brand;
             if(modelInput) modelInput.value = state.model;
+            if(versionInput) versionInput.value = state.version || '';
             if(regFromInput) regFromInput.value = state.regFrom;
             if(regToInput) regToInput.value = state.regTo;
             if(mileageFromInput) mileageFromInput.value = state.mileageFrom;
@@ -328,6 +337,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const cb = document.getElementById(eq.id);
                 if (cb) cb.checked = eq.checked;
             });
+
+            // Restore last fetched prices if they exist
+            const savedPrices = localStorage.getItem('autoscoutLastPrices');
+            if (savedPrices) {
+                try {
+                    setPriceRows(JSON.parse(savedPrices));
+                } catch(e) {}
+            }
+
             return true;
         }
         return false;

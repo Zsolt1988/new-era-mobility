@@ -123,8 +123,17 @@
     <div class="background-blob blob-2"></div>
 
     <main class="container">
+        <nav class="workflow-header">
+            <a href="launcher.html" class="home-link">🚀 Mission Control</a>
+            <div class="nav-links">
+                <a href="index.html">1. Acquisition</a>
+                <a href="pricing.html">2. Pricing</a>
+                <a href="autoscout.html" class="active">3. Market</a>
+                <a href="agent4.html">4. Creator</a>
+            </div>
+        </nav>
+
         <header class="glass-hero">
-            <a href="launcher.html" class="back-link">← Back to Dashboard</a>
             <h1 class="gradient-text">AutoScout24 Market Search</h1>
             <p class="subtitle">Agent 3: Generate search URLs for comparable vehicles in Austria</p>
         </header>
@@ -152,6 +161,10 @@
                         <div class="input-group">
                             <label for="model">Modell (Model)</label>
                             <input type="text" id="model" placeholder="e.g. 320">
+                        </div>
+                        <div class="input-group">
+                            <label for="version">Ausführung (Version)</label>
+                            <input type="text" id="version" placeholder="e.g. iV">
                         </div>
                         
                         <h3 style="margin-top: 1.5rem;">Parameters</h3>
@@ -230,6 +243,10 @@
                     </div>
                     <div id="price-status-msg" class="price-status-msg"></div>
                     <button id="fetch-prices-btn" class="primary-btn" style="padding:0.6rem 1.8rem;font-size:0.9rem;">🔍 Fetch Prices</button>
+                </div>
+
+                <div class="next-step-container">
+                    <a href="agent4.html" class="secondary-btn">Next Step: Homepage Creator →</a>
                 </div>
             </div>
         </section>

@@ -17,8 +17,8 @@
         <header class="header">
             <h1>Mission Control</h1>
             <p>Select your agent tool to begin the workflow.</p>
-            <button id="reset-query-btn" class="primary-btn" style="margin-top: 1.5rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); font-size: 0.9rem; padding: 0.6rem 1.2rem;">
-                🔄 New Query (Reset All)
+            <button id="reset-query-btn" class="reset-btn">
+                🔄 New Query (Reset Workflow)
             </button>
         </header>
 
@@ -121,6 +121,8 @@
                     
                     const diff = (marketPrice - finalPrice) / marketPrice;
                     const diffPercent = (diff * 100).toFixed(2);
+                    const diffEuro = (marketPrice - finalPrice);
+                    const formattedDiffEuro = new Intl.NumberFormat('de-DE', { signDisplay: 'always' }).format(diffEuro) + '€';
                     
                     waiting.style.display = 'none';
                     indicator.style.display = 'flex';
@@ -144,7 +146,7 @@
                         desc.innerText = 'Der Preis entspricht dem aktuellen Marktniveau.';
                     }
                     
-                    diffText.innerText = (diff > 0 ? '+' : '') + diffPercent + '% vs. Markt';
+                    diffText.innerText = `${(diff > 0 ? '+' : '')}${diffPercent}% (${formattedDiffEuro}) vs. Markt`;
                 } else {
                     indicator.style.display = 'none';
                     waiting.style.display = 'flex';
@@ -164,6 +166,12 @@
                         localStorage.removeItem('lastBuyStatus');
                         localStorage.removeItem('pricingState');
                         localStorage.removeItem('autoscoutState');
+                        localStorage.removeItem('autoscoutLastPrices');
+                        
+                        // Clear Agent 4 overrides
+                        const inputs = ['edit-title', 'edit-mileage', 'edit-reg', 'edit-color', 'edit-power', 'edit-price', 'edit-interieur', 'edit-technologie'];
+                        inputs.forEach(id => localStorage.removeItem(`override_${id}`));
+
                         window.location.reload();
                     }
                 });

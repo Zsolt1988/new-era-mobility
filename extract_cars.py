@@ -81,6 +81,13 @@ def extract_car_info(source):
                     value = items[i+1].strip()
                     if label and value:
                         specs[label] = value
+            
+            # --- Addition: Try to extract battery size or other tech details from script tags ---
+            # Often found in "batterySize", "batteryCapacity", or description
+            battery_match = re.search(r'"battery(?:Size|Capacity)"\s*:\s*(\d+(?:[.,]\d+)?)', html_content)
+            if battery_match:
+                specs["Batteriekapazität"] = battery_match.group(1) + " kWh"
+            
             if specs:
                 car_data["specs"] = specs
 

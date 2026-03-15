@@ -14,38 +14,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const data = JSON.parse(rawData);
     const car = data.cars && data.cars.length > 0 ? data.cars[0] : data;
     
-    // Update labels
-    document.getElementById('car-display-name').innerText = car.title || `${car.carBrand} ${car.carModel}`;
-    document.getElementById('label-model').innerText = `${car.carBrand || 'BYD'} ${car.carModel || 'SEAL'}`;
-    document.getElementById('label-mileage').innerText = car.carMileage || '—';
-    document.getElementById('label-reg').innerText = car.carRegistration || '—';
-    document.getElementById('label-color').innerText = car.carColor || '—';
-    
-    const formattedPrice = new Intl.NumberFormat('de-DE').format(parseInt(finalPrice)) + '€';
-    document.getElementById('label-price').innerText = formattedPrice;
+    // Initial Population
+    const initialTitle = car.title || `${car.carBrand} ${car.carModel}`;
+    document.getElementById('edit-title').value = initialTitle;
+    document.getElementById('edit-mileage').value = car.carMileage || '—';
+    document.getElementById('edit-reg').value = car.carRegistration || '—';
+    document.getElementById('edit-color').value = car.carColor || '—';
+    document.getElementById('edit-power').value = car.carPower || '—';
+    document.getElementById('edit-price').value = parseInt(finalPrice) || 0;
 
-    function getGeneratedHtml() {
-        const brand = car.carBrand || "BYD";
-        const model = car.carModel || "SEAL 6 Boost";
-        const title = car.title || `${brand} ${model}`;
-        const color = car.carColor || "sandstone (grau)";
-        const price = parseInt(finalPrice);
-        const formattedPriceStr = new Intl.NumberFormat('de-DE').format(price) + '€';
+    // Feature Mapping Helpers
+    function mapFeatures(carObj) {
+        const lowerSpecs = JSON.stringify(carObj).toLowerCase();
         
-        const kw = car.carPower || "135 kW";
-        const ps = Math.round(parseInt(kw) * 1.36) || "184";
-        const mileage = car.carMileage || "10 km";
-        const firstReg = car.carRegistration || "09/2025";
-        
-        const lowerSpecs = JSON.stringify(car).toLowerCase();
-
-        // Map Interieur
         const interieur = [];
         if (lowerSpecs.includes("klima")) interieur.push("2-Zonen-Klimaautomatik");
-        if (lowerSpecs.includes("sitzheizung") || lowerSpecs.includes("beheizbare sitze")) interieur.push("El. beheizbare Sitze vorne");
+        if (lowerSpecs.includes("sitzheizung")) interieur.push("El. beheizbare Sitze vorne");
         if (lowerSpecs.includes("verstellbare sitze")) interieur.push("El. verstellbare Sitze vorne");
         if (lowerSpecs.includes("lederlenkrad")) interieur.push("Lederlenkrad");
-        if (lowerSpecs.includes("keyless") || lowerSpecs.includes("schlüsselloses")) interieur.push("Keyless Entry");
+        if (lowerSpecs.includes("keyless")) interieur.push("Keyless Entry");
         if (lowerSpecs.includes("carplay") || lowerSpecs.includes("android auto")) interieur.push("Android Auto / CarPlay");
         if (lowerSpecs.includes("dachreling")) interieur.push("Dachreling");
         if (lowerSpecs.includes("heckklappe") && lowerSpecs.includes("elektrisch")) interieur.push("Elektrische Heckklappe");
@@ -56,22 +43,52 @@ document.addEventListener('DOMContentLoaded', () => {
             if(!interieur.includes(next)) interieur.push(next);
         }
 
-        // Map Technologie
         const technologie = [];
         if (lowerSpecs.includes("navig") || lowerSpecs.includes("navi")) technologie.push("Navigationssystem");
         if (lowerSpecs.includes("head-up") || lowerSpecs.includes("hud")) technologie.push("Head-up display");
         if (lowerSpecs.includes("led") || lowerSpecs.includes("matrix")) technologie.push("Voll-LED Scheinwerfer");
-        if (lowerSpecs.includes("kamera") || lowerSpecs.includes("360")) technologie.push("Rückfahrkamera");
-        if (lowerSpecs.includes("acc") || lowerSpecs.includes("abstand")) technologie.push("Abstandstempomat");
+        if (lowerSpecs.includes("kamera") || lowerSpecs.includes("360")) technologie.push("360° Kamera-System");
+        if (lowerSpecs.includes("acc") || lowerSpecs.includes("abstand")) technologie.push("Abstandstempomat (ACC)");
         if (lowerSpecs.includes("totwinkel")) technologie.push("Totwinkelassistent");
         if (lowerSpecs.includes("verkehrszeichen")) technologie.push("Verkehrszeichenerkennung");
-        if (lowerSpecs.includes("autonom") || lowerSpecs.includes("spurhalte")) technologie.push("Autonomes Fahren L2");
+        if (lowerSpecs.includes("autonom") || lowerSpecs.includes("spurhalte")) technologie.push("Spurhalteassistent");
+        
+        if (carObj.specs && carObj.specs["Batteriekapazität"]) {
+            technologie.push(`Batterie: ${carObj.specs["Batteriekapazität"]}`);
+        }
         
         const defaultTech = ["Einparkhilfe vorne/hinten", "Notbremsassistent", "Müdigkeitswarner", "Berganfahrassistent"];
         while(technologie.length < 8 && defaultTech.length > 0) {
             const next = defaultTech.shift();
             if(!technologie.includes(next)) technologie.push(next);
         }
+
+        return { interieur, technologie };
+    }
+
+    const initialFeatures = mapFeatures(car);
+    document.getElementById('edit-interieur').value = initialFeatures.interieur.join('\n');
+    document.getElementById('edit-technologie').value = initialFeatures.technologie.join('\n');
+
+    function getGeneratedHtml() {
+        // Read from UI inputs instead of car object/localStorage
+        const title = document.getElementById('edit-title').value;
+        const mileage = document.getElementById('edit-mileage').value;
+        const registration = document.getElementById('edit-reg').value;
+        const color = document.getElementById('edit-color').value;
+        const kw = document.getElementById('edit-power').value;
+        const price = parseInt(document.getElementById('edit-price').value);
+        
+        const ps = Math.round(parseInt(kw) * 1.36) || "—";
+        const formattedPriceStr = new Intl.NumberFormat('de-DE').format(price) + '€';
+        
+        const interieurLines = document.getElementById('edit-interieur').value.split('\n').filter(l => l.trim() !== '');
+        const technologieLines = document.getElementById('edit-technologie').value.split('\n').filter(l => l.trim() !== '');
+
+        // Extract Brand/Model from title if possible for the footer
+        const titleParts = title.split(' ');
+        const brand = titleParts[0] || "Vehicle";
+        const model = titleParts.slice(1).join(' ') || "Specification";
 
         return `<!DOCTYPE html>
 <html lang="de">
@@ -122,8 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <header class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-sage-800/30 pb-8">
             <div class="space-y-2 w-full md:w-auto">
                 <p class="text-sage-900 font-display font-semibold tracking-widest uppercase text-xs md:text-sm">New Era Mobility</p>
-                <h1 class="text-4xl md:text-6xl font-display font-bold text-gradient">${brand}</h1>
-                <p class="text-xl text-sage-200 font-bold italic">${model}</p>
+                <h1 class="text-4xl md:text-6xl font-display font-bold text-gradient">${title}</h1>
                 <p class="text-sm md:text-base text-sage-200/70 font-light italic">${color}</p>
             </div>
             <div class="flex flex-col items-start md:items-end gap-4 w-full md:w-auto">
@@ -156,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="glass-card p-4 md:p-6 bento-item flex flex-col justify-center items-center text-center">
                         <span class="text-sage-600 font-bold text-[10px] md:text-xs uppercase tracking-widest mb-1 md:mb-2">Erstzulassung</span>
-                        <span class="text-lg md:text-xl font-display font-bold">${firstReg}</span>
+                        <span class="text-lg md:text-xl font-display font-bold">${registration}</span>
                     </div>
                     <div class="glass-card p-4 md:p-6 bento-item flex flex-col justify-center items-center text-center">
                         <span class="text-sage-600 font-bold text-[10px] md:text-xs uppercase tracking-widest mb-1 md:mb-2">Antrieb</span>
@@ -170,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="w-6 md:w-8 h-[1px] bg-sage-600"></span> Interieur
                         </h3>
                         <ul class="grid grid-cols-1 gap-2 text-xs md:text-sm text-white/80">
-                            ${interieur.map(f => `<li class="flex items-center gap-2"><span>•</span> ${f}</li>`).join('')}
+                            ${interieurLines.map(f => `<li class="flex items-center gap-2"><span>•</span> ${f}</li>`).join('')}
                         </ul>
                     </div>
                     <div class="glass-card p-6 md:p-8 space-y-4 md:space-y-6">
@@ -178,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="w-6 md:w-8 h-[1px] bg-sage-600"></span> Technologie
                         </h3>
                         <ul class="grid grid-cols-1 gap-2 text-xs md:text-sm text-white/80">
-                            ${technologie.map(f => `<li class="flex items-center gap-2"><span>•</span> ${f}</li>`).join('')}
+                            ${technologieLines.map(f => `<li class="flex items-center gap-2"><span>•</span> ${f}</li>`).join('')}
                         </ul>
                     </div>
                 </div>
@@ -223,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="flex justify-between items-start py-2 border-b border-white/5 gap-4">
                             <span class="text-sage-600 text-xs md:text-sm">Variante</span>
-                            <span class="text-white font-medium text-xs md:text-sm text-right">${model.split(' ').pop()}</span>
+                            <span class="text-white font-medium text-xs md:text-sm text-right">${ brand } ${ model }</span>
                         </div>
                         <div class="flex justify-between items-start py-2 border-b border-white/5 gap-4">
                             <span class="text-sage-600 text-xs md:text-sm">Türen/Sitze</span>
@@ -246,6 +262,20 @@ document.addEventListener('DOMContentLoaded', () => {
 </html>`;
     }
 
+    const inputs = ['edit-title', 'edit-mileage', 'edit-reg', 'edit-color', 'edit-power', 'edit-price', 'edit-interieur', 'edit-technologie'];
+    inputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            // Check for previous overrides in this session
+            const saved = localStorage.getItem(`override_${id}`);
+            if (saved) el.value = saved;
+
+            el.addEventListener('input', () => {
+                localStorage.setItem(`override_${id}`, el.value);
+            });
+        }
+    });
+
     const generateBtn = document.getElementById('generate-btn');
     if (generateBtn) {
         generateBtn.addEventListener('click', (e) => {
@@ -261,14 +291,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (downloadBtn) {
         downloadBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            const brand = car.carBrand || "BYD";
-            const model = car.carModel || "SEAL";
+            const title = document.getElementById('edit-title').value;
             const html = getGeneratedHtml();
             const blob = new Blob([html], { type: 'text/html' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `homepage_${brand.toLowerCase()}_${model.toLowerCase().replace(/\s+/g, '_')}.html`;
+            a.download = `homepage_${title.toLowerCase().replace(/\s+/g, '_')}.html`;
             a.click();
             
             const origText = downloadBtn.innerHTML;

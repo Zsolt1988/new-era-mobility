@@ -5,6 +5,7 @@
     --primary-gradient: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
+    --accent: #01fd77;
 }
 
 * {
@@ -202,4 +203,33 @@ body {
     .status-card {
         grid-column: span 2;
     }
+}
+/* Reset Button Styles */
+.reset-btn {
+    margin-top: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 14px;
+    padding: 1rem 2rem;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.reset-btn:hover {
+    background: linear-gradient(135deg, rgba(255, 62, 62, 0.2) 0%, rgba(255, 62, 62, 0.1) 100%);
+    border-color: rgba(255, 62, 62, 0.5);
+    color: #ff5f5f;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(255, 62, 62, 0.2);
+}
+
+.reset-btn:active {
+    transform: translateY(-1px);
 }

@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Use the first car object if inside 'cars' array, or return the whole object depending on what's expected
                 const displayData = data.cars && data.cars.length > 0 ? data.cars[0] : data;
                 
-                updateExtractedData(displayData);
+                updateExtractedData(displayData, true);
             } catch (error) {
                 console.error('Error fetching data:', error);
                 
@@ -54,14 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 statusText.innerText = 'Error loading data.';
-                // alert(error.message); // removed alert to be less annoying
                 
                 // Fallback to error display
                 updateExtractedData({
                     status: "error",
                     message: errorMsg,
                     technical_details: error.message
-                });
+                }, true);
             }
         }, 1000);
     });
@@ -78,39 +77,54 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // This listener would be hit when the AI manually updates the UI
-    window.updateExtractedData = (data) => {
+    // Define the update function
+    window.updateExtractedData = (data, isNew = false) => {
         setLoading(false);
         resultsContainer.classList.remove('hidden');
-        statusText.innerText = 'Task Completed';
-        jsonOutput.innerText = JSON.stringify(data, null, 4);
+        if (!isNew) statusText.innerText = 'Restored session data';
+        else statusText.innerText = 'Task Completed';
         
-        const btnGotoPricing = document.getElementById('btn-goto-pricing');
+        jsonOutput.innerText = typeof data === 'string' ? data : JSON.stringify(data, null, 4);
+        
         if (data && data.status !== 'error') {
-            // Save to localStorage for Agent 2
-            try {
-                localStorage.setItem('lastExtractedCar', JSON.stringify(data));
-                // Clear stale market/buy data for the new car
-                localStorage.removeItem('lastMarketCheapestPrice');
-                localStorage.removeItem('lastBuyStatus');
-                localStorage.removeItem('pricingState');
-                localStorage.removeItem('autoscoutState');
-                console.log('Saved extracted data and cleared all stale states');
-            } catch (e) {
-                console.warn('Failed to save to localStorage', e);
-            }
-            // Show the next step button
-            if (btnGotoPricing) {
-                btnGotoPricing.classList.remove('hidden');
-            }
-        } else {
-            // Hide button if error
-            if (btnGotoPricing) {
-                btnGotoPricing.classList.add('hidden');
-            }
-        }
+            if (isNew) {
+                // Save to localStorage only for NEW extractions
+                try {
+                    localStorage.setItem('lastExtractedCar', JSON.stringify(data));
+                    
+                    // Clear overrides and stale states for the new car
+                    localStorage.removeItem('lastMarketCheapestPrice');
+                    localStorage.removeItem('lastBuyStatus');
+                    localStorage.removeItem('pricingState');
+                    localStorage.removeItem('autoscoutState');
+                    localStorage.removeItem('autoscoutLastPrices');
+                    
+                    // Clear Agent 4 overrides
+                    const inputs = ['edit-title', 'edit-mileage', 'edit-reg', 'edit-color', 'edit-power', 'edit-price', 'edit-interieur', 'edit-technologie'];
+                    inputs.forEach(id => localStorage.removeItem(`override_${id}`));
 
-        // Scroll to results
-        resultsContainer.scrollIntoView({ behavior: 'smooth' });
+                    console.log('Saved new extracted data and cleared all stale states & overrides');
+                } catch (e) {
+                    console.warn('Failed to save to localStorage', e);
+                }
+            }
+        } 
+        
+        // Scroll to results if new
+        if (isNew) {
+            resultsContainer.scrollIntoView({ behavior: 'smooth' });
+        }
     };
+
+    // Persistence: Load previous data on startup (AFTER function is defined)
+    const savedCar = localStorage.getItem('lastExtractedCar');
+    if (savedCar) {
+        try {
+            const data = JSON.parse(savedCar);
+            statusText.innerText = 'Restored previous extraction';
+            window.updateExtractedData(data);
+        } catch (e) {
+            console.warn('Failed to restore previous car data', e);
+        }
+    }
 });

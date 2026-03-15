@@ -15,8 +15,17 @@
     <div class="background-blob blob-3"></div>
 
     <main class="container">
+        <nav class="workflow-header">
+            <a href="launcher.html" class="home-link">🚀 Mission Control</a>
+            <div class="nav-links">
+                <a href="index.html" class="active">1. Acquisition</a>
+                <a href="pricing.html">2. Pricing</a>
+                <a href="autoscout.html">3. Market</a>
+                <a href="agent4.html">4. Creator</a>
+            </div>
+        </nav>
+
         <header class="glass-hero">
-            <a href="launcher.html" class="back-link">← Back to Dashboard</a>
             <h1 class="gradient-text">Data Acquisition</h1>
             <p class="subtitle">Extract structured car data from any listing</p>
         </header>
@@ -45,11 +54,12 @@
             <div id="results-container" class="hidden">
                 <div class="divider"></div>
                 <h3>Extracted Details</h3>
-                <div style="margin-bottom: 1rem;">
-                    <a href="pricing.html" id="btn-goto-pricing" class="primary-btn hidden" style="text-decoration: none; display: inline-block;">Go To Price Calculation →</a>
-                </div>
                 <div id="data-view" class="glass-inner">
                     <pre id="json-output">Generating result...</pre>
+                </div>
+
+                <div class="next-step-container">
+                    <a href="pricing.html" class="secondary-btn">Next Step: Price Calculation →</a>
                 </div>
             </div>
         </section>
