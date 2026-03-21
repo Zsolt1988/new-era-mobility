@@ -106,6 +106,16 @@ def extract_car_info(source):
             if co2_match:
                 car_data["co2_details"] = co2_match.group(1).strip()
 
+            # --- Addition: Extract Getriebe (Gearbox) ---
+            gear_match = re.search(r'"transmissionType"\s*:\s*"([^"]+)"', html_content)
+            if gear_match:
+                car_data["carTransmission"] = gear_match.group(1)
+            else:
+                # Search for Getriebe label
+                gear_label_match = re.search(r'>Getriebe<.*?<span>(.*?)</span>', html_content, re.DOTALL)
+                if gear_label_match:
+                    car_data["carTransmission"] = gear_label_match.group(1).strip()
+            
             # --- Refined Feature Extraction ---
             features = {}
             # Use a more restrictive pattern for the category name: [^<]+

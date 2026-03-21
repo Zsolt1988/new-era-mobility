@@ -1,40 +1,41 @@
 {
-    "source": "https://www.auto-mega-store.com/de/details?wgID=:30064&backlink=TDJSbEwyWmhhSEo2WlhWblpTOW1ZV2h5ZW1WMVp5MXJZWFZtWlc0L1pqMHhKbTFoYmw5cFpEMHhPREUwSm0xdlpGOXBaRDB5TVRnNEptMXBiRDB3T2prNU9UazVPU1p2Y21SbGNqMDE=&man_id=1814&mod_id=2188&mil=0:999999&order=5",
+    "source": "https://www.auto-mega-store.com/de/details?wgID=:29994&backlink=TDJSbEwyWmhhSEo2WlhWblpTOW1ZV2h5ZW1WMVp5MXJZWFZtWlc0L1pqMHhKbTFoYmw5cFpEMHhPREUwSm0xcGJEMHdPams1T1RrNU9TWnpkR0Z5ZEQwdw==&man_id=1814&mil=0:999999&start=0",
     "cars": [
         {
-            "carReference": "30064",
+            "carReference": "29994",
             "carBrand": "BYD",
-            "carModel": "Seal EV Comfort 63kWh RWD",
-            "carColor": "Grün",
+            "carModel": "Dolphin Comfort 60kWh",
+            "carColor": "Weiss",
             "carDrive": "Automatik",
             "carFuel": "Elektro",
-            "carPower": "170",
-            "carMileage": "10",
-            "carRegistration": "2025/05",
-            "carCategory": "Limousine",
-            "carPrice": "35449",
+            "carPower": "150",
+            "carMileage": "24766",
+            "carRegistration": "2024/07",
+            "carCategory": "Kleinwagen",
+            "carPrice": "21949",
             "specs": {
-                "Ref-Nr.": "LA51401",
-                "Erstzulassung": "22.05.2025",
-                "KM": "10 km",
-                "Leistung": "170 KW / 231 PS",
+                "Ref-Nr.": "LA48107",
+                "Erstzulassung": "30.07.2024",
+                "KM": "24.766 km",
+                "Leistung": "150 KW / 204 PS",
                 "Getriebe": "Automatik",
-                "Antriebsart": "Heckantrieb",
+                "Antriebsart": "Frontantrieb",
                 "Motor": "Elektro",
-                "Bauart": "Limousine",
+                "Bauart": "Kleinwagen",
                 "Anzahl der Sitze": "5",
                 "Anzahl der Türen": "5",
                 "Vorbesitzer": "1",
-                "Farbe": "Grün Metallic",
-                "Farbe (Hersteller)": "Shadow Green",
-                "Innenausstattung": "Leder, Tahitian Blue"
+                "Farbe": "Weiss Metallic",
+                "Farbe (Hersteller)": "Skiing White",
+                "Innenausstattung": "Teilleder, Ledernachbildung / Alcantara Black",
+                "Verbrauch kombiniert": "15.90  KW/h"
             },
             "highlights": [
                 "1000 Fzg. im Bestand",
                 "Kaufabwicklung Digital",
                 "Gutachten"
             ],
-            "co2_details": "15,4 kWh/100km (komb.) • 550 km (EAER) • 0 g CO₂/km (komb.) • CO₂-Klasse A (komb.)",
+            "co2_details": "15,9 kWh/100km (komb.) • 427 km (EAER) • 0 g CO₂/km (komb.) • CO₂-Klasse A (komb.)",
             "features": {
                 "mega einfach - einfach mega": [
                     "Vor Ort oder Digital",
@@ -43,16 +44,11 @@
                 ],
                 "Außen": [
                     "Aussenspiegel anlegbar",
-                    "elektr. Heckklappe",
-                    "Optikpaket Schwarz",
-                    "Panoramadach",
+                    "Colorvergl.",
                     "Wärmeschutz/Getönte Scheiben"
                 ],
                 "Innen": [
-                    "2-Zonen-Klimaautomatik",
                     "Abbl. Innenspiegel",
-                    "Akustikverglasung",
-                    "beheizb. Lenkrad",
                     "elektr. Fenster hinten",
                     "elektr. Fenster vorn",
                     "Elektronische Parkbremse",
@@ -66,14 +62,13 @@
                     "El. beheizbare Sitze - vorne",
                     "El. verstellbare Sitze - vorne",
                     "Isofix hinten",
-                    "Rücksitzbank geteilt",
-                    "Sitzbelüftung"
+                    "Lordosenstütze",
+                    "Rücksitzbank geteilt"
                 ],
                 "Technologie": [
                     "Abstandstempomat",
                     "Android Auto",
                     "Apple CarPlay",
-                    "Ausparkassistent",
                     "Autonomes Fahren Level 2",
                     "Berganfahrassistent",
                     "Bluetooth",
@@ -81,7 +76,7 @@
                     "Einparkhilfe - 360°-Kamera",
                     "Einparkhilfe hinten",
                     "Einparkhilfe vorne",
-                    "HiFi System",
+                    "Geschw.begrenzer",
                     "Induktionsladen",
                     "iPad/iPod-Anschluss",
                     "MP3 fähiges Radio",
@@ -97,11 +92,9 @@
                     "Tempomat",
                     "Totwinkelassistent",
                     "Touchscreen",
-                    "Uhr &amp; Drehzahlmesser",
                     "USB",
                     "Verkehrszeichenerkennung",
-                    "Volldigitales Kombiinstrument",
-                    "WiFi-Hotspot"
+                    "Volldigitales Kombiinstrument"
                 ],
                 "Beleuchtung": [
                     "Ambiente-Licht",
@@ -119,6 +112,7 @@
                     "Fahrerairbag",
                     "Kopfairbag",
                     "Notrufsystem",
+                    "Pannenkit",
                     "Reifendruckkontrollsystem",
                     "Seitenairbag",
                     "Traktionskontrolle",

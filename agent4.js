@@ -5,6 +5,52 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainUi = document.getElementById('main-ui');
     const noDataView = document.getElementById('no-data-view');
     
+    // CSV Export Logic (Always initialized)
+    const csvButtons = [document.getElementById('csv-btn'), document.getElementById('csv-btn-empty')];
+    console.log('CSV Buttons found:', csvButtons.filter(b => b !== null).map(b => b.id));
+    
+    csvButtons.forEach(btn => {
+        if (btn) {
+            btn.addEventListener('click', async (e) => {
+                console.log('CSV Button clicked:', btn.id);
+                e.preventDefault();
+                const origText = btn.innerHTML;
+                btn.innerHTML = '⌛ Exporting...';
+                
+                try {
+                    const response = await fetch('/api/export-csv', {
+                        method: 'POST'
+                    });
+                    console.log('Export response status:', response.status);
+                    
+                    if (!response.ok) throw new Error('Export failed on server');
+                    
+                    // Fetch the generated CSV and force a download via Blob
+                    const csvResponse = await fetch('/aktive_sammlung.csv?t=' + Date.now());
+                    const csvText = await csvResponse.text();
+                    const blob = new Blob([csvText], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'aktive_sammlung.csv';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    btn.innerHTML = '✅ Ready!';
+                    setTimeout(() => { btn.innerHTML = origText; }, 3000);
+                } catch (error) {
+                    console.error('CSV Export Error:', error);
+                    btn.innerHTML = '❌ Error';
+                    alert('Failed to export CSV: ' + error.message);
+                    setTimeout(() => { btn.innerHTML = origText; }, 3000);
+                }
+            });
+        }
+    });
+
     if (!rawData || !finalPrice) {
         if(mainUi) mainUi.classList.add('hidden');
         if(noDataView) noDataView.classList.remove('hidden');
@@ -294,18 +340,24 @@ document.addEventListener('DOMContentLoaded', () => {
     if (downloadBtn) {
         downloadBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            const title = document.getElementById('edit-title').value;
+            const titleInput = document.getElementById('edit-title');
+            const title = titleInput ? titleInput.value : 'untitled';
             const html = getGeneratedHtml();
             const blob = new Blob([html], { type: 'text/html' });
             const url = URL.createObjectURL(blob);
+            
             const a = document.createElement('a');
             a.href = url;
             a.download = `homepage_${title.toLowerCase().replace(/\s+/g, '_')}.html`;
+            document.body.appendChild(a);
             a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
             
             const origText = downloadBtn.innerHTML;
             downloadBtn.innerHTML = '✅ Downloaded!';
             setTimeout(() => { downloadBtn.innerHTML = origText; }, 3000);
         });
     }
+
 });

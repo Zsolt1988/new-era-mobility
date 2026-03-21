@@ -106,6 +106,7 @@
             <div style="display: flex; gap: 1rem; justify-content: center;">
                 <a href="index.html" class="primary-btn">Agent 1: Scrape</a>
                 <a href="pricing.html" class="primary-btn">Agent 2: Price</a>
+                <button id="csv-btn-empty" class="primary-btn" style="background: rgba(1, 253, 119, 0.1); border: 1px solid rgba(1, 253, 119, 0.3); color: #01fd77;">CSV öffnen 📊</button>
             </div>
         </section>
 
@@ -171,9 +172,14 @@
                     <button id="generate-btn" class="primary-btn" style="flex: 2; padding: 1.5rem; background: linear-gradient(135deg, #01fd77 0%, #0c7dff 100%);">
                         Preview Homepage ✨
                     </button>
-                    <button id="download-btn" class="primary-btn" style="flex: 1; padding: 1rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); font-size: 0.9rem;">
-                        Download HTML 📥
-                    </button>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem; flex: 1;">
+                        <button id="download-btn" class="primary-btn" style="width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); font-size: 0.8rem;">
+                            Download HTML 📥
+                        </button>
+                        <button id="csv-btn" class="primary-btn" style="width: 100%; padding: 0.8rem; background: rgba(1, 253, 119, 0.1); border: 1px solid rgba(1, 253, 119, 0.3); color: #01fd77; font-size: 0.8rem;">
+                            CSV öffnen 📊
+                        </button>
+                    </div>
                 </div>
                 <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-secondary);">Manual changes are saved locally for this session.</p>
             </div>

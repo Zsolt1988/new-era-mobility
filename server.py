@@ -93,6 +93,36 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(500)
                 self.end_headers()
                 
+        elif self.path == '/api/export-csv':
+            try:
+                print("CSV Export requested.")
+                # Run the export script
+                result = subprocess.run(
+                    ['python3', 'export_aktive_sammlung.py'],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    cwd=BASE_DIR
+                )
+                print("Export script completed.")
+                
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "success", "message": "CSV exported successfully"}).encode('utf-8'))
+            except subprocess.CalledProcessError as e:
+                print(f"Export script error: {e.stderr}")
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": f"Export failed: {e.stderr}"}).encode('utf-8'))
+            except Exception as e:
+                print(f"Unexpected error during CSV export: {str(e)}")
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
+
         else:
             self.send_error(404, "Endpoint not found")
 

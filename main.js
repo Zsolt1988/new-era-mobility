@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     localStorage.removeItem('autoscoutLastPrices');
                     
                     // Clear Agent 4 overrides
-                    const inputs = ['edit-title', 'edit-mileage', 'edit-reg', 'edit-color', 'edit-power', 'edit-price', 'edit-interieur', 'edit-technologie'];
+                    const inputs = ['edit-title', 'edit-execution', 'edit-mileage', 'edit-reg', 'edit-color', 'edit-power', 'edit-price', 'edit-interieur', 'edit-technologie'];
                     inputs.forEach(id => localStorage.removeItem(`override_${id}`));
 
                     console.log('Saved new extracted data and cleared all stale states & overrides');
