@@ -24,19 +24,18 @@ def load_mapping():
     if not os.path.exists(MAPPING_FILE):
         # Default mapping from Aktive_Sammlung CSV to possible Wix Field IDs
         return {
-            "Hersteller": "brand",
-            "Modell": "model",
-            "Ausführung": "execution",
-            "Kraftstoff": "fuelType",
-            "Getriebe": "transmission",
-            "PS": "power",
-            "KM Stand": "mileage",
-            "Erstzulassung": "registration",
-            "Farbe": "color",
-            "Farbe_Einfach": "simpleColor",
-            "Sofortkauf-Preis": "price",
-            "Link": "listingUrl",
-            "Baujahr": "year"
+            "Bild_Gallery1": "neuesFeld2",
+            "Hersteller": "hersteller",
+            "Modell": "modell",
+            "Ausführung": "ausfhrung",
+            "Kraftstoff": "kraftstoff",
+            "Getriebe": "getriebe",
+            "PS": "ps",
+            "KM Stand": "kmStand",
+            "Erstzulassung": "erstzulassung",
+            "Farbe": "farbe",
+            "Farbe_Einfach": "farbe_einfach",
+            "Sofortkauf-Preis": "sofortkaufPreis"
         }
     with open(MAPPING_FILE, 'r') as f:
         return json.load(f)
@@ -56,7 +55,16 @@ def sync_data(csv_path=DEFAULT_CSV):
         for row in reader:
             item_data = {}
             for csv_col, wix_field in mapping.items():
-                item_data[wix_field] = row.get(csv_col, '')
+                val = row.get(csv_col, '')
+                # Type conversion for Wix NUMBER fields
+                if wix_field in ['ps', 'kmStand', 'baujahr', 'number'] and val:
+                    try:
+                        # Remove non-numeric chars (like . or , in KM Stand)
+                        clean_val = re.sub(r'[^\d]', '', str(val))
+                        val = int(clean_val) if clean_val else 0
+                    except:
+                        val = 0
+                item_data[wix_field] = val
             # Wix v2 items usually need to be wrapped in a 'data' object
             items.append({"data": item_data})
 
