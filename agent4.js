@@ -6,6 +6,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const noDataView = document.getElementById('no-data-view');
     
     // CSV Export Logic (Always initialized)
+    const wixButtons = [document.getElementById('wix-btn'), document.getElementById('wix-btn-empty')];
+    wixButtons.forEach(btn => {
+        if (btn) {
+            btn.addEventListener('click', async () => {
+                const origText = btn.innerHTML;
+                btn.innerHTML = '⌛ Syncing...';
+                try {
+                    const response = await fetch('/api/sync-wix', {
+                        method: 'POST'
+                    });
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || 'Sync failed');
+                    }
+                    btn.innerHTML = '✅ Synced!';
+                    setTimeout(() => { btn.innerHTML = origText; }, 3000);
+                } catch (error) {
+                    console.error('Wix Sync Error:', error);
+                    btn.innerHTML = '❌ Error';
+                    alert('Fehler bei der Wix-Synchronisation: ' + error.message);
+                    setTimeout(() => { btn.innerHTML = origText; }, 5000);
+                }
+            });
+        }
+    });
+
     const csvButtons = [document.getElementById('csv-btn'), document.getElementById('csv-btn-empty')];
     console.log('CSV Buttons found:', csvButtons.filter(b => b !== null).map(b => b.id));
     

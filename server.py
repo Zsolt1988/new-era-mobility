@@ -123,6 +123,37 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
 
+        elif self.path == '/api/sync-wix':
+            try:
+                print("Wix Synchronization requested.")
+                # Run the wix sync script
+                result = subprocess.run(
+                    ['python3', 'wix_sync.py'],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    cwd=BASE_DIR
+                )
+                print("Wix synchronization script completed.")
+                print(result.stdout)
+                
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "success", "message": "Wix synchronization successful"}).encode('utf-8'))
+            except subprocess.CalledProcessError as e:
+                print(f"Wix sync error: {e.stderr}")
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": f"Wix sync failed: {e.stderr}"}).encode('utf-8'))
+            except Exception as e:
+                print(f"Unexpected error during Wix sync: {str(e)}")
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
+
         else:
             self.send_error(404, "Endpoint not found")
 
