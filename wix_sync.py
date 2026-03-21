@@ -3,6 +3,7 @@ import csv
 import os
 import requests
 import time
+import re
 
 # Configuration (defaults for local/mock testing)
 CONFIG_FILE = 'config.json'
