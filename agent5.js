@@ -32,13 +32,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             const row = document.createElement('tr');
             row.classList.add('savable');
             row.innerHTML = `
-                <td><img src="${car.carImage || ''}" style="width: 80px; border-radius: 4px;"></td>
+                <td><img src="${car.carImage || ''}" style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;" onerror="this.src='https://placehold.co/60x40?text=No+Image'"></td>
                 <td><input type="text" value="${car.carBrand || ''}" data-field="carBrand" data-index="${index}"></td>
                 <td><input type="text" value="${car.carModel || car.title || ''}" data-field="carModel" data-index="${index}"></td>
-                <td><input type="text" value="${car.carMileage || ''}" data-field="carMileage" data-index="${index}"></td>
-                <td><input type="text" value="${car.carPrice || car.price || ''}" data-field="carPrice" data-index="${index}"></td>
+                <td><input type="text" value="${car.carExecution || car.ausfuehrung || ''}" data-field="carExecution" data-index="${index}"></td>
+                <td><input type="text" value="${car.carFuel || ''}" data-field="carFuel" data-index="${index}"></td>
+                <td><input type="text" value="${car.carTransmission || ''}" data-field="carTransmission" data-index="${index}"></td>
                 <td><input type="text" value="${car.carPower || ''}" data-field="carPower" data-index="${index}"></td>
-                <td><button class="primary-btn" style="padding: 0.5rem; font-size: 0.7rem; background: rgba(255,255,255,0.1);" onclick="window.open('${car.source}', '_blank')">Link 🔗</button></td>
+                <td><input type="text" value="${car.carMileage || ''}" data-field="carMileage" data-index="${index}"></td>
+                <td><input type="text" value="${car.carRegistration || ''}" data-field="carRegistration" data-index="${index}"></td>
+                <td><input type="text" value="${car.carColor || ''}" data-field="carColor" data-index="${index}"></td>
+                <td><input type="text" value="${car.colorSimple || car.farbe_einfach || ''}" data-field="colorSimple" data-index="${index}"></td>
+                <td><input type="text" value="${car.carPrice || car.price || ''}" data-field="carPrice" data-index="${index}"></td>
+                <td style="text-align: center;"><button class="primary-btn" style="padding: 0.5rem; font-size: 0.7rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);" onclick="window.open('${car.source || car.link}', '_blank')">🔗</button></td>
             `;
             carBody.appendChild(row);
         });

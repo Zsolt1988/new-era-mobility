@@ -61,9 +61,13 @@
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">Antigravity <span>AI</span></div>
+    <div class="background-blob blob-1"></div>
+    <div class="background-blob blob-2"></div>
+    <div class="background-blob blob-3"></div>
+
+    <main class="container">
+        <nav class="workflow-header">
+            <a href="launcher.html" class="home-link">🚀 Mission Control</a>
             <div class="nav-links">
                 <a href="index.html">1. Acquisition</a>
                 <a href="pricing.html">2. Pricing</a>
@@ -72,9 +76,7 @@
                 <a href="agent5.html" class="active">5. Sync 🚀</a>
             </div>
         </nav>
-    </header>
 
-    <main>
         <div class="dashboard-container">
             <div class="action-bar">
                 <div>
@@ -97,13 +99,19 @@
                 <table id="car-table">
                     <thead>
                         <tr>
-                            <th style="width: 100px;">Bild</th>
+                            <th style="width: 80px;">Bild</th>
                             <th>Hersteller</th>
                             <th>Modell</th>
+                            <th>Ausführung</th>
+                            <th>Kraftstoff</th>
+                            <th>Getriebe</th>
+                            <th style="width: 60px;">PS</th>
                             <th>KM Stand</th>
-                            <th>Preis</th>
-                            <th>PS</th>
-                            <th>Aktion</th>
+                            <th>EZ</th>
+                            <th>Farbe</th>
+                            <th style="width: 100px;">Einfach</th>
+                            <th style="width: 120px;">Preis (€)</th>
+                            <th style="width: 60px;">Link</th>
                         </tr>
                     </thead>
                     <tbody id="car-body">
@@ -111,6 +119,7 @@
                     </tbody>
                 </table>
             </div>
+        </div>
         </div>
     </main>
 
