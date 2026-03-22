@@ -30,7 +30,7 @@ def export_to_csv(json_file, csv_output):
 
     # Standard headers for "Aktive_Sammlung"
     headers = [
-        "Bild_Gallery1", "Hersteller", "Modell", "Ausführung", "Kraftstoff", 
+        "Nummer", "Fahrzeug-Link", "Bild_Gallery1", "Hersteller", "Modell", "Ausführung", "Kraftstoff", 
         "Getriebe", "PS", "KM Stand", "Erstzulassung", "Farbe", 
         "Farbe_Einfach", "Sofortkauf-Preis", "Link", "Baujahr"
     ]
@@ -99,8 +99,13 @@ def export_to_csv(json_file, csv_output):
             if year_match:
                 baujahr = year_match.group(0)
 
+        nummer = car.get('carNumber', '')
+        fahrzeug_link = car.get('source', car.get('link', ''))
+
         rows.append({
-            "Bild_Gallery1": "",
+            "Nummer": nummer,
+            "Fahrzeug-Link": fahrzeug_link,
+            "Bild_Gallery1": car.get('carImage', ''),
             "Hersteller": hersteller,
             "Modell": modell,
             "Ausführung": ausfuehrung,

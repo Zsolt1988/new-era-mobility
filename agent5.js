@@ -75,8 +75,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 <div class="grid-3col">
                     <div class="data-item">
-                        <label class="data-label">Bild_Gallery1 (URL)</label>
-                        <input type="text" class="data-input" value="${car.carImage || ''}" data-field="carImage" data-index="${index}">
+                        <label class="data-label">Fahrzeug-Link (Agent 1)</label>
+                        <input type="text" class="data-input" value="${car.source || car.link || ''}" data-field="source" data-index="${index}">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label">Nummer (ID)</label>
+                        <input type="text" class="data-input" value="${car.carNumber || ''}" data-field="carNumber" data-index="${index}">
                     </div>
                     <div class="data-item">
                         <label class="data-label">Hersteller</label>

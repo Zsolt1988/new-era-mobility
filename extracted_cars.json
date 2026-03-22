@@ -4,15 +4,15 @@
         {
             "carReference": "29994",
             "carBrand": "BYD",
-            "carModel": "Dolphin Comfort 60kWh",
-            "carColor": "Weiss",
+            "carModel": "Dolphin ",
+            "carColor": "Skiing White",
             "carDrive": "Automatik",
             "carFuel": "Elektro",
             "carPower": "150",
-            "carMileage": "24766",
-            "carRegistration": "2024/07",
+            "carMileage": "24.766",
+            "carRegistration": "07/2024",
             "carCategory": "Kleinwagen",
-            "carPrice": "21949",
+            "carPrice": "23.990€",
             "specs": {
                 "Ref-Nr.": "LA48107",
                 "Erstzulassung": "30.07.2024",
@@ -118,7 +118,9 @@
                     "Traktionskontrolle",
                     "Wegfahrsperre"
                 ]
-            }
+            },
+            "carExecution": "Comfort",
+            "carTransmission": "Automatik"
         }
     ],
     "extraction_status": "success",
