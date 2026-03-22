@@ -28,7 +28,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         carBody.innerHTML = '';
+        const calculatedPriceStr = localStorage.getItem('lastCalculatedFinalPrice');
+        const calculatedPrice = calculatedPriceStr ? Math.round(parseFloat(calculatedPriceStr)) : null;
+
         cars.forEach((car, index) => {
+            // Priority: 1. Previously saved manual edit in Agent 5, 2. Agent 2 Calculation, 3. Raw extracted price
+            const displayPrice = car.carPrice || calculatedPrice || car.price || '';
+            
             const card = document.createElement('div');
             card.className = 'data-card savable';
             card.innerHTML = `
@@ -93,7 +99,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                     <div class="data-item">
                         <label class="data-label">Sofortkauf-Preis</label>
-                        <input type="text" class="data-input" style="color: var(--accent); font-weight: bold; border-color: rgba(1, 253, 119, 0.3);" value="${car.carPrice || car.price || ''}" data-field="carPrice" data-index="${index}">
+                        <input type="text" class="data-input" style="color: var(--accent); font-weight: bold; border-color: rgba(1, 253, 119, 0.3);" value="${displayPrice}" data-field="carPrice" data-index="${index}">
                     </div>
                 </div>
             `;
