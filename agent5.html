@@ -7,38 +7,67 @@
     <link rel="stylesheet" href="style.css">
     <style>
         .dashboard-container {
-            max-width: 1200px;
+            max-width: 95%; /* Wider for spreadsheet view */
             margin: 2rem auto;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.03);
+            padding: 2.5rem;
+            background: var(--glass-bg);
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1rem;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
         }
         table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 2rem;
-            font-size: 0.9rem;
+            width: max-content;
+            min-width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.95rem;
         }
         th, td {
             text-align: left;
-            padding: 1rem;
+            padding: 0.75rem 1rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            white-space: nowrap;
         }
         th {
+            background: rgba(255, 255, 255, 0.05);
             color: var(--text-secondary);
-            font-weight: 500;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
         input, select {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-            padding: 0.5rem;
-            border-radius: 4px;
+            background: transparent;
+            border: 1px solid transparent;
+            color: #fff;
+            padding: 0.6rem 0.8rem;
+            border-radius: 6px;
             width: 100%;
+            min-width: 120px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        input:hover {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        input:focus {
+            background: rgba(0, 0, 0, 0.2);
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(1, 253, 119, 0.2);
         }
         .action-bar {
             display: flex;
@@ -58,7 +87,9 @@
             border-left-color: #0c7dff;
             background: rgba(12, 125, 255, 0.05);
         }
-    </style>
+        .savable:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }    </style>
 </head>
 <body>
     <div class="background-blob blob-1"></div>
@@ -99,18 +130,18 @@
                 <table id="car-table">
                     <thead>
                         <tr>
-                            <th style="width: 80px;">Bild</th>
+                            <th style="width: 80px;">Bild_Gallery1</th>
                             <th>Hersteller</th>
-                            <th>Modell</th>
-                            <th>Ausführung</th>
+                            <th style="min-width: 180px;">Modell</th>
+                            <th style="min-width: 180px;">Ausführung</th>
                             <th>Kraftstoff</th>
                             <th>Getriebe</th>
-                            <th style="width: 60px;">PS</th>
+                            <th style="width: 80px;">PS</th>
                             <th>KM Stand</th>
-                            <th>EZ</th>
+                            <th>Erstzulassung</th>
                             <th>Farbe</th>
-                            <th style="width: 100px;">Einfach</th>
-                            <th style="width: 120px;">Preis (€)</th>
+                            <th>Farbe_Einfach</th>
+                            <th style="min-width: 140px;">Sofortkauf-Preis</th>
                             <th style="width: 60px;">Link</th>
                         </tr>
                     </thead>
