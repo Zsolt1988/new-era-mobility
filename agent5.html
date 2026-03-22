@@ -7,9 +7,9 @@
     <link rel="stylesheet" href="style.css">
     <style>
         .dashboard-container {
-            max-width: 95%; /* Wider for spreadsheet view */
-            margin: 2rem auto;
-            padding: 2.5rem;
+            max-width: 100%;
+            margin: 1rem 1rem;
+            padding: 1.5rem;
             background: var(--glass-bg);
             border-radius: 20px;
             border: 1px solid var(--glass-border);
@@ -17,22 +17,22 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
         .table-container {
-            overflow-x: auto;
+            overflow-x: hidden;
             margin-top: 1rem;
             border-radius: 8px;
             background: rgba(0, 0, 0, 0.2);
             box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
         }
         table {
-            width: max-content;
-            min-width: 100%;
+            width: 100%;
             border-collapse: separate;
             border-spacing: 0;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
+            table-layout: auto;
         }
         th, td {
             text-align: left;
-            padding: 0.75rem 1rem;
+            padding: 0.25rem 0.5rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             white-space: nowrap;
         }
@@ -41,8 +41,8 @@
             color: var(--text-secondary);
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            font-size: 0.7rem;
             position: sticky;
             top: 0;
             z-index: 10;
@@ -51,12 +51,12 @@
             background: transparent;
             border: 1px solid transparent;
             color: #fff;
-            padding: 0.6rem 0.8rem;
-            border-radius: 6px;
+            padding: 0.4rem 0.5rem;
+            border-radius: 4px;
             width: 100%;
-            min-width: 120px;
+            min-width: 50px;
             font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         input:hover {
@@ -130,19 +130,19 @@
                 <table id="car-table">
                     <thead>
                         <tr>
-                            <th style="width: 80px;">Bild_Gallery1</th>
+                            <th style="width: 50px;">Bild_Gallery1</th>
                             <th>Hersteller</th>
-                            <th style="min-width: 180px;">Modell</th>
-                            <th style="min-width: 180px;">Ausführung</th>
+                            <th>Modell</th>
+                            <th>Ausführung</th>
                             <th>Kraftstoff</th>
                             <th>Getriebe</th>
-                            <th style="width: 80px;">PS</th>
+                            <th style="width: 40px;">PS</th>
                             <th>KM Stand</th>
                             <th>Erstzulassung</th>
                             <th>Farbe</th>
                             <th>Farbe_Einfach</th>
-                            <th style="min-width: 140px;">Sofortkauf-Preis</th>
-                            <th style="width: 60px;">Link</th>
+                            <th style="width: 100px;">Sofortkauf-Preis</th>
+                            <th style="width: 40px;">Link</th>
                         </tr>
                     </thead>
                     <tbody id="car-body">

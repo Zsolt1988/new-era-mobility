@@ -11,7 +11,7 @@ import sys
 import traceback
 from image_overlay.overlay_service import process_car_overlay
 
-PORT = 8080
+PORT = 8085
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class ThreadingSimpleServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
