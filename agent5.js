@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    function renderTable() {
+    function renderCards() {
         const cars = currentData.cars || (currentData.title ? [currentData] : []);
         if (cars.length === 0) {
             noDataMsg.style.display = 'block';
@@ -29,34 +29,85 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         carBody.innerHTML = '';
         cars.forEach((car, index) => {
-            const row = document.createElement('tr');
-            row.classList.add('savable');
-            row.innerHTML = `
-                <td><img src="${car.carImage || ''}" style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;" onerror="this.src='https://placehold.co/60x40?text=No+Image'"></td>
-                <td><input type="text" value="${car.carBrand || ''}" data-field="carBrand" data-index="${index}"></td>
-                <td><input type="text" value="${car.carModel || car.title || ''}" data-field="carModel" data-index="${index}"></td>
-                <td><input type="text" value="${car.carExecution || car.ausfuehrung || ''}" data-field="carExecution" data-index="${index}"></td>
-                <td><input type="text" value="${car.carFuel || ''}" data-field="carFuel" data-index="${index}"></td>
-                <td><input type="text" value="${car.carTransmission || ''}" data-field="carTransmission" data-index="${index}"></td>
-                <td><input type="text" value="${car.carPower || ''}" data-field="carPower" data-index="${index}"></td>
-                <td><input type="text" value="${car.carMileage || ''}" data-field="carMileage" data-index="${index}"></td>
-                <td><input type="text" value="${car.carRegistration || ''}" data-field="carRegistration" data-index="${index}"></td>
-                <td><input type="text" value="${car.carColor || ''}" data-field="carColor" data-index="${index}"></td>
-                <td><input type="text" value="${car.colorSimple || car.farbe_einfach || ''}" data-field="colorSimple" data-index="${index}"></td>
-                <td><input type="text" value="${car.carPrice || car.price || ''}" data-field="carPrice" data-index="${index}"></td>
-                <td style="text-align: center;"><button class="primary-btn" style="padding: 0.5rem; font-size: 0.7rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);" onclick="window.open('${car.source || car.link}', '_blank')">🔗</button></td>
+            const card = document.createElement('div');
+            card.className = 'data-card savable';
+            card.innerHTML = `
+                <div class="card-header-flex">
+                    <div style="display: flex; gap: 1.5rem; align-items: center;">
+                        <img src="${car.carImage || ''}" style="width: 100px; height: 75px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);" onerror="this.src='https://placehold.co/100x75?text=No+Image'">
+                        <div>
+                            <h3 style="margin-bottom: 0.3rem;">${car.carBrand || ''} ${car.carModel || car.title || ''}</h3>
+                            <span class="badge" style="background: rgba(255,255,255,0.1); padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">Item #${index + 1}</span>
+                        </div>
+                    </div>
+                    <button class="primary-btn" style="padding: 0.6rem 1rem; font-size: 0.85rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2);" onclick="window.open('${car.source || car.link}', '_blank')">🔗 Original Link</button>
+                </div>
+                
+                <div class="grid-3col">
+                    <div class="data-item">
+                        <label class="data-label">Bild_Gallery1 (URL)</label>
+                        <input type="text" class="data-input" value="${car.carImage || ''}" data-field="carImage" data-index="${index}">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label">Hersteller</label>
+                        <input type="text" class="data-input" value="${car.carBrand || ''}" data-field="carBrand" data-index="${index}">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label">Modell</label>
+                        <input type="text" class="data-input" value="${car.carModel || car.title || ''}" data-field="carModel" data-index="${index}">
+                    </div>
+                    
+                    <div class="data-item">
+                        <label class="data-label">Ausführung</label>
+                        <input type="text" class="data-input" value="${car.carExecution || car.ausfuehrung || ''}" data-field="carExecution" data-index="${index}">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label">Kraftstoff</label>
+                        <input type="text" class="data-input" value="${car.carFuel || ''}" data-field="carFuel" data-index="${index}">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label">Getriebe</label>
+                        <input type="text" class="data-input" value="${car.carTransmission || ''}" data-field="carTransmission" data-index="${index}">
+                    </div>
+
+                    <div class="data-item">
+                        <label class="data-label">PS</label>
+                        <input type="text" class="data-input" value="${car.carPower || ''}" data-field="carPower" data-index="${index}">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label">KM Stand</label>
+                        <input type="text" class="data-input" value="${car.carMileage || ''}" data-field="carMileage" data-index="${index}">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label">Erstzulassung</label>
+                        <input type="text" class="data-input" value="${car.carRegistration || ''}" data-field="carRegistration" data-index="${index}">
+                    </div>
+
+                    <div class="data-item">
+                        <label class="data-label">Farbe</label>
+                        <input type="text" class="data-input" value="${car.carColor || ''}" data-field="carColor" data-index="${index}">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label">Farbe_Einfach</label>
+                        <input type="text" class="data-input" value="${car.colorSimple || car.farbe_einfach || ''}" data-field="colorSimple" data-index="${index}">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label">Sofortkauf-Preis</label>
+                        <input type="text" class="data-input" style="color: var(--accent); font-weight: bold; border-color: rgba(1, 253, 119, 0.3);" value="${car.carPrice || car.price || ''}" data-field="carPrice" data-index="${index}">
+                    </div>
+                </div>
             `;
-            carBody.appendChild(row);
+            carBody.appendChild(card);
         });
 
         // Add change listeners
-        document.querySelectorAll('input').forEach(input => {
+        document.querySelectorAll('.data-input').forEach(input => {
             input.addEventListener('input', (e) => {
                 const idx = e.target.dataset.index;
                 const field = e.target.dataset.field;
                 const cars = currentData.cars || [currentData];
                 cars[idx][field] = e.target.value;
-                e.target.closest('tr').classList.add('modified');
+                e.target.closest('.data-card').classList.add('modified');
             });
         });
     }
