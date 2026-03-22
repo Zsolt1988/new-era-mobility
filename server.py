@@ -6,6 +6,10 @@ import urllib.request
 import subprocess
 import os
 import re
+import base64
+import sys
+import traceback
+from image_overlay.overlay_service import process_car_overlay
 
 PORT = 8080
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -118,6 +122,57 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps({"status": "error", "message": f"Export failed: {e.stderr}"}).encode('utf-8'))
             except Exception as e:
                 print(f"Unexpected error during CSV export: {str(e)}")
+                self.send_response(500)
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
+
+        elif self.path == '/api/overlay':
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length)
+            
+            try:
+                data = json.loads(post_data.decode('utf-8'))
+                image_b64 = data.get('image', '')
+                offset = data.get('offset', 0)
+                
+                if image_b64:
+                    # Remove header if present (e.g. data:image/jpeg;base64,...)
+                    if ',' in image_b64:
+                        image_b64 = image_b64.split(',')[1]
+                    
+                    image_data = base64.b64decode(image_b64)
+                    
+                    # Save temp input
+                    temp_input = os.path.join(BASE_DIR, 'image_overlay', 'temp_input.jpg')
+                    with open(temp_input, 'wb') as f:
+                        f.write(image_data)
+                    
+                    # Prepare output path
+                    output_file = 'overlay_result.jpg'
+                    output_path = os.path.join(BASE_DIR, 'image_overlay', output_file)
+                    bg_path = os.path.join(BASE_DIR, 'image_overlay', 'fixed_background.png')
+                    
+                    # Process
+                    print("Starting overlay process...")
+                    process_car_overlay(temp_input, bg_path, output_path, position_y_offset=offset)
+                    
+                    if os.path.exists(output_path):
+                        self.send_response(200)
+                        self.send_header('Content-Type', 'application/json')
+                        self.end_headers()
+                        self.wfile.write(json.dumps({
+                            "status": "ok", 
+                            "url": f"/image_overlay/{output_file}?t={os.path.getmtime(output_path)}"
+                        }).encode('utf-8'))
+                    else:
+                        raise FileNotFoundError(f"Overlay created no file at {output_path}")
+                else:
+                    self.send_response(400)
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"status": "error", "message": "No image data provided"}).encode('utf-8'))
+            except Exception as e:
+                print(f"Error in overlay API: {str(e)}")
+                traceback.print_exc()
                 self.send_response(500)
                 self.send_header('Content-Type', 'application/json')
                 self.end_headers()
