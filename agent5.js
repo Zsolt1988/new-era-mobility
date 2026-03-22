@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const response = await fetch('/extracted_cars.json');
             if (!response.ok) throw new Error('Failed to load data');
             currentData = await response.json();
-            renderTable();
+            renderCards();
         } catch (error) {
             console.error('Error loading data:', error);
             noDataMsg.style.display = 'block';
