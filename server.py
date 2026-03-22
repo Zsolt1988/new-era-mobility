@@ -15,6 +15,8 @@ PORT = 8085
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class ThreadingSimpleServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    allow_reuse_address = True
+
     pass
 
 class MyHandler(http.server.SimpleHTTPRequestHandler):

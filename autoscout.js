@@ -86,8 +86,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            // Use absolute URL so it works even if the HTML is opened via file://
-            const apiUrl = `http://localhost:8080/api/autoscout-prices?url=${encodeURIComponent(dealerUrl)}`;
+            // Use relative URL to match the current running port
+            const apiUrl = `/api/autoscout-prices?url=${encodeURIComponent(dealerUrl)}`;
             const resp = await fetch(apiUrl);
             const data = await resp.json();
 

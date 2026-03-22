@@ -24,8 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Simulate extraction process delay for UI feedback, then load actual JSON
         setTimeout(async () => {
             try {
-                // Call the new backend extraction API with the user's URL using an absolute URL
-                const response = await fetch('http://localhost:8080/api/extract', {
+                // Call the new backend extraction API with the user's URL using a relative URL
+                const response = await fetch('/api/extract', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
