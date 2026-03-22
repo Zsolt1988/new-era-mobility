@@ -209,6 +209,27 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
 
+        elif self.path == '/api/save-cars':
+            try:
+                content_length = int(self.headers['Content-Length'])
+                post_data = self.rfile.read(content_length)
+                new_data = json.loads(post_data.decode('utf-8'))
+                
+                print("Saving updated car data.")
+                with open(os.path.join(BASE_DIR, 'extracted_cars.json'), 'w', encoding='utf-8') as f:
+                    json.dump(new_data, f, indent=4, ensure_ascii=False)
+                
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "success"}).encode('utf-8'))
+            except Exception as e:
+                print(f"Error saving cars: {str(e)}")
+                self.send_response(500)
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
+
         else:
             self.send_error(404, "Endpoint not found")
 

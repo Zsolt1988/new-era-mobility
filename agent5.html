@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent 5: Wix Sync Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+        }
+        th, td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        th {
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.75rem;
+        }
+        input, select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 4px;
+            width: 100%;
+        }
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+        }
+        .savable {
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        .savable.modified {
+            border-left-color: #0c7dff;
+            background: rgba(12, 125, 255, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Antigravity <span>AI</span></div>
+            <div class="nav-links">
+                <a href="index.html">1. Acquisition</a>
+                <a href="pricing.html">2. Pricing</a>
+                <a href="autoscout.html">3. Market</a>
+                <a href="agent4.html">4. Creator</a>
+                <a href="agent5.html" class="active">5. Sync 🚀</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="dashboard-container">
+            <div class="action-bar">
+                <div>
+                    <h1>Sync Dashboard</h1>
+                    <p style="color: var(--text-secondary);">Bearbeite deine Daten hier, bevor du sie an Wix sendest.</p>
+                </div>
+                <div class="btn-group">
+                    <button id="save-btn" class="primary-btn" style="background: rgba(12, 125, 255, 0.1); border: 1px solid #0c7dff; color: #0c7dff;">Änderungen speichern 💾</button>
+                    <button id="csv-btn" class="primary-btn" style="background: rgba(1, 253, 119, 0.1); border: 1px solid #01fd77; color: #01fd77;">CSV öffnen 📊</button>
+                    <button id="wix-btn" class="primary-btn" style="background: rgba(187, 134, 252, 0.1); border: 1px solid #bb86fc; color: #bb86fc;">Wix Sync 🚀</button>
+                </div>
+            </div>
+
+            <div id="no-data-msg" style="display: none; text-align: center; padding: 4rem;">
+                <h3 style="color: var(--text-secondary);">Keine Daten gefunden. Bitte führe zuerst eine Extraktion durch.</h3>
+                <a href="index.html" class="primary-btn" style="margin-top: 1rem; display: inline-block;">Zu Agent 1</a>
+            </div>
+
+            <div class="table-container">
+                <table id="car-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;">Bild</th>
+                            <th>Hersteller</th>
+                            <th>Modell</th>
+                            <th>KM Stand</th>
+                            <th>Preis</th>
+                            <th>PS</th>
+                            <th>Aktion</th>
+                        </tr>
+                    </thead>
+                    <tbody id="car-body">
+                        <!-- Rows will be injected by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Powered by Antigravity Sync Engine v5</p>
+    </footer>
+
+    <script src="agent5.js"></script>
+</body>
+</html>
