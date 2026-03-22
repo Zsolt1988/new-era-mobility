@@ -41,14 +41,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             const agent4Power = localStorage.getItem('override_edit-power');
             const agent4Price = localStorage.getItem('override_edit-price');
 
-            // Priority: 1. Previously saved manual edit in Agent 5, 2. Agent 4 Override, 3. Agent 2 Calculation (Price only), 4. Raw extracted price
-            const displayPrice = car.carPrice || agent4Price || calculatedPrice || car.price || '';
-            const displayModel = car.carModel || agent4Title || car.title || '';
-            const displayExec = car.carExecution || agent4Exec || car.ausfuehrung || '';
-            const displayPower = car.carPower || agent4Power || '';
-            const displayMil = car.carMileage || agent4Mil || '';
-            const displayReg = car.carRegistration || agent4Reg || '';
-            const displayColor = car.carColor || agent4Color || '';
+            // Force Priority: 1. Agent 4 explicit overrides, 2. Agent 2 Calculation (Price), 3. agent5 saved state (car.*), 4. extracted raw state
+            const displayPrice = agent4Price || calculatedPrice || car.carPrice || car.price || '';
+            const displayModel = agent4Title || car.carModel || car.title || '';
+            const displayExec = agent4Exec || car.carExecution || car.ausfuehrung || '';
+            const displayPower = agent4Power || car.carPower || '';
+            const displayMil = agent4Mil || car.carMileage || '';
+            const displayReg = agent4Reg || car.carRegistration || '';
+            const displayColor = agent4Color || car.carColor || '';
+            
+            // Assign these back to currentData object immediately so saving without modifying works correctly
+            car.carPrice = displayPrice;
+            car.carModel = displayModel;
+            car.carExecution = displayExec;
+            car.carPower = displayPower;
+            car.carMileage = displayMil;
+            car.carRegistration = displayReg;
+            car.carColor = displayColor;
             
             const card = document.createElement('div');
             card.className = 'data-card savable';
@@ -126,9 +135,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             input.addEventListener('input', (e) => {
                 const idx = e.target.dataset.index;
                 const field = e.target.dataset.field;
+                const val = e.target.value;
                 const cars = currentData.cars || [currentData];
-                cars[idx][field] = e.target.value;
+                
+                cars[idx][field] = val;
                 e.target.closest('.data-card').classList.add('modified');
+                
+                // Sync back to localStorage so manual Agent 5 edits don't get overwritten by Agent 4 on refresh
+                if (field === 'carPrice') { localStorage.setItem('override_edit-price', val); localStorage.setItem('lastCalculatedFinalPrice', val); }
+                if (field === 'carModel') localStorage.setItem('override_edit-title', val);
+                if (field === 'carExecution') localStorage.setItem('override_edit-execution', val);
+                if (field === 'carPower') localStorage.setItem('override_edit-power', val);
+                if (field === 'carMileage') localStorage.setItem('override_edit-mileage', val);
+                if (field === 'carRegistration') localStorage.setItem('override_edit-reg', val);
+                if (field === 'carColor') localStorage.setItem('override_edit-color', val);
             });
         });
     }
