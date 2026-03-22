@@ -164,14 +164,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Wix Logic
     wixBtn.addEventListener('click', async () => {
         const origText = wixBtn.innerHTML;
-        wixBtn.innerHTML = '⌛ Syncing...';
+        wixBtn.innerHTML = '⌛ Preparing Sync...';
         try {
-            const response = await fetch('/api/sync-wix', { method: 'POST' });
-            if (!response.ok) throw new Error('Wix Sync failed');
-            wixBtn.innerHTML = '✅ Synced!';
+            // Step 1: Auto-Save current data to extracted_cars.json
+            const saveResp = await fetch('/api/save-cars', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(currentData)
+            });
+            if (!saveResp.ok) throw new Error('Auto-save failed before sync');
+            document.querySelectorAll('.modified').forEach(tr => tr.classList.remove('modified'));
+
+            // Step 2: Auto-Export to Csv (updates aktive_sammlung.csv which wix_sync.py reads)
+            const csvResp = await fetch('/api/export-csv', { method: 'POST' });
+            if (!csvResp.ok) throw new Error('CSV generation failed before sync');
+
+            // Step 3: Run the actual Wix Sync
+            wixBtn.innerHTML = '⌛ Syncing to Wix...';
+            const syncResp = await fetch('/api/sync-wix', { method: 'POST' });
+            if (!syncResp.ok) throw new Error('Wix Sync API failed');
+            
+            wixBtn.innerHTML = '✅ Auto-Saved & Synced!';
             setTimeout(() => { wixBtn.innerHTML = origText; }, 3000);
         } catch (error) {
-            alert('Wix Error: ' + error.message);
+            alert('Wix Sync Error: ' + error.message);
             wixBtn.innerHTML = '❌ Error';
             setTimeout(() => { wixBtn.innerHTML = origText; }, 3000);
         }
