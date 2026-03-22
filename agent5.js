@@ -32,8 +32,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         const calculatedPrice = calculatedPriceStr ? Math.round(parseFloat(calculatedPriceStr)) : null;
 
         cars.forEach((car, index) => {
-            // Priority: 1. Previously saved manual edit in Agent 5, 2. Agent 2 Calculation, 3. Raw extracted price
-            const displayPrice = car.carPrice || calculatedPrice || car.price || '';
+            // Fetch Agent 4 Overrides
+            const agent4Title = localStorage.getItem('override_edit-title');
+            const agent4Exec = localStorage.getItem('override_edit-execution');
+            const agent4Mil = localStorage.getItem('override_edit-mileage');
+            const agent4Reg = localStorage.getItem('override_edit-reg');
+            const agent4Color = localStorage.getItem('override_edit-color');
+            const agent4Power = localStorage.getItem('override_edit-power');
+            const agent4Price = localStorage.getItem('override_edit-price');
+
+            // Priority: 1. Previously saved manual edit in Agent 5, 2. Agent 4 Override, 3. Agent 2 Calculation (Price only), 4. Raw extracted price
+            const displayPrice = car.carPrice || agent4Price || calculatedPrice || car.price || '';
+            const displayModel = car.carModel || agent4Title || car.title || '';
+            const displayExec = car.carExecution || agent4Exec || car.ausfuehrung || '';
+            const displayPower = car.carPower || agent4Power || '';
+            const displayMil = car.carMileage || agent4Mil || '';
+            const displayReg = car.carRegistration || agent4Reg || '';
+            const displayColor = car.carColor || agent4Color || '';
             
             const card = document.createElement('div');
             card.className = 'data-card savable';
@@ -42,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div style="display: flex; gap: 1.5rem; align-items: center;">
                         <img src="${car.carImage || ''}" style="width: 100px; height: 75px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);" onerror="this.src='https://placehold.co/100x75?text=No+Image'">
                         <div>
-                            <h3 style="margin-bottom: 0.3rem;">${car.carBrand || ''} ${car.carModel || car.title || ''}</h3>
+                            <h3 style="margin-bottom: 0.3rem;">${car.carBrand || ''} ${displayModel}</h3>
                             <span class="badge" style="background: rgba(255,255,255,0.1); padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">Item #${index + 1}</span>
                         </div>
                     </div>
@@ -60,12 +75,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                     <div class="data-item">
                         <label class="data-label">Modell</label>
-                        <input type="text" class="data-input" value="${car.carModel || car.title || ''}" data-field="carModel" data-index="${index}">
+                        <input type="text" class="data-input" value="${displayModel}" data-field="carModel" data-index="${index}">
                     </div>
                     
                     <div class="data-item">
                         <label class="data-label">Ausführung</label>
-                        <input type="text" class="data-input" value="${car.carExecution || car.ausfuehrung || ''}" data-field="carExecution" data-index="${index}">
+                        <input type="text" class="data-input" value="${displayExec}" data-field="carExecution" data-index="${index}">
                     </div>
                     <div class="data-item">
                         <label class="data-label">Kraftstoff</label>
@@ -78,20 +93,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     <div class="data-item">
                         <label class="data-label">PS</label>
-                        <input type="text" class="data-input" value="${car.carPower || ''}" data-field="carPower" data-index="${index}">
+                        <input type="text" class="data-input" value="${displayPower}" data-field="carPower" data-index="${index}">
                     </div>
                     <div class="data-item">
                         <label class="data-label">KM Stand</label>
-                        <input type="text" class="data-input" value="${car.carMileage || ''}" data-field="carMileage" data-index="${index}">
+                        <input type="text" class="data-input" value="${displayMil}" data-field="carMileage" data-index="${index}">
                     </div>
                     <div class="data-item">
                         <label class="data-label">Erstzulassung</label>
-                        <input type="text" class="data-input" value="${car.carRegistration || ''}" data-field="carRegistration" data-index="${index}">
+                        <input type="text" class="data-input" value="${displayReg}" data-field="carRegistration" data-index="${index}">
                     </div>
 
                     <div class="data-item">
                         <label class="data-label">Farbe</label>
-                        <input type="text" class="data-input" value="${car.carColor || ''}" data-field="carColor" data-index="${index}">
+                        <input type="text" class="data-input" value="${displayColor}" data-field="carColor" data-index="${index}">
                     </div>
                     <div class="data-item">
                         <label class="data-label">Farbe_Einfach</label>
