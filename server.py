@@ -459,6 +459,26 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
 
+        elif self.path.startswith('/api/search'):
+            parsed = urllib.parse.urlparse(self.path)
+            params = urllib.parse.parse_qs(parsed.query)
+            query = params.get('q', [''])[0].lower()
+            
+            json_path = os.path.join(BASE_DIR, 'extracted_cars.json')
+            if os.path.exists(json_path):
+                with open(json_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                
+                cars = data.get('cars', [])
+                results = [c for c in cars if query in c.get('title', '').lower() or query in c.get('carBrand', '').lower() or query in c.get('carModel', '').lower()]
+            else:
+                results = []
+            
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps(results).encode('utf-8'))
+
         elif self.path == '/api/push-github':
             try:
                 import subprocess

@@ -73,9 +73,9 @@ def calculate_final_price_data(netto_preis, location, karosserie):
     karosserie_low = str(karosserie).lower()
     
     # LCV Check (Kastenwagen)
-    is_lcv = any(word in karosserie_low for word in ['kasten', 'lcv', 'transporter', 'van'])
+    is_lcv = any(word in karosserie_low for word in ['kasten', 'lcv', 'transporter', 'van', 'pritsche', 'pick-up'])
     # SUV Check
-    is_suv = any(word in karosserie_low for word in ['suv', 'gelände', 'off-road', 'offroad'])
+    is_suv = any(word in karosserie_low for word in ['suv', 'gelände', 'off-road', 'offroad', 'pickup'])
     
     car_type = "lcv" if is_lcv else ("suv" if is_suv else "pkw")
     
