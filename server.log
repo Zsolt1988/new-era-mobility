@@ -1,0 +1,7 @@
+127.0.0.1 - - [22/Mar/2026 07:10:02] "GET /agent4.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Mar/2026 07:10:02] "GET /style.css HTTP/1.1" 304 -
+127.0.0.1 - - [22/Mar/2026 07:10:02] "GET /agent4.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Mar/2026 07:12:01] code 404, message File not found
+127.0.0.1 - - [22/Mar/2026 07:12:01] "GET /agent5.html HTTP/1.1" 404 -
+127.0.0.1 - - [22/Mar/2026 07:12:01] code 404, message File not found
+127.0.0.1 - - [22/Mar/2026 07:12:01] "GET /favicon.ico HTTP/1.1" 404 -
