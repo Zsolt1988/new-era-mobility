@@ -227,23 +227,56 @@
                     https://www.autoscout24.at/lst/...
                 </div>
                 
-                <div style="margin-top: 1.5rem; text-align: center;">
-                    <a href="#" id="open-link-btn" target="_blank" class="primary-btn" style="text-decoration: none; padding: 1rem 3rem; font-size: 1.1rem; display: inline-block;">
-                        Open in AutoScout24 ↗
-                    </a>
+                <div style="margin-top: 1.5rem; text-align: center; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <a href="#" id="open-link-btn" target="_blank" class="primary-btn" style="text-decoration: none; padding: 1rem 1.5rem; font-size: 1rem; display: block;">
+                            Open in AutoScout24 (AT) ↗
+                        </a>
+                    </div>
+                    <div>
+                        <a href="#" id="open-autouncle-btn" target="_blank" class="primary-btn" style="text-decoration: none; padding: 1rem 1.5rem; font-size: 1rem; display: block; background: linear-gradient(135deg, #10b981, #059669);">
+                            Open in AutoUncle (DE) ↗
+                        </a>
+                    </div>
                 </div>
 
-                <!-- 3 Cheapest Retail Prices -->
-                <div class="cheapest-section">
-                    <h3>🏷️ 3 Cheapest Retail Dealer Prices</h3>
-                    <p class="section-sub">Dealer sellers only — sorted by price ascending</p>
-                    <div class="price-list" id="price-list">
-                        <div class="price-row loading"><span class="price-rank">#1</span><span class="price-value">—</span><span class="price-label">Dealer · Austria</span></div>
-                        <div class="price-row loading"><span class="price-rank">#2</span><span class="price-value">—</span><span class="price-label">Dealer · Austria</span></div>
-                        <div class="price-row loading"><span class="price-rank">#3</span><span class="price-value">—</span><span class="price-label">Dealer · Austria</span></div>
+                <div style="margin-top: 2rem;">
+                    <h3>AutoUncle Search Link (Germany)</h3>
+                    <div class="url-result" id="url-autouncle-output" style="border-color: rgba(16, 185, 129, 0.2);">
+                        https://www.autouncle.de/de/...
                     </div>
-                    <div id="price-status-msg" class="price-status-msg"></div>
-                    <button id="fetch-prices-btn" class="primary-btn" style="padding:0.6rem 1.8rem;font-size:0.9rem;">🔍 Fetch Prices</button>
+                </div>
+
+                <div class="calc-grid" style="margin-top: 2.5rem;">
+                    <!-- 3 Cheapest AT Prices -->
+                    <div class="cheapest-section" style="margin-top: 0; border-top: none;">
+                        <h3>🇦🇹 3 Cheapest Prices (Austria)</h3>
+                        <p class="section-sub">AutoScout24 · Dealer sellers only</p>
+                        <div class="price-list" id="price-list">
+                            <div class="price-row loading"><span class="price-rank">#1</span><span class="price-value" contenteditable="true" title="Klicken zum Bearbeiten (Manuell)">—</span><span class="price-label">Dealer · AT</span></div>
+                            <div class="price-row loading"><span class="price-rank">#2</span><span class="price-value" contenteditable="true" title="Klicken zum Bearbeiten (Manuell)">—</span><span class="price-label">Dealer · AT</span></div>
+                            <div class="price-row loading"><span class="price-rank">#3</span><span class="price-value" contenteditable="true" title="Klicken zum Bearbeiten (Manuell)">—</span><span class="price-label">Dealer · AT</span></div>
+                        </div>
+                    </div>
+
+                    <!-- 3 Cheapest DE Prices -->
+                    <div class="cheapest-section" style="margin-top: 0; border-top: none;">
+                        <h3>🇩🇪 3 Cheapest Prices (Germany)</h3>
+                        <p class="section-sub">AutoUncle · Professional sellers</p>
+                        <div class="price-list" id="price-autouncle-list">
+                            <div class="price-row loading"><span class="price-rank">#1</span><span class="price-value" contenteditable="true" title="Klicken zum Bearbeiten (Manuell)">—</span><span class="price-label">Dealer · DE</span></div>
+                            <div class="price-row loading"><span class="price-rank">#2</span><span class="price-value" contenteditable="true" title="Klicken zum Bearbeiten (Manuell)">—</span><span class="price-label">Dealer · DE</span></div>
+                            <div class="price-row loading"><span class="price-rank">#3</span><span class="price-value" contenteditable="true" title="Klicken zum Bearbeiten (Manuell)">—</span><span class="price-label">Dealer · DE</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="price-status-msg" class="price-status-msg"></div>
+                <div style="text-align: center; font-size: 0.85rem; color: rgba(255,255,255,0.4); margin-bottom: 0.5rem;">
+                    💡 Tipp: Preise können auch manuell in die Felder eingetragen werden.
+                </div>
+                <div style="text-align: center; margin-top: 1rem;">
+                    <button id="fetch-prices-btn" class="primary-btn" style="padding:0.8rem 2.5rem; font-size:1rem; min-width: 250px;">🔍 Fetch All Market Prices</button>
                 </div>
 
                 <div class="next-step-container">

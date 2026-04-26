@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const displayMil = agent4Mil || car.carMileage || '';
             const displayReg = agent4Reg || car.carRegistration || '';
             const displayColor = agent4Color || car.carColor || '';
+            const generatedHtml = localStorage.getItem('generatedHtml');
             
             // Assign these back to currentData object immediately so saving without modifying works correctly
             car.carPrice = displayPrice;
@@ -59,6 +60,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             car.carRegistration = displayReg;
             car.carColor = displayColor;
             
+            // Only update if we have a fresh snippet from Agent 4
+            if (generatedHtml) {
+                car.htmlCode = generatedHtml;
+            } else if (!car.htmlCode) {
+                car.htmlCode = '';
+            }
+            
+            const hasHtml = !!car.htmlCode && car.htmlCode.length > 100;
+            
             const card = document.createElement('div');
             card.className = 'data-card savable';
             card.innerHTML = `
@@ -67,7 +77,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <img src="${car.carImage || ''}" style="width: 100px; height: 75px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);" onerror="this.src='https://placehold.co/100x75?text=No+Image'">
                         <div>
                             <h3 style="margin-bottom: 0.3rem;">${car.carBrand || ''} ${displayModel}</h3>
-                            <span class="badge" style="background: rgba(255,255,255,0.1); padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">Item #${index + 1}</span>
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                <span class="badge" style="background: rgba(255,255,255,0.1); padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">Item #${index + 1}</span>
+                                <span class="badge" style="background: ${hasHtml ? 'rgba(1, 253, 119, 0.2)' : 'rgba(255, 69, 58, 0.2)'}; color: ${hasHtml ? '#01fd77' : '#ff453a'}; border: 1px solid ${hasHtml ? 'rgba(1, 253, 119, 0.3)' : 'rgba(255, 69, 58, 0.3)'};">
+                                    ${hasHtml ? 'HTML: Ready' : 'HTML: Empty'}
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <button class="primary-btn" style="padding: 0.6rem 1rem; font-size: 0.85rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2);" onclick="window.open('${car.source || car.link}', '_blank')">🔗 Original Link</button>

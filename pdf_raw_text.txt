@@ -1,0 +1,796 @@
+Expertise
+Protokollnummer: 44575012
+Auftrags-Nr / Referenz: 26113694
+Besichtigungsdatum: 16.03.2026
+Hersteller: Porsche Modell: Cayenne E-Hybrid Coupe Tiptronic S Platinum Edition
+FIN: WP1ZZZ9Y6PDA32740
+Angaben zum Fahrzeug
+Hersteller / Typ / Modell / Ausstattung
+Porsche Cayenne E-Hybrid Coupe Tiptronic S Platinum Edition
+Fahrgestellnummer WP1ZZZ9Y6PDA32740
+Laufleistung (abgelesen) 94.146 km
+Erstzulassung 16.01.2023
+Anzahl Halter 1
+Nächste HU (Bericht lag vor) 01/2028
+Leistung / Hubraum 250 kw / 2.995 ccm
+Kraftstoffart / Zylinder Hybr.B/E ext.aufl / 6
+Getriebe / Anzahl Gänge Automatik / 8
+Antriebsart Allradantrieb
+Fahrzeugart Geländewagen
+Farbe / Farbcode chromitschwarzmetallic/
+chromitschwarzmetallic
+Türen / Sitze 5 / 5
+Polsterart Leder
+Polsterfarbe Braun-Schwarz
+Raucherfahrzeug Nein
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 1 / 25
+Angaben zum Fahrzeug
+Wartungsheft / Nachweis digitaler Nachweis / vollständig Restlauf bis Service 15.500 km
+Letzte Wartung am / bei 01/2026 bei 89.139 km
+Schlüssel ist/soll 2 / 2 FZG-Dokumente ZB#2 (B) lag vor (Kopie), ZB#1 (S) lag 
+nicht vor
+BriefNr GR756669
+Vorschaden / Unfall Feststellbar Nachlackierung Feststellbar
+Besichtigungsbedingungen ausreichend Hubmittel / Grube ja
+Probefahrt kurze Fahrt auf dem Betriebsgelände Motorlauf durchgeführt
+HSN/TSN 0583 / AKS 00050
+Abgasnorm EURO6;WLTP;AP;PI/CI; M, N1 I Feinstaubplakette
+zul. Gesamtgewicht 3.055 kg Leergewicht
+Bereifung
+Montierte Bereifung
+# Reifengröße Reifentyp Hersteller Profiltiefe
+1) 275/40 R21 107Y Winterreifen auf Leichtmetall Michelin 6mm / 6mm
+2) 305/35 R21 109Y Winterreifen auf Leichtmetall Michelin 6mm / 6mm
+Zusatzbereifung
+# Reifengröße Reifentyp Hersteller Profiltiefe
+1) 285/35 R22 106Y Sommerreifen auf Leichtmetall Pirelli 4mm / 4mm
+2) 315/30 R22 107Y Sommerreifen auf Leichtmetall Pirelli 4mm / 4mm
+Ersatz
+Typ Reifengröße Reifentyp Hersteller Profiltiefe
+Tirefit Ablaufdatum 01/2028
+Legende: Profiltiefenangabe für Reifen links an erster Stelle, für Reifen rechts an zweiter Stelle der Achse in Fahrtrichtung
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 2 / 25
+Ausstattung
+Ausstattung
+• 10 J x 22/11.5 J x 22 Alu
+• 2-Schicht-Mineral - chromitschwarzmetallic/chromitschwarzmetallic
+• 2995ccm (3.0 Ltr) 250kW
+• 3-Speichen-Multifunktionslenkrad, beheizbar
+• 8-Gang Automatik
+• ab 12.2022
+• Abgasnorm EU6 AP
+• Adaptative cruise control, lane departure warning and traffic sign 
+recognition
+• Aluminium Paket, schwarz
+• Anbausatz verbreiterte Radlaufabdeckung in Wagenfarbe 
+(USA)-2010, 2011- weltweit
+• AU.FAHRL.CO.HO.
+• Aussenspiegel lackiert komplett
+• Aussenspiegel mit Memory
+• Aussenspiegel, automatisch abblendbar, elektrisch anklapp/einstell 
+u. separat beheizbar & Memory
+• Batterie 330A (61Ah) und Batterie 480A (85Ah)
+• Bauteile Grundmotor V6 Turbo 3.0 Liter
+• Belt control, visual and acoustic (front + rear)
+• Black/Mojave beige bitone leather
+• Bordwerkzeug
+• Bremse hinten 358mm schwarz (Hybrid)
+• Charging cable length: standard
+• Charging socket, AC type 2, mode 2-3 (EU)
+• connect Paket Plus 13
+• Dekorteile lackiert
+• Diebstahlalarmanlage, Innenraumueberwachung, Abschleppschutz
+• Dreip. Automatikgurte hinten aussen mit ECE-Label
+• eCall / bCall
+• Einparkhilfe vorn/hinten
+• Einstiegleisten in Aluminium
+• Erh|h.der Serienkraftstofferstbef}llung
+• External, USB type A, 2 x USB socket and charging socket(s)
+• Fahrzeugschutz für KC Audi
+• Federung Standard
+• Feststellbremse
+• Frontkamera
+• Frontscheibe in Dämmglas, beheizbar
+• Fussgängerschutz Erweitert
+• Fussmatten vorn und hinten
+• Geschwindigkeitsbegrenzungsanlage
+• Gewichtsklasse 10 Vorderachse
+• Glasdach
+• Handyvorbereitung mit Koppelbox
+• Heckspoiler
+• 2-Schicht-Mineral - Chromite Black
+• 22" Cayenne Sport Classic wheels in Satin Platinum
+• 2995ccm (3.0 Ltr)
+• 2995ccm (3.0 Ltr) 250kW (Benziner)/340kW (Total)
+• 6-Zylinder Turbo-Motor 3.0l, 250KW
+• 8-Gang-Automatikgetriebe für Allrad
+• Abgaskoncept, EU6 AP
+• ACC mit Speedlimiter
+• Airbag für Fahrer und Beifahrer mit Beifahrer-Airbag-Deaktivierung
+• Analoguhr + Sport-Chrono-Paket Plus
+• Armaturenbrett Vollleder
+• Armaturentafel mit Echtleder
+• Aufkleber/Schilder in deutsch
+• Aussenspiegel links, asphärisch
+• Aussenspiegel rechts, konvex
+• Automatically dimming exterior & interior mirrors
+• Automatische Distanzregelung (ACC)
+• Batterieladegerät (Ausf.1)
+• Bauteilesatz ohne länderspezifische Bauvorschrift
+• Betriebserlaubnis Erstzulassung
+• Bordliteratur in deutsch
+• BOSE® Surround Sound System
+• Bremse vorn 350mm schwarz (Hybrid)
+• Charging Dock, flush-mounted (wall mount)
+• Climatronic, FCKW-frei
+• Dekoreinlagen Exclusive Leder
+• Deletion of Logo on Front Doors
+• Doppelton-Signalhorn
+• Drehbare Sitze vorn
+• Ebener Ladeboden hinten
+• Einbauteile f.6 Zyl.Motor
+• Einsatz für bleifreie Betankung
+• Emergency + Spurhalteassist (EA + ALDW)
+• Exterieur schwarz Hochglanz
+• Fahrermemory-Paket
+• Fahrermemorypaket
+• Federung (PASM)
+• Fertigungsablauf Standard
+• Frischluftansaugung mit Aktivkohlefilter
+• Frontscheibe heizbar
+• Fussgängerschutz
+• Fusshebelwerk "Standard"
+• Gepäckraumabdeckung
+• Gewichtsbereich 15 nur Einbausteuerung keine Bedarfsprognose
+• Haltegriff für Fahrer und Beifahrer
+• HD-Radioempfang (high-definition)
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 3 / 25
+• Himmel Standard
+• Hinterachsgetriebe Basis
+• Industrial charging cable, CEE 32A/230V/6H
+• Innenbeleuchtung Basis + Ambiente
+• Interior Pack Leather - stitching in contrast color
+• Interior sound measures (shaker)
+• Kein Sonderfahrzeug, Standard-Ausführung
+• Kennzeichenträger hinten (ECE)
+• Komfortausstattung
+• Kraftstoffbehälter
+• Kraftstoffsystem Otto-Direkteinspritzung (FSI)
+• Kältemittel R1234yf
+• Leather uphosltery with Interior pack decoration stitching in different 
+colour
+• Lenksäule, axial u.vertikal einstellbar
+• Linkslenker
+• Mirror Link (Apple® CarPlay)
+• Mit Verkehrszeichenerkennung
+• Mittelkonsole Leder, glatt
+• Modelljahr 2023
+• MULTI-FUNCTION DISPLAY/ON-BOARD COMPUTER
+• Multifunktionslenkrad heizbar
+• Nichtraucherpaket
+• Ohne Ambientebeleuchtung aussen
+• Ohne besondere Karosseriemassnahmen
+• Ohne Dachreling / Dachlastträger
+• Ohne Differentialsperre
+• Ohne Garagentoröffner
+• Ohne Lendenwirbelst}tze in den Sitzlehnen
+• Ohne Nachtsichtsystem
+• Ohne Pritschenbodenaufbauten/Ladeboden
+• Ohne Ruffunktion
+• Ohne Sitzbelüftung/Massagesitze
+• Ohne spez. Schilder/Aufkleber/ Sicherheitszertifikate
+• Ohne Telepass-gerät
+• Ohne Triebwerksunterschutz
+• Ohne Wärmespeicher/Zusatzheizung
+• Ohne zus. Dichtungen au~en
+• OHNE ZUSAETZLICHEN TANK FUER SCR
+• Ohne zusätzliche Bereifung
+• Parkassistent vorne und hinten
+• Platinum Edition
+• Porsche Entry + Drive
+• Porsche schwarz, Entfall Modellbezeichnung
+• Porsche Wappen Kopfstütze
+• Premium Package (P6U)
+• Privacy-Verglasung
+• Radhausverbreiterung in teilweise Wagenfarbe
+• Radioempfang digital
+• Heissland
+• Hinterachse "Standard"
+• Hybrid-Antriebssystem PHEV
+• Innen-/Aussenspiegel automatisch abblendbar
+• Instrumenteneinsatz "Lowline" Tachometeranzeige in KM/H
+• Karosserieform E3 Coupe
+• Keine Aktionsausfuehrung, Grundausstattung
+• Kennzeichenträger vorn (gross)
+• Kopfstuetzen mit gepraegtem Wappen
+• Kraftstoffmarkt A
+• Kurzer Radstand
+• Ladekabel für Haushaltssteckdose Typ E/F 16A
+• LED Scheinwerfer Linksverkehr + dyn. Kurvenlicht
+• LED-Scheinwerfer mit Kurvenlicht (PDLS)
+• LEUCHT.AUT.DYN.
+• Manuell betätigte TÜren
+• Mit Feuerlöscher
+• Mittelarmlehne vorn
+• Mittelkonsole Vollleder
+• Modelljahreszeitraum 2
+• Multifunktionskamera
+• Navigationsgerät-High
+• Notruf & Service (e-call/b-call)
+• Ohne Beifahrerdisplay
+• Ohne CD-Wechsler/CD-Player
+• Ohne Dekorleisten
+• Ohne Dämpfung/Schaltung
+• Ohne Head-Up Display
+• Ohne Lichtassistent
+• Ohne Pistolenhalfterfach, Gewehrfach undHaltestange
+• ohne Rammschutzmassnahmen
+• Ohne Scheinwerferreinigungsanlage
+• Ohne Sonnenschutzrollo
+• Ohne Spurwechselassistent
+• ohne Trennwand
+• Ohne Uhr
+• Ohne Zuendanlass-/Schloss-Sperrsystem, ohne Lenkungssperre
+• Ohne Zusatz-/Standheizung
+• Online-Dienst, ohne OCU, mit Head Unit Codierung, ohne WFS-
+Verbund
+• Porsche Active Suspension Management (PASM)
+• Porsche Schriftzug matt schwarz/Entfall Modellbezeichnung
+• pre sense city ohne pre care
+• Preparation for Exclusive Order
+• Radabdeckungen konkav mit Wappen
+• RADIO PREMIUM (MIB3)
+• Radnabenabdeckung, farbiges Wappen (konkav)
+• Real Topview (4-Kamerasystem)
+• Regionscode " ECE " für Radio
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 4 / 25
+• Radschrauben Standard
+• Rechtsverkehr
+• Reifendruckkontrolle 433MHz
+• Rekuperationohne Start/Stop
+• R}cksitzbank-/lehne, geteilt, umlegbar mit Mittelarmlehne
+• Schalthebelknauf in Leder
+• Scheibenbremsen vorn (Geomet D)
+• SCOPE FROM EXCLUSIVE/CT RANGE
+• Seitliche Blinkleuchten
+• Servolenkung
+• Sicherheitsgurte automatisch verstellbar
+• Sicherheitsgurte in Kreide
+• Side Airbags in Rear Compartment
+• Sitzbezug Leder
+• Sitzheizung vorne und hinten
+• Sound box without deactivation
+• Soundsystem BOSE
+• Spiegelunterschale/-Fuss Wagenfarbe
+• Sportabgasanlage mit Endrohre in schwarz
+• Sportsitzanlage mit erweiterter Memory-Funktion, Glattleder
+• Sportsitze hinten
+• Standard-Klimazonen
+• Tankdeckel
+• TPM valve, silver
+• Tuer & Seitenverkleidung - Vollleder Saeulen/Himmel in Alcantara - 
+PAG
+• Türgriffe in Wagenfarbe
+• Umgebungskameras
+• Vehicle class differentiation -9Y0/9Y3-
+• Verbandsmaterial mit Warndreieck
+• vorn 285/35 ZR 22 hinten 315/30 ZR 22
+• W/O 48 V ISLAND-BOARD VEH. EL. SYSTEM
+• Without Generator
+• Without Traffic Jam Assist
+• Zentralverriegelung Keyless-Entry RdW
+• Reifendruckkontrolle, Frequenz 433 MHz High
+• Reservefaltradmit Kompressor
+• SBBR-Leuchte mit Dioden (LED)
+• Scheiben hinten, Scheibendurchmesser 18 Zoll, Bremssattel 
+schwarz lackiert
+• Seitenairbag hinten
+• SERIENFAHRZEUG
+• Servoschliessung Heckklappe mit virtuellem Pedal (Powerliftgate)
+• Sicherheitsinnenspiegel automatisch abblendbar
+• Sitzbezuege in Teilleder, Glattleder
+• Sitzheizung vorn/hinten
+• Sonnenblenden,mit Make-up-Spiegel beleuchtet auf Fahrer und 
+Beifahrerseite
+• Spezielles Typschild für EG
+• Sport Chrono Paket Plus
+• Sportabgasanlage, Endrohr schwarz
+• Sportsitzanlage vorn/hinten
+• Sprachsteuerung
+• Stossfänger Standard
+• Tire suppliers for EU countries
+• Trägerfrequenz 433,92 MHz
+• Typprüfland Deutschland
+• Tür-/Seitenverkleidung Vollleder
+• Umfeldbeleuchtung Ambiente
+• VARIANTE BASIS
+• Vehicle without product enhancement
+• VORB.ANHAENG.RDW
+• VTS PREP.+PORSCHE CAR CONNECT (PCC)
+• Without front cross traffic assist
+• Without mode 3 charging cable
+• yellow rear brake calipers
+• Ziffernblätter in schwarz
+Sonderausstattung
+• 22-Zoll Cayenne Sport Classic Räder in Platinum se
+• Außenspiegel lackiert in Exterieurfarbe
+• chromitschwarz metallic
+• Interieur-Paket Leder in Interieurfarbe
+• Lederausstattung in Bi-Color, Glattleder schwarzmo
+• ParkAssistent inkl. Surround View
+• Sitzheizung vorn und hinten
+• Sportabgasanlage inkl. Sportendrohren schwarz
+• Abstandsregeltempostat inkl. Nothaltefunktion
+• Beheizbare Frontscheibe
+• Feuerlöscher
+• Interieur-Paket Ziernähte in abweichender Farbe
+• Lenkradheizung
+• Seiten-Airbags im Fond
+• Smartphone-Ablage inkl. Induktiven Laden
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 5 / 25
+Kurze Sachverständige Feststellungen
+Vorgelegte Dokumente Zum Zeitpunkt der Besichtigung lag die Zulassungsbescheinigung Teil 2 (Brief) vor, die Zulassungsbescheinigung 
+Teil 1 (Schein) lag nicht vor. (Kopie)
+FIN-Vergleich Die Fahrzeug-Identifizierungsnummer (FIN) wurde am Fahrzeug abgelesen und die Übereinstimmung im Verlauf 
+der Besichtigung durch den Unterzeichner mit den vorgelegten Unterlagen festgestellt.
+Besichtigung Die Besichtigungsbedingungen waren zur Beurteilung des Fahrzeuges ausreichend. 
+Zur Untersuchung des Fahrzeuges standen Hubmittel bzw. eine Grube zur Verfügung.
+Probefahrt Es wurde eine kurze Bewegungs- und Rangierfahrt auf dem Betriebsgelände durchgeführt.
+Motorlauf Ein Probelauf des Motors wurde durchgeführt.
+Wertmindernde Faktoren
+Nr. Bauteilgruppe Beschreibung
+1 Außenspiegel rechts Abdeckkappe - Kratzer - Smart Repair
+2 Außenspiegel links Abdeckkappe - Kratzer - Smart Repair
+3 Schweller rechts Einstieg - Kratzer - Smart Repair
+4 Seitenwand links Seitenwand - Kratzer - Smart Repair
+5 Interieur Innenraum - Geruch - Ozonbehandlung
+6 Schweller links Einstieg - Delle / Lackschaden - Smart Repair
+7 Verkleidungen/
+Abdeckungen
+Heckdeckel, Innenverkleidung - gebrochen / gerissen - erneuern
+8 Heckklappe/-tür Heckspoiler - Kratzer - lackieren
+9 Tür hinten links Tür - Kratzer - lackieren
+10 Tür hinten rechts Tür - Kratzer - lackieren
+11 2.Radsatz 3 Reifen - gebrochen / gerissen - erneuern
+12 Heckklappe/-tür Heckklappe - Kratzer - lackieren
+13 Stossfänger hinten Stossfänger hinten - Kratzer - lackieren
+14 2.Radsatz Leichtmetallfelgensatz komplett - verkratzt / verschürft - erneuern
+Gebrauchsspuren
+Nr. Bauteilgruppe Beschreibung
+1 Rad/Reifen Leichtmetallfelge vorn rechts - Kratzer - kein Abzug
+2 Rad/Reifen Leichtmetallfelge hinten rechts - verkratzt / verschürft - kein Abzug
+3 Rad/Reifen Leichtmetallfelge hinten links - verkratzt / verschürft - kein Abzug
+4 Stossfänger vorn Stossfänger vorn - Steinschlag - kein Abzug
+5 Verglasung Frontscheibe - Steinschlag - kein Abzug
+6 Motorhaube Motorhaube (Auslegen/Polieren) - Kratzer - kein Abzug
+Das Fahrzeug weist dem Alter und Einsatz entsprechende Gebrauchsspuren auf.
+Vorschäden
+Nr. Vorschaden Schadenhöhe (netto)
+1 Seite links, Angabe durch Nutzer/Auftraggeber, vom 25.01.2024 1.945,94 €
+2 Seite rechts, Angabe durch Nutzer/Auftraggeber, vom 20.10.2025 4.808,92 €
+3 Seite links, Angabe durch Nutzer/Auftraggeber, vom 01.02.2024 5.194,81 €
+4 Front, Angabe durch Nutzer/Auftraggeber, vom 06.06.2025 9.405,70 €
+5 Heck, Angabe durch Nutzer/Auftraggeber, vom 24.07.2025 9.729,28 €
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 6 / 25
+Nachlackierungen
+Nr. Nachlackierung
+1 Kotflügel rechts, fachgerecht ausgeführt, Reparaturrechnung nicht vorhanden
+2 Seitenwand rechts, fachgerecht ausgeführt, Reparaturrechnung nicht vorhanden
+3 Tür hinten rechts, fachgerecht ausgeführt, Reparaturrechnung nicht vorhanden
+4 Tür vorne rechts, fachgerecht ausgeführt, Reparaturrechnung nicht vorhanden
+Lackschichtdickenmessung
+Kotflügel rechts 192 µm Seitenwand rechts 213 µm
+Tür hinten rechts 189 µm Tür vorne rechts 198 µm
+Auftrag/Auftragsumfang
+Es wurde der Auftrag erteilt, ein Verkaufsbericht über das beschriebene Fahrzeug zu erstellen. Dieses beinhaltet folgende Umfänge:
+• Beschreibung von kernrelevanten Angaben zum Fahrzeug
+• Dokumentation von Ausstattungsmerkmalen
+(Lieferung durch Drittdienstleister)
+• Dokumentation von Schäden, Mängeln, Fehlteilen
+• Dokumentation von Vorschäden, unreparierten Vorschäden, Nachlackierungen
+• eine kurze Sicht- oder Funktionsprüfung der Ausstattungsdetails sofern möglich.
+(Funktionsprüfungen von Fahrerassistenzsysteme gehören nicht zum Leistungsumfang!)
+• eine Fotodokumentation des Fahrzeuges
+Grundlage zum Auftrag
+Grundlage dieses Produktes stellt der Leitfaden für Fahrzeugrücknahmen und Bewertungen der Alphabet Fuhrpark GmbH dar. Die expliziten 
+Feststellungen im Einzelfall trifft der Sachverständige objektiv im Rahmen der vorgegebenen Standards aufgrund eigener Sachkunde.
+Die Fahrzeugbesichtigung erfolgt im demontagefreien Zustand.
+Schäden oder Mängel welche erst im Rahmen von Zerlege-/ Diagnosearbeiten oder durch erweiterte Kenntnisse festgestellt werden können, 
+verbleiben im Bereich des Prognoserisikos. Ein erweitertes Risiko besteht durch verschwiegene Mängel welche durch arglistige Täuschung 
+hervorgerufen, und durch den sachverständigen nicht identifizierbar waren.
+Schäden oder Mängel, die aus einer normalen Nutzung bzw. Abnutzung des Fahrzeuges entstanden sind, werden gemäß dem zugrunde gelegten 
+Standard akzeptiert.
+Ein expliziter Ausweis und eine monetäre Betrachtung der zu erwartenden Merkmale innerhalb des Produktes erfolgten nicht.
+Merkmale, welche in ihrer Art und Ausprägung leicht über den üblichen Gebrauch hinausgehen jedoch keine inakzeptable Beschädigung 
+darstellen, werden ggf. unter Gebrauchsspuren dokumentiert und ausgewiesen.
+Schäden oder Mängel, welche gemäß dem zugrunde gelegten Standard, nicht mehr einer normalen Nutzung bzw. Abnutzung zugeordnet werden 
+können, werden im Produkt unter Wertmindernde Faktoren aufgelistet.
+Je nach Produktspezifikation kann ein monetärer Ausweis erfolgen. Insofern dieses stattfindet können die Kosten zu 100% dargestellt sein oder 
+anteilig gemäß Fahrzeugalter und Laufleistung.
+Vorschäden
+Laut vorliegenden Informationen wurden am Fahrzeug Vorschäden instandgesetzt. Reparaturspuren, die Rückschlüsse auf den 
+Instandsetzungsbereich des Schadens ermöglichen, waren bei der Besichtigung nicht erkennbar.
+Bemerkungen
+- Winterradsatz ist kein Bestandteil des Auslieferumfangs.
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 7 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Abbildung 1: Schräg vorne (links)
+ Abbildung 2: Schräg vorne (rechts)
+Abbildung 3: Schräg hinten (links)
+ Abbildung 4: Schräg hinten (rechts)
+Abbildung 5: Innenraum vorne
+ Abbildung 6: Innenraum hinten
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 8 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Abbildung 7: Kombiinstrument
+ Abbildung 8: Instrumententafel
+Abbildung 9: Innenraum 360° Ansicht
+ Abbildung 10: Laderaum
+Abbildung 11: FIN
+ Abbildung 12: Montierte Bereifung
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 9 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Abbildung 13: Dokumente
+ Abbildung 14: Dokumente
+Abbildung 15: Dokumente
+ Abbildung 16: Dokumente
+Abbildung 17: Dokumente
+ Abbildung 18: Zusatzbereifung
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 10 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Abbildung 19: Navigation
+ Abbildung 20: Sonstiges
+Abbildung 21: Sonstiges
+ Abbildung 22: Sonstiges
+Abbildung 23: Sonstiges
+ Abbildung 24: Sonstiges
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 11 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Abbildung 25: Sonstiges
+ Abbildung 26: Sonstiges
+Abbildung 27: Sonstiges
+ Abbildung 28: Sonstiges
+Abbildung 29: Sonstiges
+ Abbildung 30: Sonstiges
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 12 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Abbildung 31: Sonstiges
+ Abbildung 32: Sonstiges
+Abbildung 33: Sonstiges
+ Abbildung 34: Sonstiges
+Abbildung 35: Sonstiges
+ Beschädigung 1: Außenspiegel rechts: Abdeckkappe - Kratzer - Smart 
+Repair
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 13 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Beschädigung 1: Außenspiegel rechts: Abdeckkappe - Kratzer - Smart 
+Repair
+Beschädigung 2: Außenspiegel links: Abdeckkappe - Kratzer - Smart 
+Repair
+Beschädigung 2: Außenspiegel links: Abdeckkappe - Kratzer - Smart 
+Repair
+Beschädigung 3: Schweller rechts: Einstieg - Kratzer - Smart Repair
+Beschädigung 3: Schweller rechts: Einstieg - Kratzer - Smart Repair
+ Beschädigung 4: Seitenwand links: Seitenwand - Kratzer - Smart Repair
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 14 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Beschädigung 4: Seitenwand links: Seitenwand - Kratzer - Smart Repair
+ Beschädigung 6: Schweller links: Einstieg - Delle / Lackschaden - Smart 
+Repair
+Beschädigung 6: Schweller links: Einstieg - Delle / Lackschaden - Smart 
+Repair
+Beschädigung 6: Schweller links: Einstieg - Delle / Lackschaden - Smart 
+Repair
+Beschädigung 7: Verkleidungen/Abdeckungen: Heckdeckel, 
+Innenverkleidung - gebrochen / gerissen - erneuern
+Beschädigung 7: Verkleidungen/Abdeckungen: Heckdeckel, 
+Innenverkleidung - gebrochen / gerissen - erneuern
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 15 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Beschädigung 8: Heckklappe/-tür: Heckspoiler - Kratzer - lackieren
+ Beschädigung 8: Heckklappe/-tür: Heckspoiler - Kratzer - lackieren
+Beschädigung 9: Tür hinten links: Tür - Kratzer - lackieren
+ Beschädigung 9: Tür hinten links: Tür - Kratzer - lackieren
+Beschädigung 9: Tür hinten links: Tür - Kratzer - lackieren
+ Beschädigung 9: Tür hinten links: Tür - Kratzer - lackieren
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 16 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Beschädigung 10: Tür hinten rechts: Tür - Kratzer - lackieren
+ Beschädigung 10: Tür hinten rechts: Tür - Kratzer - lackieren
+Beschädigung 10: Tür hinten rechts: Tür - Kratzer - lackieren
+ Beschädigung 11: 2.Radsatz: 3 Reifen - gebrochen / gerissen - 
+erneuern
+Beschädigung 11: 2.Radsatz: 3 Reifen - gebrochen / gerissen - 
+erneuern
+Beschädigung 11: 2.Radsatz: 3 Reifen - gebrochen / gerissen - 
+erneuern
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 17 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Beschädigung 11: 2.Radsatz: 3 Reifen - gebrochen / gerissen - 
+erneuern
+Beschädigung 11: 2.Radsatz: 3 Reifen - gebrochen / gerissen - 
+erneuern
+Beschädigung 11: 2.Radsatz: 3 Reifen - gebrochen / gerissen - 
+erneuern
+Beschädigung 12: Heckklappe/-tür: Heckklappe - Kratzer - lackieren
+Beschädigung 12: Heckklappe/-tür: Heckklappe - Kratzer - lackieren
+ Beschädigung 12: Heckklappe/-tür: Heckklappe - Kratzer - lackieren
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 18 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Beschädigung 12: Heckklappe/-tür: Heckklappe - Kratzer - lackieren
+ Beschädigung 13: Stossfänger hinten: Stossfänger hinten - Kratzer - 
+lackieren
+Beschädigung 13: Stossfänger hinten: Stossfänger hinten - Kratzer - 
+lackieren
+Beschädigung 13: Stossfänger hinten: Stossfänger hinten - Kratzer - 
+lackieren
+Beschädigung 13: Stossfänger hinten: Stossfänger hinten - Kratzer - 
+lackieren
+Beschädigung 13: Stossfänger hinten: Stossfänger hinten - Kratzer - 
+lackieren
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 19 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Beschädigung 13: Stossfänger hinten: Stossfänger hinten - Kratzer - 
+lackieren
+Beschädigung 14: 2.Radsatz: Leichtmetallfelgensatz komplett - 
+verkratzt / verschürft - erneuern
+Beschädigung 14: 2.Radsatz: Leichtmetallfelgensatz komplett - 
+verkratzt / verschürft - erneuern
+Beschädigung 14: 2.Radsatz: Leichtmetallfelgensatz komplett - 
+verkratzt / verschürft - erneuern
+Beschädigung 14: 2.Radsatz: Leichtmetallfelgensatz komplett - 
+verkratzt / verschürft - erneuern
+Beschädigung 14: 2.Radsatz: Leichtmetallfelgensatz komplett - 
+verkratzt / verschürft - erneuern
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 20 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Beschädigung 14: 2.Radsatz: Leichtmetallfelgensatz komplett - 
+verkratzt / verschürft - erneuern
+Beschädigung 14: 2.Radsatz: Leichtmetallfelgensatz komplett - 
+verkratzt / verschürft - erneuern
+Beschädigung 14: 2.Radsatz: Leichtmetallfelgensatz komplett - 
+verkratzt / verschürft - erneuern
+Beschädigung 14: 2.Radsatz: Leichtmetallfelgensatz komplett - 
+verkratzt / verschürft - erneuern
+Beschädigung 14: 2.Radsatz: Leichtmetallfelgensatz komplett - 
+verkratzt / verschürft - erneuern
+Gebrauchsspur 1: Rad/Reifen: Leichtmetallfelge vorn rechts - Kratzer - 
+kein Abzug
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 21 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Gebrauchsspur 1: Rad/Reifen: Leichtmetallfelge vorn rechts - Kratzer - 
+kein Abzug
+Gebrauchsspur 2: Rad/Reifen: Leichtmetallfelge hinten rechts - 
+verkratzt / verschürft - kein Abzug
+Gebrauchsspur 2: Rad/Reifen: Leichtmetallfelge hinten rechts - 
+verkratzt / verschürft - kein Abzug
+Gebrauchsspur 2: Rad/Reifen: Leichtmetallfelge hinten rechts - 
+verkratzt / verschürft - kein Abzug
+Gebrauchsspur 3: Rad/Reifen: Leichtmetallfelge hinten links - verkratzt / 
+verschürft - kein Abzug
+Gebrauchsspur 3: Rad/Reifen: Leichtmetallfelge hinten links - verkratzt / 
+verschürft - kein Abzug
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 22 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Gebrauchsspur 4: Stossfänger vorn: Stossfänger vorn - Steinschlag - 
+kein Abzug
+Gebrauchsspur 4: Stossfänger vorn: Stossfänger vorn - Steinschlag - 
+kein Abzug
+Gebrauchsspur 4: Stossfänger vorn: Stossfänger vorn - Steinschlag - 
+kein Abzug
+Gebrauchsspur 4: Stossfänger vorn: Stossfänger vorn - Steinschlag - 
+kein Abzug
+Gebrauchsspur 4: Stossfänger vorn: Stossfänger vorn - Steinschlag - 
+kein Abzug
+Gebrauchsspur 6: Motorhaube: Motorhaube (Auslegen/Polieren) - 
+Kratzer - kein Abzug
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 23 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Gebrauchsspur 6: Motorhaube: Motorhaube (Auslegen/Polieren) - 
+Kratzer - kein Abzug
+Gebrauchsspur 6: Motorhaube: Motorhaube (Auslegen/Polieren) - 
+Kratzer - kein Abzug
+Gebrauchsspur 6: Motorhaube: Motorhaube (Auslegen/Polieren) - 
+Kratzer - kein Abzug
+Nachlackierung 1: Kotflügel rechts
+Nachlackierung 2: Seitenwand rechts
+ Nachlackierung 3: Tür hinten rechts
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 24 / 25
+TÜV SÜD Auto Partner GmbH
+Wiesenring 2
+04159 Leipzig
+Besichtigungsort
+ARS Altmann AG Niederlassung 
+Wolnzach
+Feierabendmühle 2
+85283 Wolnzach
+Nachlackierung 4: Tür vorne rechts
+FIN: WP1ZZZ9Y6PDA32740 - Protokollnummer: 4457501224.03.2026 Seite 25 / 25
+Wartungshistorie
+(gemäß Auftraggeber Informationen)
+Fahrgestellnummer: WP1ZZZ9Y6PDA32740
+Hersteller / Modell: PORSCHE PORSCHE Cayenne E-Hybrid Coupe Tiptronic S 
+Platinum Edition
+Datum KM-Stand Beschreibung
+20.01.2026 89.139 HU + AU; Motoröl b. Wartung; Ölfilter ern; Regelwartungsdienst; Systemtest/
+Eigendiagnose; Wartung Sonstiges
+17.01.2025 62.779 Bremsflüssigkeit; Bremsflüssigkeit ern; Getriebeöl ern/prüfen; Motoröl b. 
+Wartung; Ölfilter ern; Regelwartungsdienst; Reparatur Sonstiges; Wartung 
+Sonstiges; Zündkerzen ern
+16.01.2024 30.895 Motoröl b. Wartung; Ölfilter ern; Regelwartungsdienst; Wartung Sonstiges
+

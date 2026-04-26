@@ -1,2 +1,174 @@
-Nummer;Fahrzeug-Link;Bild_Gallery1;Hersteller;Modell;Ausführung;Kraftstoff;Getriebe;PS;KM Stand;Erstzulassung;Farbe;Farbe_Einfach;Sofortkauf-Preis;Link;Baujahr
-2026006;https://www.auto-mega-store.com/de/details?wgID=:29994&backlink=TDJSbEwyWmhhSEo2WlhWblpTOW1ZV2h5ZW1WMVp5MXJZWFZtWlc0L1pqMHhKbTFoYmw5cFpEMHhPREUwSm0xcGJEMHdPams1T1RrNU9TWnpkR0Z5ZEQwdw==&man_id=1814&mil=0:999999&start=0;;BYD;Dolphin ;Comfort;Elektro;Automatik;204;24.766;07/2024;Skiing White;Weiß;23990;https://www.auto-mega-store.com/de/details?wgID=:29994&backlink=TDJSbEwyWmhhSEo2WlhWblpTOW1ZV2h5ZW1WMVp5MXJZWFZtWlc0L1pqMHhKbTFoYmw5cFpEMHhPREUwSm0xcGJEMHdPams1T1RrNU9TWnpkR0Z5ZEQwdw==&man_id=1814&mil=0:999999&start=0;2024
+Nummer;Fahrzeug-Link;Bild_Gallery1;Hersteller;Modell;Ausführung;Kraftstoff;Getriebe;PS;KM Stand;Erstzulassung;Farbe;Farbe_Einfach;Sofortkauf-Preis;Link;Baujahr;HTML_Code
+2026003;https://de.bca-europe.com/Lot?id=23457600&ItemId=b2585f95-336a-4bf5-b015-cb8068c9b861&q=&bq=suppresssaleinformation_exact%3Atrue%7Cfueltype_exact%3ABEV%20-%20battery%20electric%20vehicle%20%20100%25%20electric&sort=Relevance&missingMileage=True&awaitingAppraisal=True&page=1&extraFiltersActive=true&returnTo=1907187&promoAppliedSets=&R=15&SR=10&SourceSystem=PEEP;;BYD;Seal;Excellence;Elektro;Automatik;530;15000;04/2025;INDIGO GREY;Silber;40990;https://de.bca-europe.com/Lot?id=23457600&ItemId=b2585f95-336a-4bf5-b015-cb8068c9b861&q=&bq=suppresssaleinformation_exact%3Atrue%7Cfueltype_exact%3ABEV%20-%20battery%20electric%20vehicle%20%20100%25%20electric&sort=Relevance&missingMileage=True&awaitingAppraisal=True&page=1&extraFiltersActive=true&returnTo=1907187&promoAppliedSets=&R=15&SR=10&SourceSystem=PEEP;2025;"<!DOCTYPE html>
+<html lang=""de"">
+<head>
+    <meta charset=""UTF-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+    <title>BYD Seal | New Era Mobility</title>
+    <script src=""https://cdn.tailwindcss.com""></script>
+    <link href=""https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"" rel=""stylesheet"">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sage: {
+                            50: '#01fd77ff',
+                            100: '#e6ede6',
+                            200: '#ceddce',
+                            300: '#a8c2a8',
+                            400: '#7fa17f',
+                            500: '#24d9edff',
+                            600: '#0c7dffff', // Base Sage
+                            700: '#3f563f',
+                            800: '#344634',
+                            900: '#ffffffff',
+                        },
+                        premium: '#1a1a1a',
+                        accent: '#ceed21ff'
+                    },
+                    fontFamily: {
+                        display: ['Outfit', 'sans-serif'],
+                        body: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #404040;
+            color: #ffffffff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background: #404040;
+            backdrop-filter: blur(12px);
+            border: 2px solid #ffffffff;
+            border-radius: 24px;
+        }
+        .bento-item {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .bento-item:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+        .text-gradient { 
+            background: linear-gradient(135deg, #ffffff 0%, #0c7dffff 100%); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
+    </style>
+</head>
+<body class=""p-4 md:p-8 lg:p-12"">
+
+    <div class=""max-w-7xl mx-auto space-y-8 md:space-y-12 animate-fade-in"">
+
+        <!-- CONTENT GRID -->
+        <div class=""grid grid-cols-1 lg:grid-cols-5 gap-6 md:gap-8 items-start"">
+            
+            <!-- LEFT SIDE: STATS & FEATURES (Spans 3) -->
+            <div class=""lg:col-span-3 space-y-6 md:space-y-8"">
+                
+                <!-- KEY STATS GRID -->
+                <div class=""grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4"">
+                    <div class=""glass-card p-4 md:p-6 bento-item flex flex-col justify-center items-center text-center"">
+                        <span class=""text-sage-600 font-bold text-[10px] md:text-xs uppercase tracking-widest mb-1 md:mb-2"">Leistung</span>
+                        <span class=""text-lg md:text-xl font-display font-bold"">390 kW</span>
+                        <span class=""text-white/60 text-[10px] md:text-xs"">(530 PS)</span>
+                    </div>
+                    <div class=""glass-card p-4 md:p-6 bento-item flex flex-col justify-center items-center text-center"">
+                        <span class=""text-sage-600 font-bold text-[10px] md:text-xs uppercase tracking-widest mb-1 md:mb-2"">Laufleistung</span>
+                        <span class=""text-lg md:text-xl font-display font-bold"">15000</span>
+                    </div>
+                    <div class=""glass-card p-4 md:p-6 bento-item flex flex-col justify-center items-center text-center"">
+                        <span class=""text-sage-600 font-bold text-[10px] md:text-xs uppercase tracking-widest mb-1 md:mb-2"">Erstzulassung</span>
+                        <span class=""text-lg md:text-xl font-display font-bold"">30.04.2025</span>
+                    </div>
+                    <div class=""glass-card p-4 md:p-6 bento-item flex flex-col justify-center items-center text-center"">
+                        <span class=""text-sage-600 font-bold text-[10px] md:text-xs uppercase tracking-widest mb-1 md:mb-2"">Antrieb</span>
+                        <span class=""text-lg md:text-xl font-display font-bold"">Automatik</span>
+                    </div>
+                </div>
+
+                <!-- DETAILED FEATURES -->
+                <div class=""grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"">
+                    <div class=""glass-card p-6 md:p-8 space-y-4 md:space-y-6 border-white/10"">
+                        <h3 class=""text-lg md:text-xl font-display font-semibold text-sage-600 flex items-center gap-2"">
+                            <span class=""w-6 md:w-8 h-[1px] bg-sage-600""></span> Interieur
+                        </h3>
+                        <ul class=""space-y-2 md:space-y-3 text-xs md:text-sm text-white/80"">
+                            <li class=""flex items-start gap-2""><span>•</span> 2-Zonen-Klimaautomatik</li><li class=""flex items-start gap-2""><span>•</span> El. beheizbare Sitze vorne</li><li class=""flex items-start gap-2""><span>•</span> Keyless Entry</li><li class=""flex items-start gap-2""><span>•</span> Android Auto / CarPlay</li><li class=""flex items-start gap-2""><span>•</span> Ambientebeleuchtung</li><li class=""flex items-start gap-2""><span>•</span> Digitales Cockpit</li><li class=""flex items-start gap-2""><span>•</span> Induktives Laden</li><li class=""flex items-start gap-2""><span>•</span> Multifunktionslenkrad</li>
+                        </ul>
+                    </div>
+
+                    <div class=""glass-card p-6 md:p-8 space-y-4 md:space-y-6 border-white/10"">
+                        <h3 class=""text-lg md:text-xl font-display font-semibold text-sage-600 flex items-center gap-2"">
+                            <span class=""w-6 md:w-8 h-[1px] bg-sage-600""></span> Technologie
+                        </h3>
+                        <ul class=""space-y-2 md:space-y-3 text-xs md:text-sm text-white/80"">
+                            <li class=""flex items-start gap-2""><span>•</span> Navigationssystem</li><li class=""flex items-start gap-2""><span>•</span> Head-up display</li><li class=""flex items-start gap-2""><span>•</span> Voll-LED Scheinwerfer</li><li class=""flex items-start gap-2""><span>•</span> 360° Kamera-System</li><li class=""flex items-start gap-2""><span>•</span> Abstandstempomat (ACC)</li><li class=""flex items-start gap-2""><span>•</span> Totwinkelassistent</li><li class=""flex items-start gap-2""><span>•</span> Verkehrszeichenerkennung</li><li class=""flex items-start gap-2""><span>•</span> Spurhalteassistent</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE: ACTION AREA (Spans 2) -->
+            <div class=""lg:col-span-2 space-y-6"">
+                <div class=""glass-card p-6 md:p-8 border-white/20 lg:sticky lg:top-8"">
+                    <h3 class=""text-xl md:text-2xl font-display font-bold mb-6 text-white text-center md:text-left"">Leistungspaket</h3>
+                    <div class=""space-y-4 mb-8"">
+                        <div class=""flex items-center gap-3 text-white/90 text-sm md:text-base"">
+                            <div class=""min-w-[20px] h-5 w-5 rounded-full bg-sage-400 flex items-center justify-center text-[10px] text-sage-100"">✓</div>
+                            <span>Import & Transport</span>
+                        </div>
+                        <div class=""flex items-center gap-3 text-white/90 text-sm md:text-base"">
+                            <div class=""min-w-[20px] h-5 w-5 rounded-full bg-sage-400 flex items-center justify-center text-[10px] text-sage-100"">✓</div>
+                            <span>NoVA & Umsatzsteuer</span>
+                        </div>
+                        <div class=""flex items-center gap-3 text-white/90 text-sm md:text-base"">
+                            <div class=""min-w-[20px] h-5 w-5 rounded-full bg-sage-400 flex items-center justify-center text-[10px] text-sage-100"">✓</div>
+                            <span>Vollständige Abwicklung</span>
+                        </div>
+                    </div>
+
+                    <div class=""p-4 md:p-5 bg-white/5 rounded-2xl border border-white/5 mb-8 text-center md:text-left"">
+                        <p class=""text-[10px] text-sage-600 uppercase font-bold tracking-[0.1em] mb-2"">Optional zubuchbar</p>
+                        <ul class=""space-y-1 text-xs md:text-sm text-white/70"">
+                            <li>12 - 36 Monate Basisgarantie</li>
+                            <li>Haustür-Lieferung</li>
+                        </ul>
+                    </div>
+
+                    <button onclick=""window.open('https://google.com', '_blank')"" class=""w-full bg-sage-600 hover:bg-sage-500 text-white font-display font-bold py-4 md:py-5 rounded-2xl transition-all duration-300 shadow-xl shadow-sage-600/20 flex items-center justify-center gap-2 group text-sm md:text-base"">
+                        Jetzt anfragen
+                        <svg xmlns=""http://www.w3.org/2000/svg"" class=""h-5 w-5 group-hover:translate-x-1 transition-transform"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+                            <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M17 8l4 4m0 0l-4 4m4-4H3"" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER / DISCLAIMER -->
+        <footer class=""pt-8 md:pt-12 pb-6 border-t border-white/10"">
+            <p class=""text-[10px] leading-relaxed text-white/40 uppercase tracking-[0.15em] text-center max-w-3xl mx-auto"">
+                Hinweis: Alle Angaben basieren auf den vorliegenden Fahrzeugdaten und werden nach bestem Wissen erstellt. Irrtümer und Zwischenverkauf vorbehalten.
+            </p>
+        </footer>
+
+    </div>
+</body>
+</html>"

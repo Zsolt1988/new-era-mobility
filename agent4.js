@@ -142,6 +142,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const initialFeatures = mapFeatures(car);
     document.getElementById('edit-interieur').value = initialFeatures.interieur.join('\n');
     document.getElementById('edit-technologie').value = initialFeatures.technologie.join('\n');
+    
+    // Map Schäden (Damages)
+    let initialSchaeden = [];
+    const damageSource = (car.schaeden && car.schaeden.length > 0) ? car.schaeden : (car.schäden || []);
+    if (damageSource && damageSource.length > 0) {
+        initialSchaeden = damageSource.map(s => {
+            if (s.Bauteil) {
+                return `${s.Bauteil} (${s.Position || ''}): ${s.Beschreibung}`.replace('(): ', ': ');
+            }
+            return s.Beschreibung;
+        });
+    }
+    document.getElementById('edit-schaeden').value = initialSchaeden.join('\n');
 
     function getGeneratedHtml() {
         // Read from UI inputs instead of car object/localStorage
@@ -158,6 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const interieurLines = document.getElementById('edit-interieur').value.split('\n').filter(l => l.trim() !== '');
         const technologieLines = document.getElementById('edit-technologie').value.split('\n').filter(l => l.trim() !== '');
+        const schaedenLines = document.getElementById('edit-schaeden').value.split('\n').filter(l => l.trim() !== '');
 
         // Extract Brand/Model from title if possible for the footer
         const titleParts = title.split(' ');
@@ -184,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             300: '#a8c2a8',
                             400: '#7fa17f',
                             500: '#24d9edff',
-                            600: '#0c7dffff', 
+                            600: '#0c7dffff', // Base Sage
                             700: '#3f563f',
                             800: '#344634',
                             900: '#ffffffff',
@@ -195,51 +209,64 @@ document.addEventListener('DOMContentLoaded', () => {
                     fontFamily: {
                         display: ['Outfit', 'sans-serif'],
                         body: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out',
                     }
                 }
             }
         }
     </script>
     <style>
-        body { background-color: #3d3a3aff; color: #ffffffff; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
-        .glass-card { background: #3d3a3aff; backdrop-filter: blur(12px); border: 2px solid #ffffffff; border-radius: 24px; }
-        .glass-card1 { background: #3d3a3aff; backdrop-filter: blur(12px); border: 0px none; border-radius: 24px; }
-        .text-gradient { background: linear-gradient(135deg, #ffffff 0%, #2779d1ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; padding-bottom: 0.1em; margin-bottom: -0.1em; }
-        .bento-item { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        body {
+            background-color: #404040;
+            color: #ffffffff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background: #404040;
+            backdrop-filter: blur(12px);
+            border: 2px solid #ffffffff;
+            border-radius: 24px;
+        }
+        .bento-item {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .bento-item:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+        .text-gradient { 
+            background: linear-gradient(135deg, #ffffff 0%, #0c7dffff 100%); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
     </style>
 </head>
 <body class="p-4 md:p-8 lg:p-12">
-    <div class="max-w-7xl mx-auto space-y-8">
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-sage-800/30 pb-8">
-            <div class="space-y-2 w-full md:w-auto">
-                <p class="text-sage-900 font-display font-semibold tracking-widest uppercase text-xs md:text-sm">New Era Mobility</p>
-                <h1 class="text-4xl md:text-6xl font-display font-bold text-gradient">${title}</h1>
-                <p class="text-xl text-sage-200 font-bold italic">${execution}</p>
-                <p class="text-sm md:text-base text-sage-200/70 font-light italic">${color}</p>
-            </div>
-            <div class="flex flex-col items-start md:items-end gap-4 w-full md:w-auto">
-                <div class="flex flex-row flex-wrap justify-start md:justify-end gap-2">
-                    <span class="bg-sage-900 text-sage-600 px-3 py-1 rounded-full text-[10px] md:text-sm font-medium border border-sage-600/0 whitespace-nowrap">FIXPREIS</span>
-                    <span class="bg-sage-900 text-sage-600 px-3 py-1 rounded-full text-[10px] md:text-sm font-medium border border-sage-600/0 whitespace-nowrap">Gebrauchtwagen</span>
-                    <span class="bg-sage-900 text-sage-600 px-3 py-1 rounded-full text-[10px] md:text-sm font-medium border border-sage-600/0">Verfügbar in ca. 5 Wochen</span>
-                </div>
-                <div class="text-3xl md:text-4xl font-display font-bold text-white">${formattedPriceStr}</div>
-            </div>
-        </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
-            <div class="lg:col-span-3 space-y-6 md:space-y-10">
-                <div class="glass-card1 overflow-hidden group">
-                    <div class="relative aspect-video flex items-center justify-center bg-black/20 rounded-3xl">
-                        <span class="text-sage-600 font-display font-bold text-sm md:text-xl uppercase tracking-widest text-center px-4">Fahrzeugbild Platzhalter</span>
-                    </div>
-                </div>
+    <div class="max-w-7xl mx-auto space-y-8 md:space-y-12 animate-fade-in">
 
+        <!-- CONTENT GRID -->
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 md:gap-8 items-start">
+            
+            <!-- LEFT SIDE: STATS & FEATURES (Spans 3) -->
+            <div class="lg:col-span-3 space-y-6 md:space-y-8">
+                
+                <!-- KEY STATS GRID -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                     <div class="glass-card p-4 md:p-6 bento-item flex flex-col justify-center items-center text-center">
                         <span class="text-sage-600 font-bold text-[10px] md:text-xs uppercase tracking-widest mb-1 md:mb-2">Leistung</span>
-                        <span class="text-lg md:text-xl font-display font-bold">${kw}</span>
-                        <span class="text-white/60 text-xs">(${ps} PS)</span>
+                        <span class="text-lg md:text-xl font-display font-bold">${kw} kW</span>
+                        <span class="text-white/60 text-[10px] md:text-xs">(${ps} PS)</span>
                     </div>
                     <div class="glass-card p-4 md:p-6 bento-item flex flex-col justify-center items-center text-center">
                         <span class="text-sage-600 font-bold text-[10px] md:text-xs uppercase tracking-widest mb-1 md:mb-2">Laufleistung</span>
@@ -255,89 +282,92 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
 
+                <!-- DETAILED FEATURES -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    <div class="glass-card p-6 md:p-8 space-y-4 md:space-y-6">
+                    <div class="glass-card p-6 md:p-8 space-y-4 md:space-y-6 border-white/10">
                         <h3 class="text-lg md:text-xl font-display font-semibold text-sage-600 flex items-center gap-2">
                             <span class="w-6 md:w-8 h-[1px] bg-sage-600"></span> Interieur
                         </h3>
-                        <ul class="grid grid-cols-1 gap-2 text-xs md:text-sm text-white/80">
-                            ${interieurLines.map(f => `<li class="flex items-center gap-2"><span>•</span> ${f}</li>`).join('')}
+                        <ul class="space-y-2 md:space-y-3 text-xs md:text-sm text-white/80">
+                            ${interieurLines.map(f => `<li class="flex items-start gap-2"><span>•</span> ${f}</li>`).join('')}
                         </ul>
                     </div>
-                    <div class="glass-card p-6 md:p-8 space-y-4 md:space-y-6">
+
+                    <div class="glass-card p-6 md:p-8 space-y-4 md:space-y-6 border-white/10">
                         <h3 class="text-lg md:text-xl font-display font-semibold text-sage-600 flex items-center gap-2">
                             <span class="w-6 md:w-8 h-[1px] bg-sage-600"></span> Technologie
                         </h3>
-                        <ul class="grid grid-cols-1 gap-2 text-xs md:text-sm text-white/80">
-                            ${technologieLines.map(f => `<li class="flex items-center gap-2"><span>•</span> ${f}</li>`).join('')}
+                        <ul class="space-y-2 md:space-y-3 text-xs md:text-sm text-white/80">
+                            ${technologieLines.map(f => `<li class="flex items-start gap-2"><span>•</span> ${f}</li>`).join('')}
                         </ul>
                     </div>
                 </div>
             </div>
 
+            <!-- RIGHT SIDE: ACTION AREA (Spans 2) -->
             <div class="lg:col-span-2 space-y-6">
-                <div class="glass-card p-6 md:p-8">
+                <div class="glass-card p-6 md:p-8 border-white/20 lg:sticky lg:top-8">
                     <h3 class="text-xl md:text-2xl font-display font-bold mb-6 text-white text-center md:text-left">Leistungspaket</h3>
                     <div class="space-y-4 mb-8">
                         <div class="flex items-center gap-3 text-white/90 text-sm md:text-base">
-                            <div class="min-w-[20px] h-5 rounded-full bg-sage-50/30 flex items-center justify-center text-[10px] text-sage-300">✓</div>
+                            <div class="min-w-[20px] h-5 w-5 rounded-full bg-sage-400 flex items-center justify-center text-[10px] text-sage-100">✓</div>
                             <span>Import & Transport</span>
                         </div>
                         <div class="flex items-center gap-3 text-white/90 text-sm md:text-base">
-                            <div class="min-w-[20px] h-5 rounded-full bg-sage-50/30 flex items-center justify-center text-[10px] text-sage-300">✓</div>
+                            <div class="min-w-[20px] h-5 w-5 rounded-full bg-sage-400 flex items-center justify-center text-[10px] text-sage-100">✓</div>
                             <span>NoVA & Umsatzsteuer</span>
                         </div>
                         <div class="flex items-center gap-3 text-white/90 text-sm md:text-base">
-                            <div class="min-w-[20px] h-5 rounded-full bg-sage-50/30 flex items-center justify-center text-[10px] text-sage-300">✓</div>
+                            <div class="min-w-[20px] h-5 w-5 rounded-full bg-sage-400 flex items-center justify-center text-[10px] text-sage-100">✓</div>
                             <span>Vollständige Abwicklung</span>
                         </div>
                     </div>
-                    <div class="p-4 bg-white/5 rounded-xl border border-white/5 mb-8 text-center md:text-left">
-                        <p class="text-[10px] text-sage-600 uppercase tracking-[0.1em] mb-2 font-bold">Optional zubuchbar</p>
-                        <p class="text-xs md:text-sm text-sage-100">12 - 36 Monate Basisgarantie</p>
-                        <p class="text-xs md:text-sm text-sage-100">Lieferung bis vor die Haustür</p>
+
+                    <div class="p-4 md:p-5 bg-white/5 rounded-2xl border border-white/5 mb-8 text-center md:text-left">
+                        <p class="text-[10px] text-sage-600 uppercase font-bold tracking-[0.1em] mb-2">Optional zubuchbar</p>
+                        <ul class="space-y-1 text-xs md:text-sm text-white/70">
+                            <li>12 - 36 Monate Basisgarantie</li>
+                            <li>Haustür-Lieferung</li>
+                        </ul>
                     </div>
-                    <button onclick="window.open('https://google.com', '_blank')" class="w-full bg-sage-600 hover:bg-sage-500 text-white font-display font-bold py-4 md:py-5 rounded-2xl transition-all duration-300 shadow-lg flex items-center justify-center gap-2 group text-sm md:text-base">
+
+                    <button onclick="window.open('https://google.com', '_blank')" class="w-full bg-sage-600 hover:bg-sage-500 text-white font-display font-bold py-4 md:py-5 rounded-2xl transition-all duration-300 shadow-xl shadow-sage-600/20 flex items-center justify-center gap-2 group text-sm md:text-base">
                         Jetzt anfragen
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
                     </button>
                 </div>
-
-                <div class="glass-card p-6 md:p-8 space-y-6">
-                    <h4 class="text-xs font-display font-bold text-sage-600 uppercase tracking-[0.2em]">Fahrzeug-Details</h4>
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-start py-2 border-b border-white/5 gap-4">
-                            <span class="text-sage-600 text-xs md:text-sm">Karosserie</span>
-                            <span class="text-white font-medium text-xs md:text-sm text-right">Touring (Kombi)</span>
-                        </div>
-                        <div class="flex justify-between items-start py-2 border-b border-white/5 gap-4">
-                            <span class="text-sage-600 text-xs md:text-sm">Variante</span>
-                            <span class="text-white font-medium text-xs md:text-sm text-right">${ brand } ${ model }</span>
-                        </div>
-                        <div class="flex justify-between items-start py-2 border-b border-white/5 gap-4">
-                            <span class="text-sage-600 text-xs md:text-sm">Türen/Sitze</span>
-                            <span class="text-white font-medium text-xs md:text-sm text-right">5 / 5</span>
-                        </div>
-                        <div class="flex justify-between items-start py-2 border-b border-white/5 gap-4">
-                            <span class="text-sage-600 text-xs md:text-sm">Standort</span>
-                            <span class="text-white font-medium text-xs md:text-sm text-right">Pfaffstätt, OÖ</span>
-                        </div>
-                        <div class="flex justify-between items-start py-2 gap-4">
-                            <span class="text-sage-600 text-xs md:text-sm whitespace-nowrap">Quelle</span>
-                            <span class="text-white font-medium text-xs md:text-sm text-right">DE Händler</span>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
+
+        <!-- FOOTER / DISCLAIMER -->
+        <footer class="pt-8 md:pt-12 pb-6 border-t border-white/10">
+            <p class="text-[10px] leading-relaxed text-white/40 uppercase tracking-[0.15em] text-center max-w-3xl mx-auto">
+                Hinweis: Alle Angaben basieren auf den vorliegenden Fahrzeugdaten und werden nach bestem Wissen erstellt. Irrtümer und Zwischenverkauf vorbehalten.
+            </p>
+        </footer>
+
     </div>
 </body>
 </html>`;
     }
 
-    const inputs = ['edit-title', 'edit-execution', 'edit-mileage', 'edit-reg', 'edit-color', 'edit-power', 'edit-price', 'edit-interieur', 'edit-technologie'];
+    function saveGeneratedHtml() {
+        try {
+            const html = getGeneratedHtml();
+            if (html && html.length > 100) {
+                localStorage.setItem('generatedHtml', html);
+                console.log('✅ HTML generated and saved to localStorage (Length: ' + html.length + ')');
+            } else {
+                console.warn('⚠️ Generated HTML seems too short, not saving.');
+            }
+        } catch (e) {
+            console.error('❌ Failed to generate or save HTML:', e);
+        }
+    }
+
+    const inputs = ['edit-title', 'edit-execution', 'edit-mileage', 'edit-reg', 'edit-color', 'edit-power', 'edit-price', 'edit-interieur', 'edit-technologie', 'edit-schaeden'];
     inputs.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -347,9 +377,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             el.addEventListener('input', () => {
                 localStorage.setItem(`override_${id}`, el.value);
+                saveGeneratedHtml();
             });
         }
     });
+
+    // Initial Save of HTML
+    saveGeneratedHtml();
 
     const generateBtn = document.getElementById('generate-btn');
     if (generateBtn) {

@@ -15,6 +15,46 @@ document.addEventListener('DOMContentLoaded', async () => {
     const displayNova = document.getElementById('display-nova');
     const displayTotal = document.getElementById('display-total');
 
+    // BCA Elements
+    const bcaEpInput = document.getElementById('bca-ep');
+    const bcaDamageInput = document.getElementById('bca-damage');
+    const bcaAuctionPercentInput = document.getElementById('bca-auction-percent');
+    const bcaAuctionFixInput = document.getElementById('bca-auction-fix');
+    const bcaMarginInput = document.getElementById('bca-margin');
+
+    const modeAtUi = document.getElementById('mode-at-ui');
+    const modeBcaUi = document.getElementById('mode-bca-ui');
+    const btnTabAt = document.getElementById('btn-tab-at');
+    const btnTabBca = document.getElementById('btn-tab-bca');
+
+    // Tab Switching Logic
+    function switchMode(mode) {
+        if (mode === 'at') {
+            modeAtUi.classList.remove('hidden');
+            modeBcaUi.classList.add('hidden');
+            btnTabAt.classList.add('active');
+            btnTabBca.classList.remove('active');
+            localStorage.setItem('pricingCurrentMode', 'at');
+            calculate();
+        } else {
+            modeAtUi.classList.add('hidden');
+            modeBcaUi.classList.remove('hidden');
+            btnTabAt.classList.remove('active');
+            btnTabBca.classList.add('active');
+            localStorage.setItem('pricingCurrentMode', 'bca');
+            
+            // Auto-fill BCA EP from Agent 3 if empty
+            const germanPrice = localStorage.getItem('lastGermanMarketCheapestPrice');
+            if (germanPrice && (!bcaEpInput.value || bcaEpInput.value == 0)) {
+                bcaEpInput.value = germanPrice;
+            }
+            calculateBCA();
+        }
+    }
+
+    if(btnTabAt) btnTabAt.addEventListener('click', () => switchMode('at'));
+    if(btnTabBca) btnTabBca.addEventListener('click', () => switchMode('bca'));
+
     // New inputs for NoVA
     const regYearInput = document.getElementById('reg-year');
     const co2Input = document.getElementById('co2-value');
@@ -22,14 +62,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let currentCarData = null;
 
-    // Register event listeners immediately so they work regardless of data source
+    // Register event listeners immediately
     [basePriceInput, distanceInput, regInput, regYearInput, co2Input, marginPercentInput].forEach(input => {
         if(input) input.addEventListener('input', calculate);
     });
+    [bcaEpInput, bcaDamageInput, bcaAuctionPercentInput, bcaAuctionFixInput, bcaMarginInput].forEach(input => {
+        if(input) input.addEventListener('input', calculateBCA);
+    });
+
     const recalculateBtn = document.getElementById('recalculate-btn');
-    if (recalculateBtn) {
-        recalculateBtn.addEventListener('click', calculate);
-    }
+    if (recalculateBtn) recalculateBtn.addEventListener('click', calculate);
+    
+    const bcaRecalculateBtn = document.getElementById('bca-recalculate-btn');
+    if (bcaRecalculateBtn) bcaRecalculateBtn.addEventListener('click', calculateBCA);
 
     // Try to load saved manual state first
     if (loadState()) {
@@ -121,7 +166,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             registration: regInput.value,
             regYear: regYearInput.value,
             co2: co2Input.value,
-            marginPercent: marginPercentInput.value
+            marginPercent: marginPercentInput.value,
+            // BCA state
+            bcaEp: bcaEpInput.value,
+            bcaDamage: bcaDamageInput.value,
+            bcaAuctionPercent: bcaAuctionPercentInput.value,
+            bcaAuctionFix: bcaAuctionFixInput.value,
+            bcaMargin: bcaMarginInput.value
         };
         localStorage.setItem('pricingState', JSON.stringify(state));
     }
@@ -136,10 +187,59 @@ document.addEventListener('DOMContentLoaded', async () => {
             regYearInput.value = state.regYear;
             co2Input.value = state.co2;
             marginPercentInput.value = state.marginPercent;
+            
+            // BCA state
+            if(bcaEpInput && state.bcaEp) bcaEpInput.value = state.bcaEp;
+            if(bcaDamageInput && state.bcaDamage) bcaDamageInput.value = state.bcaDamage;
+            if(bcaAuctionPercentInput && state.bcaAuctionPercent) bcaAuctionPercentInput.value = state.bcaAuctionPercent;
+            if(bcaAuctionFixInput && state.bcaAuctionFix) bcaAuctionFixInput.value = state.bcaAuctionFix;
+            if(bcaMarginInput && state.bcaMargin) bcaMarginInput.value = state.bcaMargin;
+            
             return true;
         }
         return false;
     }
+
+    function calculateBCA() {
+        const ep = parseFloat(bcaEpInput.value) || 0;
+        const damage = parseFloat(bcaDamageInput.value) || 0;
+        const auctionPercent = parseFloat(bcaAuctionPercentInput.value) || 0;
+        const auctionFix = parseFloat(bcaAuctionFixInput.value) || 0;
+        const marginPercent = parseFloat(bcaMarginInput.value) || 0;
+
+        // Value_1: Einkaufspreis Netto (19% DE)
+        const v1_netto = ep / 1.19;
+        
+        // Value_2: Schäden Netto (assuming 20%)
+        const v2_damage_net = damage / 1.2;
+        
+        // Value_3: Auktionsgebühr % (from Brutto EP)
+        // Adjust formula: if percent is X, multiplier is (1 + X/100)
+        const v3_fee_percent = ep - (ep / (1 + auctionPercent/100));
+        
+        // Value_4: Auktionsgebühr fix
+        const v4_fee_fix = auctionFix;
+        
+        // Value_5: Gewinn (Margin on Netto V1)
+        const v5_margin = v1_netto - (v1_netto / (1 + marginPercent/100));
+
+        // Result_1: Maximaler Einkaufspreis
+        const result = v1_netto - v2_damage_net - v3_fee_percent - v4_fee_fix - v5_margin;
+
+        // UI Updates
+        document.getElementById('display-bca-v1').innerText = formatEuro(v1_netto);
+        document.getElementById('display-bca-v2').innerText = formatEuro(v2_damage_net);
+        document.getElementById('display-bca-v3').innerText = formatEuro(v3_fee_percent);
+        document.getElementById('display-bca-v4').innerText = formatEuro(v4_fee_fix);
+        document.getElementById('display-bca-v5').innerText = formatEuro(v5_margin);
+        document.getElementById('display-bca-result').innerText = formatEuro(result);
+
+        saveState();
+    }
+
+    // Set initial mode from storage
+    const savedMode = localStorage.getItem('pricingCurrentMode') || 'at';
+    switchMode(savedMode);
 
     function calculate() {
         const basePrice = parseFloat(basePriceInput.value) || 0;
@@ -207,32 +307,47 @@ document.addEventListener('DOMContentLoaded', async () => {
         const marketPriceStr = localStorage.getItem('lastMarketCheapestPrice');
         const comparisonData = document.getElementById('comparison-data');
         const displayMarketPrice = document.getElementById('display-market-price');
+        const displayGermanPrice = document.getElementById('display-german-price');
         const displayDiff = document.getElementById('display-diff');
         const ampelContainer = document.querySelector('.ampel-container');
         const recommendationText = document.getElementById('recommendation-text');
 
-        if (marketPriceStr && comparisonData) {
-            const marketPrice = parseFloat(marketPriceStr);
-            comparisonData.classList.remove('hidden');
-            displayMarketPrice.innerText = formatEuro(marketPrice);
+        if (comparisonData) {
+            const marketPriceStr = localStorage.getItem('lastMarketCheapestPrice');
+            const germanPriceStr = localStorage.getItem('lastGermanMarketCheapestPrice');
 
-            // Difference logic: (Market - Calculated) / Market
-            const diff = (marketPrice - finalPrice) / marketPrice;
-            const diffPercent = (diff * 100).toFixed(2);
-            displayDiff.innerText = (diff > 0 ? '+' : '') + diffPercent + '%';
+            if (marketPriceStr || germanPriceStr) {
+                comparisonData.classList.remove('hidden');
+            }
 
-            // Reset classes
-            ampelContainer.classList.remove('green', 'orange', 'red');
+            if (germanPriceStr && displayGermanPrice) {
+                displayGermanPrice.innerText = formatEuro(parseFloat(germanPriceStr));
+            }
 
-            if (diff >= 0.02) {
-                ampelContainer.classList.add('green');
-                recommendationText.innerText = 'Kaufempfehlung: JA (Günstiger als Markt)';
-            } else if (diff <= -0.02) {
-                ampelContainer.classList.add('red');
-                recommendationText.innerText = 'Kaufempfehlung: NEIN (Teurer als Markt)';
-            } else {
-                ampelContainer.classList.add('orange');
-                recommendationText.innerText = 'Kaufempfehlung: NEUTRAL (Marktniveau)';
+            if (marketPriceStr) {
+                const marketPrice = parseFloat(marketPriceStr);
+                displayMarketPrice.innerText = formatEuro(marketPrice);
+
+                // Difference logic: (Market - Calculated) / Market
+                const diff = (marketPrice - finalPrice) / marketPrice;
+                const diffEuro = marketPrice - finalPrice;
+                const diffPercent = (diff * 100).toFixed(2);
+                
+                displayDiff.innerText = `${diff > 0 ? '+' : ''}${diffPercent}% (${formatEuro(diffEuro)})`;
+
+                // Reset classes
+                ampelContainer.classList.remove('green', 'orange', 'red');
+
+                if (diff >= 0.02) {
+                    ampelContainer.classList.add('green');
+                    recommendationText.innerText = 'Kaufempfehlung: JA (Günstiger als Markt)';
+                } else if (diff <= -0.02) {
+                    ampelContainer.classList.add('red');
+                    recommendationText.innerText = 'Kaufempfehlung: NEIN (Teurer als Markt)';
+                } else {
+                    ampelContainer.classList.add('orange');
+                    recommendationText.innerText = 'Kaufempfehlung: NEUTRAL (Marktniveau)';
+                }
             }
         } else {
             // Reset to default waiting state if no data

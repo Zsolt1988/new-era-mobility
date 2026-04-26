@@ -49,7 +49,137 @@ def extract_car_info(source):
                 "message": "Invalid URL format. Please start with http:// or https://"
             }
 
-    # 1. Try to extract from window.dataLayer
+def extract_audaris_info(html_content, source):
+    """
+    Attempts to extract data via Audaris API if the site is identified as Audaris.
+    """
+    # Detect Audaris internal number in URL (e.g., .../EG-GK999/)
+    internal_number_match = re.search(r"/([^/]+)/?$", source)
+    if not internal_number_match:
+        return None
+        
+    internal_number = internal_number_match.group(1)
+    
+    # Default Ostermaier IDs (could be extracted from HTML if needed, but these are stable)
+    client_id = "1841"
+    website_id = "5f5b60b339214b195c6a612f"
+    
+    # Check if the site is indeed Ostermaier or has Audaris indicators
+    if "ostermaier.de" in source or "audaris" in html_content:
+        api_url = f"https://api.audaris.de/v1/clients/{client_id}/website-vehicles/{internal_number}?field=internalNumber&website={website_id}"
+        print(f"Detected Audaris site. Fetching from API: {api_url}")
+        
+        try:
+            req = urllib.request.Request(
+                api_url, 
+                headers={'User-Agent': 'Mozilla/5.0'}
+            )
+            with urllib.request.urlopen(req) as response:
+                api_data = json.loads(response.read().decode('utf-8'))
+                
+            if "data" in api_data:
+                car = api_data["data"]
+                # Map to standard format
+                car_data = {
+                    "manufacturerName": car.get("manufacturerName"),
+                    "modelName": car.get("modelName"),
+                    "carTitle": car.get("title"),
+                    "carPrice": car.get("price", {}).get("gross"),
+                    "carMileage": car.get("mileage"),
+                    "firstRegistration": car.get("registration"),
+                    "carFuel": car.get("fuelTypeName"),
+                    "carTransmission": car.get("transmissionType"),
+                    "carPower": f"{car.get('powerKW')} kW ({car.get('powerPS')} PS)",
+                    "title": f"{car.get('manufacturerName')} {car.get('modelName')} {car.get('title')}",
+                    "price": str(car.get("price", {}).get("gross", "N/A")),
+                    "price_status": "brutto",
+                    "source": source
+                }
+                
+                # Tech Specs
+                specs = {
+                    "Kilometerstand": f"{car.get('mileage')} km",
+                    "Erstzulassung": car.get("registration"),
+                    "Kraftstoff": car.get("fuelTypeName"),
+                    "Getriebe": car.get("transmissionType"),
+                    "Leistung": f"{car.get('powerPS')} PS",
+                    "Farbe": car.get("exteriorColorName"),
+                    "Polster": car.get("interiorColorName"),
+                    "Interne Nummer": car.get("vehicleClientInternalNumber")
+                }
+                car_data["specs"] = specs
+                
+                # Features
+                if "features" in car:
+                    car_data["features"] = {"Ausstattung": [f.get("name") for f in car.get("features", [])]}
+                
+                # Highlights
+                if "descriptionHTML" in car:
+                    # Very basic highlight extraction from HTML if needed, or just use features
+                    pass
+
+                return car_data
+        except Exception as e:
+            print(f"Audaris API extraction failed: {e}")
+            
+    return None
+
+def extract_car_info(source):
+    """
+    Extracts car information from a URL or a local HTML file.
+    """
+    html_content = ""
+    
+    if os.path.exists(source):
+        print(f"Reading from local file: {source}")
+        with open(source, "r", encoding="utf-8", errors="ignore") as f:
+            html_content = f.read()
+    else:
+        print(f"Attempting to fetch URL: {source}")
+        try:
+            req = urllib.request.Request(
+                source, 
+                data=None, 
+                headers={
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+                }
+            )
+            with urllib.request.urlopen(req) as response:
+                html_content = response.read().decode('utf-8', errors='ignore')
+            print("Successfully fetched URL content.")
+        except HTTPError as e:
+            print(f"HTTP Error {e.code}: {e.reason}")
+            return {
+                "source_url": source,
+                "extraction_status": "error",
+                "message": f"HTTP Error: {e.code}"
+            }
+        except URLError as e:
+            print(f"URL Error: {e.reason}")
+            return {
+                "source_url": source,
+                "extraction_status": "error",
+                "message": f"Failed to reach server: {e.reason}"
+            }
+        except ValueError:
+            return {
+                "source_url": source,
+                "extraction_status": "error",
+                "message": "Invalid URL format. Please start with http:// or https://"
+            }
+
+    # 1. Try Audaris API first if applicable
+    audaris_data = extract_audaris_info(html_content, source)
+    if audaris_data:
+        print("Successfully extracted data via Audaris API.")
+        return {
+            "source": source,
+            "cars": [audaris_data],
+            "extraction_status": "success",
+            "method": "audaris_api"
+        }
+
+    # 2. Try to extract from window.dataLayer
     # Pattern looks for: car : { ... }
     data_layer_match = re.search(r"car\s*:\s*(\{.*?\})", html_content, re.DOTALL)
     
@@ -90,7 +220,7 @@ def extract_car_info(source):
             
             if specs:
                 car_data["specs"] = specs
-
+            
             # --- Addition: Extract Highlights ---
             highlights = []
             highlights_match = re.search(r'<div class="item highlights">.*?</i>(.*?)</div>', html_content, re.DOTALL)
@@ -142,22 +272,46 @@ def extract_car_info(source):
         except Exception as e:
             print(f"Failed to parse dataLayer JSON: {e}")
 
-    # 2. Fallback: Manual extraction using regex for key fields
+    # 3. Fallback: Manual extraction using regex for key fields
     print("Attempting fallback manual extraction...")
     
-    # Extract Title/Brand/Model from header tags or titles
-    title_match = re.search(r"<title>(.*?)</title>", html_content, re.IGNORECASE)
-    title = title_match.group(1).strip() if title_match else "Unknown Car"
+    # Pre-clean HTML Content
+    clean_html = html_content.replace("&nbsp;", " ").replace("&euro;", "€")
     
-    # Simple regex for finding price pattern like 28.799 €
-    # And check for brutto/netto labels nearby
-    price_match = re.search(r"(\d+[\.,]\d+)\s*&nbsp;&euro;", html_content)
-    price = price_match.group(1).replace(".", "") if price_match else "N/A"
+    # Extract Title/Brand/Model
+    # Try H1 first as it's usually the prominent car name
+    h1_match = re.search(r"<h1[^>]*>(.*?)</h1>", clean_html, re.IGNORECASE | re.DOTALL)
+    if h1_match:
+        title = re.sub(r"<[^>]+>", " ", h1_match.group(1)).strip()
+        # Remove extra whitespace
+        title = re.sub(r"\s+", " ", title)
+    else:
+        title_match = re.search(r"<title>(.*?)</title>", clean_html, re.IGNORECASE)
+        title = title_match.group(1).strip() if title_match else "Unknown Car"
+    
+    # If title still feels generic (like "Angebote entdecken"), try Meta Tags
+    if "Angebote entdecken" in title or "Fahrzeugangebote" in title:
+        og_title = re.search(r'property="og:title"\s*content="([^"]+)"', clean_html)
+        if og_title:
+            title = og_title.group(1).strip()
+    
+    # Improved Price regex
+    # Common patterns: 33.240,- € or 33.240 € or 33,240.00 €
+    # We look for a price followed by the Euro symbol
+    price_match = re.search(r"(\d{1,3}(?:\.\d{3})*(?:,\d{2}|,-)?)\s*€", clean_html)
+    if not price_match:
+        # Try finding it in audaris-price-value class or similar
+        price_match = re.search(r'class="[^"]*price[^"]*"[^>]*>([^<€]+)', clean_html)
+        
+    price = "N/A"
+    if price_match:
+        price_str = price_match.group(1).strip()
+        # Clean up: remove dots, handle comma
+        price = price_str.split(",")[0].replace(".", "")
     
     price_status = "unknown"
     if price_match:
-        # Search for (brutto) or (netto) within 50 chars of the price
-        context = html_content[max(0, price_match.start()-50) : min(len(html_content), price_match.end()+50)]
+        context = clean_html[max(0, price_match.start()-50) : min(len(clean_html), price_match.end()+50)]
         if "brutto" in context.lower():
             price_status = "brutto"
         elif "netto" in context.lower():

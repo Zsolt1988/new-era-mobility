@@ -12,7 +12,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // UI Elements
     const carNameTitle = document.getElementById('car-name');
     const urlOutput = document.getElementById('url-output');
+    const urlUncleOutput = document.getElementById('url-autouncle-output');
     const openLinkBtn = document.getElementById('open-link-btn');
+    const openUncleBtn = document.getElementById('open-autouncle-btn');
     const generateBtn = document.getElementById('generate-btn');
 
     // Equipment Checkboxes
@@ -28,17 +30,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Event Listeners for live updates
     function generateAndFetch() {
-        const newUrl = generateUrl();
-        triggerPriceFetch(newUrl);
+        const atUrl = generateUrl();
+        const deUrl = generateAutoUncleUrl();
+        triggerPriceFetch(atUrl, deUrl);
     }
 
     const allInputs = [brandInput, modelInput, versionInput, regFromInput, regToInput, mileageFromInput, mileageInput, fuelSelect, ...eqCheckboxes];
     allInputs.forEach(input => {
         if(input) input.addEventListener('change', generateAndFetch);
-        if(input && input.type === 'text' || input.type === 'number') input.addEventListener('keyup', () => {
-             // For text/number inputs on keyup, let's just generate the URL so it feels live, but maybe don't hammer the fetch API.
-             // Actually, user expects fetch when URL changes, so let's debounce or omit fetch on keyup to prevent spam.
+        if(input && (input.type === 'text' || input.type === 'number')) input.addEventListener('keyup', () => {
              generateUrl();
+             generateAutoUncleUrl();
         });
     });
     
@@ -48,16 +50,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const priceStatusMsg = document.getElementById('price-status-msg');
 
     function setPriceRowsLoading() {
-        const rows = priceList.querySelectorAll('.price-row');
-        rows.forEach(row => {
+        const allRows = document.querySelectorAll('.price-row');
+        allRows.forEach(row => {
             row.classList.add('loading');
             row.querySelector('.price-value').textContent = 'Fetching…';
         });
         priceStatusMsg.textContent = '';
     }
 
-    function setPriceRows(prices) {
-        const rows = priceList.querySelectorAll('.price-row');
+    function setPriceRows(prices, containerId = 'price-list') {
+        const container = document.getElementById(containerId);
+        const rows = container.querySelectorAll('.price-row');
         rows.forEach((row, i) => {
             row.classList.remove('loading');
             const valEl = row.querySelector('.price-value');
@@ -69,15 +72,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    async function triggerPriceFetch(overrideUrl = null) {
-        const searchUrl = overrideUrl || urlOutput.innerText.trim();
-        if (!searchUrl || searchUrl.startsWith('https://www.autoscout24.at/lst/...')) {
+    async function triggerPriceFetch(atUrlOverride = null, deUrlOverride = null) {
+        const atUrl = atUrlOverride || urlOutput.innerText.trim();
+        const deUrl = deUrlOverride || urlUncleOutput.innerText.trim();
+
+        const isAtValid = atUrl && !atUrl.includes('...');
+        const isDeValid = deUrl && !deUrl.includes('...');
+
+        if (!isAtValid && !isDeValid) {
             if(priceStatusMsg) priceStatusMsg.textContent = '⚠️ Please configure the search first.';
             return;
         }
-
-        // Append dealer-only filter
-        const dealerUrl = searchUrl + '&custtype=D';
 
         setPriceRowsLoading();
         if(fetchPricesBtn) {
@@ -85,46 +90,112 @@ document.addEventListener('DOMContentLoaded', async () => {
             fetchPricesBtn.textContent = 'Fetching…';
         }
 
-        try {
-            // Use relative URL to match the current running port
-            const apiUrl = `/api/autoscout-prices?url=${encodeURIComponent(dealerUrl)}`;
-            const resp = await fetch(apiUrl);
-            const data = await resp.json();
+        const fetchPromises = [];
 
-            if (data.status === 'ok' && data.prices && data.prices.length > 0) {
-                setPriceRows(data.prices);
-                if(priceStatusMsg) priceStatusMsg.textContent = '';
-                
-                // Save the cheapest price (rank 1) for Agent 2 consumption
-                const cheapest = data.prices[0].price;
-                localStorage.setItem('lastMarketCheapestPrice', cheapest);
-                
-                // Save full price list for persistence in Agent 3 UI
-                localStorage.setItem('autoscoutLastPrices', JSON.stringify(data.prices));
-                console.log("Saved prices to localStorage");
-            } else {
-                setPriceRows([]);
-                if(priceStatusMsg) priceStatusMsg.textContent = '⚠️ ' + (data.message || 'No prices found.');
-            }
+        // Fetch AT Prices
+        if (isAtValid) {
+            const dealerAtUrl = atUrl + '&custtype=D';
+            fetchPromises.push(
+                fetch(`/api/autoscout-prices?url=${encodeURIComponent(dealerAtUrl)}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.status === 'ok' && data.prices && data.prices.length > 0) {
+                            setPriceRows(data.prices, 'price-list');
+                            localStorage.setItem('lastMarketCheapestPrice', data.prices[0].price);
+                            localStorage.setItem('autoscoutLastPrices', JSON.stringify(data.prices));
+                        } else {
+                            setPriceRows([], 'price-list');
+                            if(data.message && priceStatusMsg) priceStatusMsg.textContent = '🇦🇹 ' + data.message;
+                        }
+                    })
+                    .catch(e => {
+                        console.error("AT Fetch Error:", e);
+                        setPriceRows([], 'price-list');
+                    })
+            );
+        }
+
+        // Fetch DE Prices
+        if (isDeValid) {
+            fetchPromises.push(
+                fetch(`/api/autouncle-prices?url=${encodeURIComponent(deUrl)}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.status === 'ok' && data.prices && data.prices.length > 0) {
+                            setPriceRows(data.prices, 'price-autouncle-list');
+                            localStorage.setItem('lastGermanMarketCheapestPrice', data.prices[0].price);
+                            localStorage.setItem('autouncleLastPrices', JSON.stringify(data.prices));
+                        } else {
+                            setPriceRows([], 'price-autouncle-list');
+                            if(data.message && priceStatusMsg) priceStatusMsg.textContent = '🇩🇪 ' + data.message;
+                        }
+                    })
+                    .catch(e => {
+                        console.error("DE Fetch Error:", e);
+                        setPriceRows([], 'price-autouncle-list');
+                    })
+            );
+        }
+
+        try {
+            await Promise.all(fetchPromises);
+            if(priceStatusMsg) priceStatusMsg.textContent = '';
         } catch (err) {
-            setPriceRows([]);
-            if(priceStatusMsg) priceStatusMsg.textContent = '⚠️ Could not reach backend. Is the server running?';
+            if(priceStatusMsg) priceStatusMsg.textContent = '⚠️ Error during market fetch.';
         }
 
         if(fetchPricesBtn) {
             fetchPricesBtn.disabled = false;
-            fetchPricesBtn.textContent = '🔍 Fetch Prices';
+            fetchPricesBtn.textContent = '🔍 Fetch All Market Prices';
         }
     }
 
     if (fetchPricesBtn) {
         fetchPricesBtn.addEventListener('click', () => {
-            // Read fresh URL directly from the generated field
-            const freshUrl = urlOutput.innerText.trim();
-            console.log("Fetching prices for explicitly read URL:", freshUrl);
-            triggerPriceFetch(freshUrl);
+            const atUrl = urlOutput.innerText.trim();
+            const deUrl = urlUncleOutput.innerText.trim();
+            triggerPriceFetch(atUrl, deUrl);
         });
     }
+
+    // Manual Price Entry Handling
+    document.querySelectorAll('.price-value').forEach(span => {
+        span.addEventListener('blur', (e) => {
+            const container = e.target.closest('.price-list');
+            if(!container) return;
+            const isAt = container.id === 'price-list';
+            const rows = Array.from(container.querySelectorAll('.price-row'));
+            
+            const prices = rows.map((row, i) => {
+                const valEl = row.querySelector('.price-value');
+                const text = valEl.innerText.trim();
+                if(!text || text === '—' || text === 'Fetching…') return null;
+                
+                const num = parseInt(text.replace(/[^0-9]/g, ''));
+                if (isNaN(num)) return null;
+                
+                // Update formatting immediately on blur for clean UI
+                valEl.innerText = `€ ${num.toLocaleString('de-DE')}`.replace(',', '.');
+                
+                return {
+                    rank: i + 1,
+                    price: num,
+                    formatted: valEl.innerText
+                };
+            }).filter(p => p !== null);
+
+            if (prices.length > 0) {
+                if (isAt) {
+                    localStorage.setItem('lastMarketCheapestPrice', prices[0].price);
+                    localStorage.setItem('autoscoutLastPrices', JSON.stringify(prices));
+                } else {
+                    localStorage.setItem('lastGermanMarketCheapestPrice', prices[0].price);
+                    localStorage.setItem('autouncleLastPrices', JSON.stringify(prices));
+                }
+                console.log('Saved manual prices to localStorage');
+            }
+        });
+    });
 
     // Load Data Phase
     if (loadState()) {
@@ -140,6 +211,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             } catch(e) {}
         }
         generateUrl();
+        generateAutoUncleUrl();
         return;
     }
 
@@ -256,8 +328,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (lowerText.includes("headupdisplay") || lowerText.includes("hud") || lowerText.includes("head-up")) document.getElementById('eq-123').checked = true;
 
         const initialUrl = generateUrl();
-        // Trigger fetch immediately with the guaranteed correct URL
-        triggerPriceFetch(initialUrl);
+        const initialUncleUrl = generateAutoUncleUrl();
+        // Trigger fetch immediately
+        triggerPriceFetch(initialUrl, initialUncleUrl);
     }
 
     function formatForUrl(str) {
@@ -306,6 +379,73 @@ document.addEventListener('DOMContentLoaded', async () => {
         return url;
     }
 
+    function generateAutoUncleUrl() {
+        // Logik: DOMAIN / LAND / KATEGORIE / MARKE / MODELL / KRAFTSTOFF ? s[FILTER_TYP] = WERT
+        const rawBrand = brandInput.value.trim();
+        const rawModel = modelInput.value.trim();
+        
+        // AutoUncle likes Capitalized first letter usually, but let's try to match 
+        // user preference/common patterns
+        let brand = rawBrand.charAt(0).toUpperCase() + rawBrand.slice(1).toLowerCase();
+        
+        // Handle common abbreviations for DE market
+        const upper = rawBrand.toUpperCase();
+        if (['BYD', 'MG', 'VW', 'BMW', 'DS'].includes(upper)) brand = upper;
+        
+        const modelFormatted = rawModel.replace(/\s+/g, '-');
+        const model = modelFormatted.charAt(0).toUpperCase() + modelFormatted.slice(1);
+        
+        let fuelPath = "";
+        const fuel = fuelSelect.value;
+        if (fuel === "D") fuelPath = "/f-diesel";
+        else if (fuel === "B") fuelPath = "/f-benzin";
+        else if (fuel === "E") fuelPath = "/f-elektro";
+        else if (fuel === "2") fuelPath = "/f-hybrid"; // Assumption for AutoUncle
+
+        let url = `https://www.autouncle.de/de/gebrauchtwagen`;
+        if (brand) url += `/${brand}`;
+        if (model) url += `/${model}`;
+        
+        // SEO format: use year in path if available
+        const minYear = regFromInput.value;
+        if (minYear) {
+            url += `/y-${minYear}`;
+        }
+        if (fuelPath) {
+            url += fuelPath;
+        }
+        
+        url += `?`;
+
+        const params = [];
+        const minKm = mileageFromInput.value;
+        if (minKm) params.push(`s[min_km]=${minKm}`);
+        
+        const maxKm = mileageInput.value;
+        if (maxKm) params.push(`s[max_km]=${maxKm}`);
+        
+        // Only add min_year as param if not in path (though AutoUncle redirects anyway)
+        // If max year is different, we can add it as param
+        const maxYear = regToInput.value;
+        if (maxYear && maxYear !== minYear) params.push(`s[max_year]=${maxYear}`);
+
+        // Features
+        if (document.getElementById('eq-11').checked) params.push(`s[has_4wd]=true`);
+        if (document.getElementById('eq-20').checked) params.push(`s[has_tow_bar]=true`);
+        if (document.getElementById('eq-50').checked) params.push(`s[has_sunroof]=true`);
+        if (document.getElementById('eq-123').checked) params.push(`s[has_headup_display]=true`);
+
+        // Sorting
+        params.push(`s[order_by]=price_asc`);
+
+        url += params.join('&');
+
+        if (urlUncleOutput) urlUncleOutput.innerText = url;
+        if (openUncleBtn) openUncleBtn.href = url;
+        
+        return url;
+    }
+
     function saveState() {
         const state = {
             brand: brandInput ? brandInput.value : '',
@@ -338,12 +478,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (cb) cb.checked = eq.checked;
             });
 
-            // Restore last fetched prices if they exist
-            const savedPrices = localStorage.getItem('autoscoutLastPrices');
-            if (savedPrices) {
-                try {
-                    setPriceRows(JSON.parse(savedPrices));
-                } catch(e) {}
+            // Restore last fetched prices
+            const savedAtPrices = localStorage.getItem('autoscoutLastPrices');
+            if (savedAtPrices) {
+                try { setPriceRows(JSON.parse(savedAtPrices), 'price-list'); } catch(e) {}
+            }
+            const savedDePrices = localStorage.getItem('autouncleLastPrices');
+            if (savedDePrices) {
+                try { setPriceRows(JSON.parse(savedDePrices), 'price-autouncle-list'); } catch(e) {}
             }
 
             return true;
@@ -353,9 +495,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if(generateBtn) {
         generateBtn.addEventListener('click', () => {
-            const newUrl = generateUrl();
-            console.log("Auto-fetching with strictly returned URL:", newUrl);
-            triggerPriceFetch(newUrl);
+            const atUrl = generateUrl();
+            const deUrl = generateAutoUncleUrl();
+            triggerPriceFetch(atUrl, deUrl);
         });
     }
 });

@@ -1,0 +1,650 @@
+
+    <!DOCTYPE html>
+    <html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>BCA Fahrzeugübersicht - Premium</title>
+        <style>
+            :root {
+                --primary: #2c3e50;
+                --accent: #3498db;
+                --bg: #f4f7f6;
+                --card-bg: #ffffff;
+                --text: #333;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: var(--bg);
+                color: var(--text);
+                margin: 0;
+                padding: 20px;
+            }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            header {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+            h1 {
+                color: var(--primary);
+                font-weight: 300;
+                font-size: 2.5em;
+            }
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 25px;
+            }
+            .card {
+                background: var(--card-bg);
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                display: flex;
+                flex-direction: column;
+            }
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            }
+            .image-container {
+                width: 100%;
+                height: 200px;
+                background: #eee;
+                overflow: hidden;
+            }
+            .image-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            .content {
+                padding: 20px;
+                flex-grow: 1;
+            }
+            .kat-no {
+                font-size: 0.8em;
+                color: #888;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            .title {
+                font-size: 1.2em;
+                font-weight: 600;
+                margin: 10px 0;
+                color: var(--primary);
+            }
+            .details {
+                font-size: 0.9em;
+                color: #666;
+                line-height: 1.6;
+            }
+            .price-tag {
+                margin-top: 15px;
+                padding-top: 15px;
+                border-top: 1px solid #eee;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .price-label {
+                font-size: 0.9em;
+                color: #888;
+            }
+            .price-value {
+                font-size: 1.4em;
+                font-weight: 700;
+                color: #27ae60;
+            }
+            .badge {
+                background: var(--accent);
+                color: white;
+                padding: 4px 10px;
+                border-radius: 20px;
+                font-size: 0.75em;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>BCA Fahrzeug-Portfolio</h1>
+                <p>Aktualisierte Übersicht mit Preisen und Bildern</p>
+            </header>
+            <div class="grid">
+    
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1966410-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Maxus Edeliver">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 64</div>
+                        <div class="title">Maxus Edeliver</div>
+                        <div class="details">EZ: 26.09.2023 | KM: - | Weiss </div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">7.000  €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1967676-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Ford Mustang">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 33</div>
+                        <div class="title">Ford Mustang</div>
+                        <div class="details">EZ: 21.04.2022 | KM: - | Weiss </div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">9.600 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1967089-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Jaguar I-pace">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 44</div>
+                        <div class="title">Jaguar I-pace</div>
+                        <div class="details">EZ: 12.01.2022 | KM: - | Blau Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">10.400 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=0117059544-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Tesla Model">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 37</div>
+                        <div class="title">Tesla Model</div>
+                        <div class="details">EZ: 30.11.2021 | KM: - | Blau Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">12.400 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1966403-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Maxus Edeliver">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 42</div>
+                        <div class="title">Maxus Edeliver</div>
+                        <div class="details">EZ: 20.03.2023 | KM: - | Weiss </div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">7.000  €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1966406-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Maxus Edeliver">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 53</div>
+                        <div class="title">Maxus Edeliver</div>
+                        <div class="details">EZ: 26.09.2023 | KM: - | Weiss </div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">7.000  €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1966413-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Polestar Polestar">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 57</div>
+                        <div class="title">Polestar Polestar</div>
+                        <div class="details">EZ: 24.10.2023 | KM: - | Blau Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">16.000  €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1967666-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Nissan Leaf">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 15</div>
+                        <div class="title">Nissan Leaf</div>
+                        <div class="details">EZ: 25.03.2022 | KM: - | Silber Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">5.700 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1967664-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Hyundai Kona">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 18</div>
+                        <div class="title">Hyundai Kona</div>
+                        <div class="details">EZ: 03.11.2020 | KM: - | Schwarz Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">11.200 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1967662-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Hyundai Ioniq">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 34</div>
+                        <div class="title">Hyundai Ioniq</div>
+                        <div class="details">EZ: 20.12.2022 | KM: - | Grün </div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">11.500 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=0116922659-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Hyundai Kona">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 47</div>
+                        <div class="title">Hyundai Kona</div>
+                        <div class="details">EZ: 14.07.2023 | KM: - |  </div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">14.600 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=0117039167-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Genesis Gv70">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 86</div>
+                        <div class="title">Genesis Gv70</div>
+                        <div class="details">EZ: 10.06.2024 | KM: - | Silber Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">31.600  €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=0116948176-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Citroen E-c4">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 24</div>
+                        <div class="title">Citroen E-c4</div>
+                        <div class="details">EZ: 20.06.2023 | KM: - | Rot Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">11.700 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1961417-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="BMW Ix">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 14</div>
+                        <div class="title">BMW Ix</div>
+                        <div class="details">EZ: 23.03.2023 | KM: - | Schwarz Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">40.000  €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1961418-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Tesla Model">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 17</div>
+                        <div class="title">Tesla Model</div>
+                        <div class="details">EZ: 01.03.2022 | KM: - | Weiss </div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">12.400 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1961405-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Polestar Polestar">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 5</div>
+                        <div class="title">Polestar Polestar</div>
+                        <div class="details">EZ: 06.12.2022 | KM: - | Weiss Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">20.200 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1961404-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Audi Q4">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 6</div>
+                        <div class="title">Audi Q4</div>
+                        <div class="details">EZ: 20.12.2022 | KM: - | Schwarz Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">12.000 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1961608-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Smart SMART">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 7</div>
+                        <div class="title">Smart SMART</div>
+                        <div class="details">EZ: 31.01.2022 | KM: - | Schwarz </div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">7.100 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1961423-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Opel Corsa-e">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 8</div>
+                        <div class="title">Opel Corsa-e</div>
+                        <div class="details">EZ: 20.12.2022 | KM: - | Weiss Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">6.600 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1960494-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="MINI MINI">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 4</div>
+                        <div class="title">MINI MINI</div>
+                        <div class="details">EZ: 09.03.2023 | KM: - | Schwarz Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">11.000 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1961610-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Volkswagen Id.3">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 1</div>
+                        <div class="title">Volkswagen Id.3</div>
+                        <div class="details">EZ: 15.03.2022 | KM: - | Weiss Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">12.400 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1961413-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Volvo Ex30">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 10</div>
+                        <div class="title">Volvo Ex30</div>
+                        <div class="details">EZ: 16.10.2024 | KM: - | Schwarz Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">23.500 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1961421-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Audi Q4">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 11</div>
+                        <div class="title">Audi Q4</div>
+                        <div class="details">EZ: 02.03.2023 | KM: - | Grau </div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">12.500 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1961420-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="BMW Ix1">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 12</div>
+                        <div class="title">BMW Ix1</div>
+                        <div class="details">EZ: 22.03.2023 | KM: - | Schwarz Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">14.900 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1967666-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Mercedes-Benz Eqb">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 15</div>
+                        <div class="title">Mercedes-Benz Eqb</div>
+                        <div class="details">EZ: 22.03.2023 | KM: - | Grau Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">5.700 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1961416-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="SKODA Enyaq">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 16</div>
+                        <div class="title">SKODA Enyaq</div>
+                        <div class="details">EZ: 19.04.2022 | KM: - | Schwarz </div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">15.300 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1967664-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Ford Mustang">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 18</div>
+                        <div class="title">Ford Mustang</div>
+                        <div class="details">EZ: 26.08.2021 | KM: - | Schwarz </div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">11.200 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1961611-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Volkswagen Id.3">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 19</div>
+                        <div class="title">Volkswagen Id.3</div>
+                        <div class="details">EZ: 15.03.2022 | KM: - | Weiss Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">13.900 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1961411-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="BMW I4">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 2</div>
+                        <div class="title">BMW I4</div>
+                        <div class="details">EZ: 22.03.2023 | KM: - | Grau Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">18.900 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1961609-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Volkswagen Id.3">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 20</div>
+                        <div class="title">Volkswagen Id.3</div>
+                        <div class="details">EZ: 15.03.2022 | KM: - | Weiss Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">8.500 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1961408-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Mercedes-Benz Eqa">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 3</div>
+                        <div class="title">Mercedes-Benz Eqa</div>
+                        <div class="details">EZ: 09.02.2023 | KM: - | Schwarz Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">18.700 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1960494-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Opel Corsa-e">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 4</div>
+                        <div class="title">Opel Corsa-e</div>
+                        <div class="details">EZ: 20.12.2022 | KM: - | Weiss Metallic</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">11.000 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=1961422-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Tesla Model">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 9</div>
+                        <div class="title">Tesla Model</div>
+                        <div class="details">EZ: 28.03.2022 | KM: - | Schwarz </div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">16.300 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=W1N2437011J041321-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Mercedes-benz EQA 250 Progressive">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 1003</div>
+                        <div class="title">Mercedes-benz EQA 250 Progressive</div>
+                        <div class="details">EZ: 27.05.2022 | KM: - | Black</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">12.800 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card">
+                    <div class="image-container">
+                        <img src="https://www1.bcaimage.com/Document?DocType=VehicleImage&Reg=W1N2437011J041321-DE&grp=public&obl=hht3,Manheim,bluescreen&minwidth=600&width=600&default=5" alt="Bmw iX1 xDrive30 64,7kWh (U11)">
+                    </div>
+                    <div class="content">
+                        <div class="kat-no">Katalognummer 1003</div>
+                        <div class="title">Bmw iX1 xDrive30 64,7kWh (U11)</div>
+                        <div class="details">EZ: 03.07.2023 | KM: - | White</div>
+                        <div class="price-tag">
+                            <span class="price-label">Aktueller Preis</span>
+                            <span class="price-value">12.800 €</span>
+                        </div>
+                    </div>
+                </div>
+        
+            </div>
+        </div>
+    </body>
+    </html>
+    

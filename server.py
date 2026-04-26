@@ -9,6 +9,8 @@ import re
 import base64
 import sys
 import traceback
+import cgi
+import shutil
 from image_overlay.overlay_service import process_car_overlay
 
 PORT = 8085
@@ -98,6 +100,81 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 print(f"Generic error in do_POST: {str(e)}")
                 self.send_response(500)
                 self.end_headers()
+
+        elif self.path == '/api/extract-pdf':
+            try:
+                # Use cgi to parse multipart form data
+                ctype, pdict = cgi.parse_header(self.headers.get('content-type'))
+                if ctype == 'multipart/form-data':
+                    # We need to handle the boundary correctly
+                    pdict['boundary'] = bytes(pdict['boundary'], "utf-8")
+                    pdict['CONTENT-LENGTH'] = int(self.headers.get('content-length'))
+                    form = cgi.FieldStorage(
+                        fp=self.rfile,
+                        headers=self.headers,
+                        environ={'REQUEST_METHOD': 'POST', 'CONTENT_TYPE': self.headers['Content-Type']}
+                    )
+                    
+                    if 'pdf' in form:
+                        file_item = form['pdf']
+                        if file_item.filename:
+                            # Ensure temp directory exists
+                            temp_dir = os.path.join(BASE_DIR, 'temp_uploads')
+                            if not os.path.exists(temp_dir):
+                                os.makedirs(temp_dir)
+                            
+                            temp_path = os.path.join(temp_dir, file_item.filename)
+                            with open(temp_path, 'wb') as f:
+                                f.write(file_item.file.read())
+                            
+                            print(f"Received PDF: {file_item.filename}")
+                            
+                            # Run PDF extraction script
+                            try:
+                                result = subprocess.run(
+                                    ['python3', 'extract_pdf.py', temp_path],
+                                    check=True,
+                                    capture_output=True,
+                                    text=True,
+                                    cwd=BASE_DIR
+                                )
+                                print("PDF Extraction script completed.")
+                                
+                                # Read extracted_cars.json (should have been written by the script)
+                                json_path = os.path.join(BASE_DIR, 'extracted_cars.json')
+                                if os.path.exists(json_path):
+                                    with open(json_path, 'r', encoding='utf-8') as f:
+                                        json_result = json.load(f)
+                                    
+                                    # Clean up temp file
+                                    try:
+                                        os.remove(temp_path)
+                                    except: pass
+                                        
+                                    self.send_response(200)
+                                    self.send_header('Content-Type', 'application/json')
+                                    self.end_headers()
+                                    self.wfile.write(json.dumps(json_result).encode('utf-8'))
+                                else:
+                                    raise FileNotFoundError("extracted_cars.json not found after script execution")
+                            
+                            except subprocess.CalledProcessError as e:
+                                print(f"Subprocess error: {e.stderr}")
+                                raise Exception(f"Extraction failed: {e.stderr}")
+                        else:
+                            raise Exception("No file content found in 'pdf' field")
+                    else:
+                        raise Exception("Missing 'pdf' field in form data")
+                else:
+                    raise Exception("Expected multipart/form-data")
+                    
+            except Exception as e:
+                print(f"Error in extract-pdf API: {str(e)}")
+                traceback.print_exc()
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
                 
         elif self.path == '/api/export-csv':
             try:
@@ -206,6 +283,60 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps({"status": "error", "message": f"Wix sync failed: {e.stderr}"}).encode('utf-8'))
             except Exception as e:
                 print(f"Unexpected error during Wix sync: {str(e)}")
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
+
+        elif self.path == '/api/merge-bca':
+            try:
+                ctype, pdict = cgi.parse_header(self.headers.get('content-type'))
+                if ctype == 'multipart/form-data':
+                    pdict['boundary'] = bytes(pdict['boundary'], "utf-8")
+                    pdict['CONTENT-LENGTH'] = int(self.headers.get('content-length'))
+                    form = cgi.FieldStorage(
+                        fp=self.rfile,
+                        headers=self.headers,
+                        environ={'REQUEST_METHOD': 'POST', 'CONTENT_TYPE': self.headers['Content-Type']}
+                    )
+                    
+                    if 'xls' in form and 'html' in form:
+                        xls_item = form['xls']
+                        html_item = form['html']
+                        
+                        temp_dir = os.path.join(BASE_DIR, 'temp_uploads')
+                        if not os.path.exists(temp_dir):
+                            os.makedirs(temp_dir)
+                            
+                        xls_path = os.path.join(temp_dir, 'temp_input.xls')
+                        html_path = os.path.join(temp_dir, 'temp_input.html')
+                        out_path = os.path.join(BASE_DIR, 'BCA_Finale_Uebersicht.html')
+                        
+                        with open(xls_path, 'wb') as f:
+                            f.write(xls_item.file.read())
+                        with open(html_path, 'wb') as f:
+                            f.write(html_item.file.read())
+                            
+                        # Run the merge script
+                        script_path = '/Users/zsoltsimon/.gemini/antigravity/scratch/create_html_table.py'
+                        subprocess.run([
+                            'python3', script_path, 
+                            '--xls', xls_path, 
+                            '--html', html_path, 
+                            '--out', out_path
+                        ], check=True, capture_output=True, text=True)
+                        
+                        self.send_response(200)
+                        self.send_header('Content-Type', 'application/json')
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"status": "success", "url": "BCA_Finale_Uebersicht.html"}).encode('utf-8'))
+                    else:
+                        raise Exception("Missing 'xls' or 'html' in form data")
+                else:
+                    raise Exception("Expected multipart/form-data")
+            except Exception as e:
+                print(f"Error in merge-bca API: {str(e)}")
+                traceback.print_exc()
                 self.send_response(500)
                 self.send_header('Content-Type', 'application/json')
                 self.end_headers()
@@ -328,11 +459,109 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
 
+        elif self.path == '/api/push-github':
+            try:
+                import subprocess
+                print("GitHub Push requested...")
+                # git add everything
+                subprocess.run(['git', 'add', '.'], check=True, cwd=BASE_DIR)
+                # commit with timestamp
+                from datetime import datetime
+                ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                subprocess.run(['git', 'commit', '-m', f'Portfolio Update {ts}'], check=False, cwd=BASE_DIR)
+                # push
+                result = subprocess.run(['git', 'push'], check=True, capture_output=True, text=True, cwd=BASE_DIR)
+                
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "success", "message": "Erfolgreich an GitHub übertragen!"}).encode('utf-8'))
+            except Exception as e:
+                print(f"GitHub Sync Error: {str(e)}")
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
+
+        elif self.path.startswith('/api/autouncle-prices'):
+            parsed = urllib.parse.urlparse(self.path)
+            params = urllib.parse.parse_qs(parsed.query)
+            search_url = params.get('url', [None])[0]
+
+            if not search_url:
+                self.send_response(400)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": "No url param provided"}).encode('utf-8'))
+                return
+
+            try:
+                print(f"DEBUG: Fetching AutoUncle URL: {search_url}")
+                req = urllib.request.Request(
+                    search_url,
+                    headers={
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+                        'Accept-Language': 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7',
+                        'DNT': '1',
+                        'Connection': 'keep-alive',
+                        'Upgrade-Insecure-Requests': '1',
+                        'Sec-Fetch-Dest': 'document',
+                        'Sec-Fetch-Mode': 'navigate',
+                        'Sec-Fetch-Site': 'none',
+                        'Cache-Control': 'max-age=0'
+                    }
+                )
+                try:
+                    with urllib.request.urlopen(req, timeout=15) as resp:
+                        html_bytes = resp.read()
+                        html = html_bytes.decode('utf-8', errors='replace')
+                except urllib.error.HTTPError as e:
+                    if e.code == 403:
+                        # Try to see if it's Cloudflare
+                        err_body = e.read().decode('utf-8', errors='replace')
+                        if "Cloudflare" in err_body or "attention_required" in err_body:
+                             raise Exception("Blocked by Cloudflare bot protection. Please open the link manually.")
+                    raise e
+
+                print(f"Fetched AutoUncle page ({len(html)} bytes)")
+
+                # Use regex to find prices like "18.900 €"
+                text_prices = re.findall(r'(\d{1,3}(?:[.,]\d{3})+)\s*€', html)
+                
+                def parse_price(p: str) -> int:
+                    return int(p.replace('.', '').replace(',', ''))
+                
+                valid_prices = sorted(list(set(parse_price(p) for p in text_prices if 1000 < parse_price(p) < 500000)))
+                
+                if valid_prices:
+                    prices = valid_prices[:3]
+                    result = {
+                        "status": "ok",
+                        "prices": [{"rank": i+1, "price": p, "formatted": f"€ {p:,}".replace(',', '.')} for i, p in enumerate(prices)]
+                    }
+                else:
+                    result = {"status": "no_prices", "message": "No prices could be extracted from AutoUncle."}
+
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps(result).encode('utf-8'))
+
+            except Exception as e:
+                print(f"AutoUncle scrape error: {e}")
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
+
         else:
             # Default: serve static files
             super().do_GET()
 
-with ThreadingSimpleServer(("", PORT), MyHandler) as httpd:
-    print(f"Backend Server running at http://localhost:{PORT}")
-    print("Keep this terminal open, and use the UI to trigger extractions.")
-    httpd.serve_forever()
+if __name__ == "__main__":
+    os.chdir(BASE_DIR)
+    with ThreadingSimpleServer(("", PORT), MyHandler) as httpd:
+        print(f"Backend Server running at http://localhost:{PORT}")
+        print("Keep this terminal open, and use the UI to trigger extractions.")
+        httpd.serve_forever()

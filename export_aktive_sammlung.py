@@ -32,7 +32,7 @@ def export_to_csv(json_file, csv_output):
     headers = [
         "Nummer", "Fahrzeug-Link", "Bild_Gallery1", "Hersteller", "Modell", "Ausführung", "Kraftstoff", 
         "Getriebe", "PS", "KM Stand", "Erstzulassung", "Farbe", 
-        "Farbe_Einfach", "Sofortkauf-Preis", "Link", "Baujahr"
+        "Farbe_Einfach", "Sofortkauf-Preis", "Link", "Baujahr", "HTML_Code"
     ]
 
     rows = []
@@ -101,6 +101,7 @@ def export_to_csv(json_file, csv_output):
 
         nummer = car.get('carNumber', '')
         fahrzeug_link = car.get('source', car.get('link', ''))
+        html_code = car.get('htmlCode', '')
 
         rows.append({
             "Nummer": nummer,
@@ -118,7 +119,8 @@ def export_to_csv(json_file, csv_output):
             "Farbe_Einfach": farbe_einfach,
             "Sofortkauf-Preis": sofortkauf_preis,
             "Link": link,
-            "Baujahr": baujahr
+            "Baujahr": baujahr,
+            "HTML_Code": html_code
         })
 
     with open(csv_output, 'w', encoding='utf-8', newline='') as f:

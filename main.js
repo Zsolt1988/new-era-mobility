@@ -65,6 +65,92 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     });
 
+    // PDF Upload Logic
+    const pdfUploadZone = document.getElementById('pdf-upload-zone');
+    const pdfInput = document.getElementById('pdf-input');
+    const pdfStatus = document.getElementById('pdf-status');
+    
+    if (pdfUploadZone) {
+        pdfUploadZone.addEventListener('click', () => pdfInput.click());
+        
+        pdfUploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            pdfUploadZone.classList.add('dragover');
+        });
+        
+        pdfUploadZone.addEventListener('dragleave', () => {
+            pdfUploadZone.classList.remove('dragover');
+        });
+        
+        pdfUploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            pdfUploadZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type === 'application/pdf') {
+                handlePdfUpload(files[0]);
+            } else {
+                showPdfStatus('Bitte wählen Sie eine gültige PDF Datei aus.', 'error');
+            }
+        });
+    }
+    
+    if (pdfInput) {
+        pdfInput.addEventListener('change', () => {
+            if (pdfInput.files.length > 0) {
+                handlePdfUpload(pdfInput.files[0]);
+            }
+        });
+    }
+    
+    async function handlePdfUpload(file) {
+        setLoading(true);
+        showPdfStatus(`Lade PDF hoch: ${file.name}...`, 'info');
+        statusText.innerText = 'Analysiere PDF Datenblatt...';
+        
+        const formData = new FormData();
+        formData.append('pdf', file);
+        
+        try {
+            const response = await fetch('/api/extract-pdf', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) {
+                let errorMsg = 'PDF Extraktion fehlgeschlagen';
+                try {
+                    const err = await response.json();
+                    errorMsg = err.message || errorMsg;
+                } catch(e) {}
+                throw new Error(errorMsg);
+            }
+            
+            const data = await response.json();
+            showPdfStatus('PDF erfolgreich analysiert!', 'success');
+            
+            // Handle consistent car data return
+            const displayData = data.cars && data.cars.length > 0 ? data.cars[0] : data;
+            
+            // Add a flag that this was from PDF
+            displayData.extraction_method = 'pdf';
+            
+            window.updateExtractedData(displayData, true);
+            
+        } catch (error) {
+            console.error('PDF Upload Error:', error);
+            showPdfStatus(`Fehler: ${error.message}`, 'error');
+            statusText.innerText = 'Fehler bei PDF Analyse.';
+            setLoading(false);
+        }
+    }
+    
+    function showPdfStatus(message, type) {
+        if (!pdfStatus) return;
+        pdfStatus.innerText = message;
+        pdfStatus.className = 'helper-text ' + type;
+        pdfStatus.style.display = 'block';
+    }
+
     function setLoading(isLoading) {
         if (isLoading) {
             extractBtn.disabled = true;
