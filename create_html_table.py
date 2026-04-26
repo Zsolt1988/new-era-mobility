@@ -133,9 +133,12 @@ def process_bca():
             
             if lot_match:
                 img_url = img_match.group(1) if img_match else ""
-                if img_url.startswith('//'): img_url = 'https:' + img_url
-                if img_url and 'width=' not in img_url:
-                    img_url += '&minwidth=600&width=600'
+                if img_url:
+                    if img_url.startswith('//'): img_url = 'https:' + img_url
+                    # Upgrade quality from 100px to 800px
+                    img_url = img_url.replace('width=100', 'width=800').replace('minwidth=600', 'minwidth=800')
+                    if 'width=' not in img_url:
+                        img_url += '&width=800&minwidth=800'
                 
                 extracted_html_data.append({
                     "Katalognummer": int(lot_match.group(1)),
@@ -484,7 +487,9 @@ def process_bca():
             function changePage(p) {{
                 currentPage = p;
                 render();
-                window.scrollTo({{ top: 0, behavior: 'smooth' }});
+                window.scrollTo(0, 0);
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
             }}
 
             document.getElementById('searchInput').addEventListener('input', () => {{ currentPage = 1; render(); }});
