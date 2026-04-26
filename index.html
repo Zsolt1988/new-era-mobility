@@ -34,8 +34,8 @@
             .sync-btn:active { transform: translateY(0); }
         </style>
     </head>
-    <body class="p-8">
-        <div class="max-w-7xl mx-auto">
+    <body class="p-4 sm:p-8 bg-slate-50 text-slate-800">
+        <div id="mainContainer" class="max-w-7xl mx-auto">
             <header class="mb-10">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
                     <div>
@@ -248,13 +248,17 @@
             }
 
             function sendHeightToWix() {
-                const height = document.body.scrollHeight;
-                window.parent.postMessage({ type: 'resize', height: height }, '*');
+                const container = document.getElementById('mainContainer');
+                if (container) {
+                    // Add padding (64px) to the container's actual content height
+                    const height = Math.ceil(container.getBoundingClientRect().height) + 64;
+                    window.parent.postMessage({ type: 'resize', height: height }, '*');
+                }
             }
             
-            // Watch for any changes in body size (e.g., window resize, images loading) and update Wix
+            // Watch for any changes in body size (e.g., window resize, images loading, filtering) and update Wix
             if (window.ResizeObserver) {
-                new ResizeObserver(() => sendHeightToWix()).observe(document.body);
+                new ResizeObserver(() => sendHeightToWix()).observe(document.getElementById('mainContainer'));
             } else {
                 window.addEventListener('resize', sendHeightToWix);
             }
