@@ -479,7 +479,7 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps(results).encode('utf-8'))
 
-        elif self.path == '/api/push-github':
+        elif self.path.startswith('/api/push-github'):
             try:
                 import subprocess
                 print("GitHub Push requested...")
