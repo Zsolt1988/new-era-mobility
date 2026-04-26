@@ -281,6 +281,12 @@
             document.getElementById('searchInput').addEventListener('input', () => { currentPage = 1; render(); });
             initFilters();
             render();
+            
+            // Hide GitHub Sync button on live site (GitHub Pages)
+            if (window.location.hostname.includes('github.io')) {
+                const syncBtn = document.getElementById('syncGitHub');
+                if (syncBtn) syncBtn.style.display = 'none';
+            }
         </script>
     </body>
     </html>
