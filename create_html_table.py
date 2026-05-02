@@ -207,7 +207,7 @@ def process_bca():
         <script src="https://unpkg.com/lucide@latest"></script>
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
         <style>
-            body {{ font-family: 'Outfit', sans-serif; background-color: #f8fafc; }}
+            body {{ font-family: 'Outfit', sans-serif; background-color: #f8fafc; position: relative; min-height: 100vh; }}
             .glass-card {{ background: white; border: 1px solid #e2e8f0; }}
             .calc-box {{ background: #f1f5f9; border: 1px dashed #cbd5e1; }}
             .ausstattung-badge {{ background-color: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }}
@@ -228,8 +228,8 @@ def process_bca():
         </div>
 
         <!-- Anfrage Modal -->
-        <div id="modalBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
-            <div id="modalContainer" class="max-w-xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col max-h-[90vh]">
+        <div id="modalBackdrop" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-start justify-center p-4 transition-opacity duration-300 opacity-0 min-h-full">
+            <div id="modalContainer" class="max-w-xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col my-8">
                 <div class="relative h-48 bg-slate-100 flex-shrink-0">
                     <img id="modalCarImg" src="" class="w-full h-full object-cover" alt="Auto">
                     <div class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
@@ -394,9 +394,17 @@ def process_bca():
                 document.getElementById('modalCarName').innerText = name;
                 document.getElementById('modalCarId').innerText = id;
                 document.getElementById('modalCarImg').src = img || 'https://via.placeholder.com/600x400';
+                
                 const backdrop = document.getElementById('modalBackdrop');
                 backdrop.classList.remove('hidden');
-                setTimeout(() => {{ backdrop.classList.add('opacity-100'); document.getElementById('modalContainer').classList.add('scale-100', 'opacity-100'); }}, 10);
+                
+                // Scroll to top of the iframe so the modal is visible
+                window.scrollTo(0, 0);
+
+                setTimeout(() => {{ 
+                    backdrop.classList.add('opacity-100'); 
+                    document.getElementById('modalContainer').classList.add('scale-100', 'opacity-100'); 
+                }}, 10);
                 validateForm();
             }}
 
@@ -409,8 +417,14 @@ def process_bca():
 
             function toggleExtraFields(s) {{
                 const e = document.getElementById('extraFields');
-                if(s) {{ e.classList.remove('hidden'); setTimeout(() => e.classList.add('opacity-100', 'translate-y-0'), 10); }}
-                else {{ e.classList.remove('opacity-100', 'translate-y-0'); setTimeout(() => e.classList.add('hidden'), 300); }}
+                if(s) {{ 
+                    e.classList.remove('hidden'); 
+                    setTimeout(() => e.classList.add('opacity-100', 'translate-y-0'), 10); 
+                }}
+                else {{ 
+                    e.classList.remove('opacity-100', 'translate-y-0'); 
+                    setTimeout(() => e.classList.add('hidden'), 300); 
+                }}
             }}
 
             function toggleLimitInput(c) {{ document.getElementById('limitInput').disabled = !c; if(c) document.getElementById('limitInput').focus(); }}
@@ -438,12 +452,13 @@ def process_bca():
                     recipient: 'office@newera-mobility.at'
                 }};
 
+                // Send to WIX
                 window.parent.postMessage(data, "*");
                 
                 document.getElementById('btnSubmitInquiry').disabled = true;
                 document.getElementById('btnText').innerText = "Anfrage wird gesendet...";
                 
-                showToast("Anfrage wurde an WIX übermittelt!", "success");
+                showToast("Anfrage wurde übermittelt!", "success");
                 setTimeout(closeModal, 1500);
                 setTimeout(() => {{ 
                     document.getElementById('btnText').innerText = "Anfrage senden";
@@ -509,7 +524,7 @@ def process_bca():
 
             function sendHeightToWix() {{
                 const c = document.getElementById('mainContainer');
-                if (c) {{ window.parent.postMessage({{ type: 'resize', height: Math.ceil(c.getBoundingClientRect().height) + 64 }}, '*'); }}
+                if (c) {{ window.parent.postMessage({{ type: 'resize', height: Math.ceil(c.getBoundingClientRect().height) + 100 }}, '*'); }}
             }}
             
             function renderPagination(t) {{
@@ -522,6 +537,14 @@ def process_bca():
             }}
             function changePage(p) {{ currentPage = p; render(); window.scrollTo(0,0); }}
             initFilters(); render();
+            
+            // Hide sync button on live site (GitHub/Wix) but keep it on local file:// or localhost
+            const isLocal = window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            if (!isLocal) {{
+                const syncBtn = document.getElementById('syncGitHub');
+                if (syncBtn) syncBtn.style.display = 'none';
+            }}
+
             if (window.ResizeObserver) {{ new ResizeObserver(() => sendHeightToWix()).observe(document.getElementById('mainContainer')); }}
             setTimeout(sendHeightToWix, 1000);
         </script>
