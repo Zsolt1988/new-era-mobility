@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zustandsbericht Downloader</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --accent: #8b5cf6;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem 0;
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        input[type="url"] {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            font-size: 1rem;
+            color: var(--text-main);
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input[type="url"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        input[type="url"]::placeholder {
+            color: rgba(148, 163, 184, 0.5);
+        }
+
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-family: inherit;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px rgba(139, 92, 246, 0.6);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .result-box {
+            margin-top: 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: none;
+            border: 1px solid var(--border);
+        }
+
+        .result-box h3 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .output-log {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            white-space: pre-wrap;
+            word-break: break-all;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 1rem;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .status-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h1>Report Downloader</h1>
+                <p class="subtitle">Zustandsberichte automatisch herunterladen</p>
+            </div>
+
+            <div class="input-group">
+                <input type="url" id="urlInput" placeholder="URL des Fahrzeugs (BCA, etc.)" required autocomplete="off">
+            </div>
+
+            <button id="downloadBtn">
+                <span class="spinner" id="spinner"></span>
+                <span id="btnText">Berichte Herunterladen</span>
+            </button>
+
+            <div class="result-box" id="resultBox">
+                <div class="status-badge" id="statusBadge">Status</div>
+                <div id="currentStatus" style="font-size: 0.9rem; color: var(--primary); margin-bottom: 0.5rem; font-weight: 500;">Bereit</div>
+                <div class="output-log" id="outputLog"></div>
+            </div>
+
+            <div class="divider" style="margin: 2.5rem 0; height: 1px; background: var(--border);"></div>
+
+            <div class="header" style="margin-bottom: 1.5rem;">
+                <h2 style="font-size: 1.2rem; color: var(--text-muted);">Excel Batch Download</h2>
+                <p class="subtitle">Spalte AB muss die BCA URLs enthalten</p>
+            </div>
+
+            <div class="input-group">
+                <input type="file" id="excelInput" accept=".xls,.xlsx" style="display: none;">
+                <button id="uploadBtn" style="background: rgba(15, 23, 42, 0.5); border: 1px dashed var(--primary); color: var(--text-muted);">
+                    <span id="uploadText">Excel Datei auswählen...</span>
+                </button>
+            </div>
+
+            <button id="batchDownloadBtn" disabled style="background: linear-gradient(135deg, #4f46e5, var(--accent)); margin-top: 1rem;">
+                <span id="batchBtnText">Batch Download Starten</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('downloadBtn');
+        const urlInput = document.getElementById('urlInput');
+        const spinner = document.getElementById('spinner');
+        const btnText = document.getElementById('btnText');
+        const resultBox = document.getElementById('resultBox');
+        const statusBadge = document.getElementById('statusBadge');
+        const outputLog = document.getElementById('outputLog');
+
+        // Excel elements
+        const excelInput = document.getElementById('excelInput');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const uploadText = document.getElementById('uploadText');
+        const batchBtn = document.getElementById('batchDownloadBtn');
+        const batchBtnText = document.getElementById('batchBtnText');
+
+        let selectedFile = null;
+        let pollInterval = null;
+
+        function startPolling() {
+            if (pollInterval) clearInterval(pollInterval);
+            pollInterval = setInterval(async () => {
+                try {
+                    const response = await fetch('http://localhost:8085/api/get-status');
+                    const data = await response.json();
+                    if (data.status) {
+                        document.getElementById('currentStatus').textContent = data.status;
+                    }
+                } catch (e) {
+                    console.error("Polling error", e);
+                }
+            }, 2000);
+        }
+
+        function stopPolling() {
+            if (pollInterval) clearInterval(pollInterval);
+            pollInterval = null;
+        }
+
+        uploadBtn.addEventListener('click', () => excelInput.click());
+
+        excelInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                selectedFile = e.target.files[0];
+                uploadText.textContent = selectedFile.name;
+                batchBtn.disabled = false;
+            }
+        });
+
+        batchBtn.addEventListener('click', async () => {
+             if (!selectedFile) return;
+
+             // UI State: Loading
+             batchBtn.disabled = true;
+             batchBtnText.textContent = 'Verarbeite Batch...';
+             resultBox.style.display = 'block';
+             statusBadge.textContent = 'In Arbeit';
+             statusBadge.className = 'status-badge';
+             outputLog.textContent = 'Lese Datei und starte Download-Prozess...';
+             
+             startPolling();
+
+             try {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const content = e.target.result.split(',')[1]; // Get base64 content
+                    
+                    const response = await fetch('http://localhost:8085/api/upload-batch', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            filename: selectedFile.name,
+                            content: content
+                        })
+                    });
+
+                    const data = await response.json();
+                    
+                    stopPolling();
+                    
+                    outputLog.textContent = data.output || data.message || 'Abgeschlossen.';
+                    
+                    if (data.status === 'success') {
+                        statusBadge.textContent = 'Batch Erfolg';
+                        statusBadge.className = 'status-badge status-success';
+                    } else {
+                        statusBadge.textContent = 'Batch Fehler';
+                        statusBadge.className = 'status-badge status-error';
+                    }
+                    
+                    batchBtn.disabled = false;
+                    batchBtnText.textContent = 'Batch Download Starten';
+                };
+                reader.readAsDataURL(selectedFile);
+             } catch (error) {
+                stopPolling();
+                statusBadge.textContent = 'Systemfehler';
+                statusBadge.className = 'status-badge status-error';
+                outputLog.textContent = 'Ein Fehler ist aufgetreten:\n' + error.message;
+                batchBtn.disabled = false;
+                batchBtnText.textContent = 'Batch Download Starten';
+             }
+        });
+
+        btn.addEventListener('click', async () => {
+            const url = urlInput.value.trim();
+            if (!url) {
+                alert('Bitte gib eine gültige URL ein.');
+                return;
+            }
+
+            // UI State: Loading
+            btn.disabled = true;
+            spinner.style.display = 'block';
+            btnText.textContent = 'Lädt herunter...';
+            resultBox.style.display = 'none';
+            
+            startPolling();
+
+            try {
+                const response = await fetch('http://localhost:8085/api/download-report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+
+                const data = await response.json();
+
+                stopPolling();
+
+                // UI State: Result
+                resultBox.style.display = 'block';
+                outputLog.textContent = data.output || data.message || 'Keine Ausgabe.';
+                
+                if (data.status === 'success') {
+                    statusBadge.textContent = 'Erfolgreich';
+                    statusBadge.className = 'status-badge status-success';
+                } else {
+                    statusBadge.textContent = 'Fehler';
+                    statusBadge.className = 'status-badge status-error';
+                }
+            } catch (error) {
+                stopPolling();
+                resultBox.style.display = 'block';
+                statusBadge.textContent = 'Systemfehler';
+                statusBadge.className = 'status-badge status-error';
+                outputLog.textContent = 'Ein Verbindungsfehler ist aufgetreten:\n' + error.message;
+            } finally {
+                // UI State: Reset
+                btn.disabled = false;
+                spinner.style.display = 'none';
+                btnText.textContent = 'Berichte Herunterladen';
+            }
+        });
+        
+        // Allow pressing Enter to submit
+        urlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                btn.click();
+            }
+        });
+    </script>
+</body>
+</html>
