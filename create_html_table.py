@@ -398,8 +398,8 @@ def process_bca():
                 const backdrop = document.getElementById('modalBackdrop');
                 backdrop.classList.remove('hidden');
                 
-                // Scroll to top of the iframe so the modal is visible
-                window.scrollTo(0, 0);
+                // WICHTIG: Als String senden, da WIX oft Probleme mit rohen Objekten hat
+                window.parent.postMessage(JSON.stringify({{ type: 'scroll_to_top' }}), '*');
 
                 setTimeout(() => {{ 
                     backdrop.classList.add('opacity-100'); 
@@ -407,7 +407,7 @@ def process_bca():
                 }}, 10);
                 validateForm();
             }}
-
+            
             function closeModal() {{
                 const backdrop = document.getElementById('modalBackdrop');
                 backdrop.classList.remove('opacity-100');
@@ -452,8 +452,8 @@ def process_bca():
                     recipient: 'office@newera-mobility.at'
                 }};
 
-                // Send to WIX
-                window.parent.postMessage(data, "*");
+                // Als String senden
+                window.parent.postMessage(JSON.stringify(data), "*");
                 
                 document.getElementById('btnSubmitInquiry').disabled = true;
                 document.getElementById('btnText').innerText = "Anfrage wird gesendet...";
