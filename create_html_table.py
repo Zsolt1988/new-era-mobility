@@ -217,6 +217,11 @@ def process_bca():
             @keyframes slideUp {{ from {{ transform: translateY(100%); opacity: 0; }} to {{ transform: translateY(0); opacity: 1; }} }}
             .sync-btn {{ background: #059669; color: white; transition: all 0.3s; cursor: pointer; }}
             .sync-btn:hover {{ background: #047857; transform: translateY(-1px); }}
+            
+            /* Custom Scrollbar for Modal */
+            #modalScrollArea::-webkit-scrollbar {{ width: 6px; }}
+            #modalScrollArea::-webkit-scrollbar-track {{ background: transparent; }}
+            #modalScrollArea::-webkit-scrollbar-thumb {{ background: #cbd5e1; border-radius: 10px; }}
         </style>
     </head>
     <body class="p-4 sm:p-8 bg-slate-50 text-slate-800">
@@ -229,71 +234,128 @@ def process_bca():
 
         <!-- Anfrage Modal -->
         <div id="modalBackdrop" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-start justify-center p-4 transition-opacity duration-300 opacity-0 min-h-full">
-            <div id="modalContainer" class="max-w-xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col my-8">
-                <div class="relative h-48 bg-slate-100 flex-shrink-0">
+            <div id="modalContainer" class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col my-8 max-h-[90vh]">
+                
+                <!-- Modal Header (Static) -->
+                <div class="relative h-40 bg-slate-100 flex-shrink-0">
                     <img id="modalCarImg" src="" class="w-full h-full object-cover" alt="Auto">
                     <div class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
                     <button onclick="closeModal()" class="absolute top-4 right-4 p-2 bg-white/80 hover:bg-white rounded-full text-slate-600 shadow-sm transition-colors">
                         <i data-lucide="x" class="w-6 h-6"></i>
                     </button>
+                    <div class="absolute bottom-4 left-8">
+                         <h3 id="modalCarName" class="text-2xl font-bold text-slate-800 leading-tight">...</h3>
+                         <p class="text-sm text-slate-500 font-medium">ID: <span id="modalCarId">...</span></p>
+                    </div>
                 </div>
 
-                <div class="p-8 pt-2 overflow-y-auto">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="p-2 bg-blue-50 rounded-lg text-blue-600">
-                            <i data-lucide="info" class="w-5 h-5"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-800">Fahrzeuganfrage</h3>
-                    </div>
+                <!-- Modal Content (Scrollable) -->
+                <div id="modalScrollArea" class="p-8 pt-4 overflow-y-auto flex-grow">
                     
-                    <p class="text-lg text-slate-700 leading-relaxed mb-6">
-                        Sie interessieren sich für den <span id="modalCarName" class="font-bold text-blue-600">...</span>, 
-                        ID: <span id="modalCarId" class="font-mono text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">...</span>.
-                    </p>
-
-                    <div class="space-y-4">
-                        <div class="space-y-3">
-                            <label class="flex items-start gap-4 p-4 rounded-2xl hover:bg-slate-50 cursor-pointer transition-all border border-slate-100 hover:border-blue-200 group">
-                                <div class="flex items-center h-6"><input type="checkbox" id="checkEmail" onchange="toggleExtraFields(this.checked); validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded focus:ring-blue-500 cursor-pointer"></div>
+                    <div class="space-y-6">
+                        <!-- Basis Optionen -->
+                        <div class="grid grid-cols-1 gap-3">
+                            <label class="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group">
+                                <input type="checkbox" id="checkEmail" onchange="validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
                                 <div class="flex flex-col">
                                     <span class="text-slate-800 font-semibold group-hover:text-blue-600 transition-colors">Technischer Zustandsbericht</span>
-                                    <span class="text-sm text-slate-500">Bericht per E-Mail erhalten.</span>
+                                    <span class="text-xs text-slate-400 uppercase font-bold tracking-wider">Per E-Mail erhalten</span>
                                 </div>
                             </label>
-                            <div id="extraFields" class="hidden opacity-0 translate-y-[-10px] transition-all duration-300 px-4 py-2 space-y-3">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <input type="text" id="userName" placeholder="Ihr Name" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                                    <input type="email" id="userEmail" placeholder="Ihre E-Mail Adresse" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="flex items-start gap-4 p-4 rounded-2xl hover:bg-slate-50 transition-all border border-slate-100 hover:border-blue-200 group">
-                            <div class="flex items-center h-6 pt-1"><input type="checkbox" id="checkLimit" onchange="toggleLimitInput(this.checked); validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded focus:ring-blue-500 cursor-pointer"></div>
-                            <div class="flex flex-col w-full">
-                                <label for="checkLimit" class="text-slate-800 font-semibold cursor-pointer group-hover:text-blue-600 transition-colors">Gebotslimit prüfen</label>
-                                <div class="flex items-center gap-2 mt-2">
-                                    <span class="text-sm text-slate-500">Limit von</span>
-                                    <div class="relative w-28">
-                                        <input type="number" id="limitInput" disabled placeholder="0.00" class="w-full pl-3 pr-8 py-2 bg-white border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50">
-                                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold">€</span>
+                            <label class="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group">
+                                <input type="checkbox" id="checkImport" onchange="validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
+                                <div class="flex flex-col">
+                                    <span class="text-slate-800 font-semibold group-hover:text-blue-600 transition-colors">Allgemeine Frage</span>
+                                    <span class="text-xs text-slate-400 uppercase font-bold tracking-wider">Frage zum Import-Ablauf</span>
+                                </div>
+                            </label>
+
+                            <!-- Gebotslimit & Kalkulator -->
+                            <div class="rounded-2xl border border-slate-100 overflow-hidden transition-all duration-300" id="calcContainer">
+                                <label class="flex items-center gap-4 p-4 bg-white hover:bg-slate-50 transition-all cursor-pointer group">
+                                    <input type="checkbox" id="checkLimit" onchange="toggleCalculator(this.checked); validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
+                                    <div class="flex flex-col">
+                                        <span class="text-slate-800 font-semibold group-hover:text-blue-600 transition-colors">Gebotslimit prüfen & kalkulieren</span>
+                                        <span class="text-xs text-slate-400 uppercase font-bold tracking-wider">Detaillierte Kostenaufstellung</span>
                                     </div>
-                                    <span class="text-sm text-slate-500">prüfen.</span>
+                                </label>
+
+                                <div id="detailedCalc" class="hidden bg-slate-50 border-t border-slate-100 p-6 space-y-6">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm font-bold text-slate-500 uppercase">Max. Gebot (Netto)</span>
+                                        <div class="relative w-32">
+                                            <input type="number" id="modalLimitInput" oninput="runModalCalc()" value="0" class="w-full pl-3 pr-8 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500">
+                                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold">€</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Service Optionen -->
+                                    <div class="space-y-3">
+                                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Optionale Services</label>
+                                        
+                                        <select id="optWarranty" onchange="runModalCalc()" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option value="0">Keine Zusatzgarantie</option>
+                                            <option value="390">Fahrzeuggarantie (12 Monate) - 390 €</option>
+                                            <option value="590">Fahrzeuggarantie (24 Monate) - 590 €</option>
+                                            <option value="790">Fahrzeuggarantie (36 Monate) - 790 €</option>
+                                        </select>
+
+                                        <div class="grid grid-cols-2 gap-3">
+                                            <label class="flex items-center gap-2 p-3 bg-white border border-slate-200 rounded-xl cursor-pointer">
+                                                <input type="checkbox" id="optWash" onchange="runModalCalc()" class="w-4 h-4 text-blue-600">
+                                                <span class="text-xs text-slate-600">Handwäsche (49€)</span>
+                                            </label>
+                                            <label class="flex items-center gap-2 p-3 bg-white border border-slate-200 rounded-xl cursor-pointer">
+                                                <input type="checkbox" id="optCleaning" onchange="runModalCalc()" class="w-4 h-4 text-blue-600">
+                                                <span class="text-xs text-slate-600">Innenreinigung (99€)</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Kostenaufstellung -->
+                                    <div class="space-y-2 text-sm pt-4 border-t border-slate-200">
+                                        <div class="flex justify-between"><span>Netto Preis:</span><span id="resNetto" class="font-bold">0 €</span></div>
+                                        <div class="flex justify-between"><span>Transport:</span><span id="resTransport">0 €</span></div>
+                                        <div class="flex justify-between"><span>Anmeldung AT:</span><span>800 €</span></div>
+                                        <div class="flex justify-between text-slate-400"><span>Provision / Gebühren:</span><span id="resProvision">0 €</span></div>
+                                        <div id="resOptionsRow" class="flex justify-between text-blue-600 hidden"><span>Zusatzoptionen:</span><span id="resOptions">0 €</span></div>
+                                        
+                                        <div class="pt-4 mt-2 border-t border-slate-300">
+                                            <div class="flex justify-between items-end">
+                                                <span class="text-xs font-bold text-slate-400 uppercase">Gesamtpreis Brutto</span>
+                                                <span id="resTotalBrutto" class="text-2xl font-bold text-blue-600">0 €</span>
+                                            </div>
+                                            <div class="flex justify-between text-[10px] font-bold text-slate-400 uppercase mt-1">
+                                                <span>Inkl. 20% MwSt</span>
+                                                <span id="resTotalNetto">Netto: 0 €</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <label class="flex items-start gap-4 p-4 rounded-2xl hover:bg-slate-50 cursor-pointer transition-all border border-slate-100 hover:border-blue-200 group">
-                            <div class="flex items-center h-6"><input type="checkbox" id="checkImport" onchange="validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded focus:ring-blue-500 cursor-pointer"></div>
-                            <div class="flex flex-col">
-                                <span class="text-slate-800 font-semibold group-hover:text-blue-600 transition-colors">Allgemeine Frage</span>
-                                <span class="text-sm text-slate-500">Frage zum Import-Ablauf.</span>
+                        <!-- Kontaktdaten (Immer sichtbar, vor dem Button) -->
+                        <div class="p-6 bg-blue-50/50 rounded-3xl border border-blue-100 space-y-4">
+                            <label class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block">Ihre Kontaktdaten</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div class="space-y-1">
+                                    <input type="text" id="userName" placeholder="Ihr Name" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
+                                </div>
+                                <div class="space-y-1">
+                                    <input type="email" id="userEmail" placeholder="Ihre E-Mail" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
+                                </div>
                             </div>
-                        </label>
+                            <div class="space-y-1">
+                                <textarea id="userMessage" rows="3" placeholder="Ihre Nachricht / Anliegen (optional)" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm resize-none"></textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="p-6 bg-slate-50/50 flex flex-col sm:flex-row gap-3 flex-shrink-0">
+                <!-- Modal Footer -->
+                <div class="p-6 bg-white border-t border-slate-100 flex flex-col sm:flex-row gap-3 flex-shrink-0">
                     <button id="btnSubmitInquiry" disabled onclick="sendInquiry()" class="flex-[2] bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white font-bold py-4 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-2 group">
                         <i data-lucide="send" class="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
                         <span id="btnText">Anfrage senden</span>
@@ -345,6 +407,7 @@ def process_bca():
             const fmt = new Intl.NumberFormat('de-DE', {{ style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }});
             let currentPage = 1;
             const itemsPerPage = 50;
+            let currentCarId = null;
 
             async function syncToGitHub() {{
                 const btn = document.getElementById('syncGitHub');
@@ -391,20 +454,32 @@ def process_bca():
             }}
 
             function openModal(name, id, img) {{
+                currentCarId = id;
+                const car = cars.find(c => c.id === id);
                 document.getElementById('modalCarName').innerText = name;
                 document.getElementById('modalCarId').innerText = id;
                 document.getElementById('modalCarImg').src = img || 'https://via.placeholder.com/600x400';
+                document.getElementById('modalLimitInput').value = car.bca_price;
                 
                 const backdrop = document.getElementById('modalBackdrop');
                 backdrop.classList.remove('hidden');
                 
-                // WICHTIG: Als String senden, da WIX oft Probleme mit rohen Objekten hat
                 window.parent.postMessage(JSON.stringify({{ type: 'scroll_to_top' }}), '*');
 
                 setTimeout(() => {{ 
                     backdrop.classList.add('opacity-100'); 
                     document.getElementById('modalContainer').classList.add('scale-100', 'opacity-100'); 
                 }}, 10);
+                
+                // Reset form
+                document.getElementById('checkEmail').checked = false;
+                document.getElementById('checkLimit').checked = false;
+                document.getElementById('checkImport').checked = false;
+                document.getElementById('optWash').checked = false;
+                document.getElementById('optCleaning').checked = false;
+                document.getElementById('optWarranty').value = "0";
+                document.getElementById('userMessage').value = "";
+                toggleCalculator(false);
                 validateForm();
             }}
             
@@ -412,47 +487,110 @@ def process_bca():
                 const backdrop = document.getElementById('modalBackdrop');
                 backdrop.classList.remove('opacity-100');
                 document.getElementById('modalContainer').classList.remove('scale-100', 'opacity-100');
-                setTimeout(() => {{ backdrop.classList.add('hidden'); toggleExtraFields(false); }}, 300);
+                setTimeout(() => {{ backdrop.classList.add('hidden'); }}, 300);
             }}
 
-            function toggleExtraFields(s) {{
-                const e = document.getElementById('extraFields');
+            function toggleCalculator(s) {{
+                const e = document.getElementById('detailedCalc');
                 if(s) {{ 
                     e.classList.remove('hidden'); 
-                    setTimeout(() => e.classList.add('opacity-100', 'translate-y-0'), 10); 
-                }}
-                else {{ 
-                    e.classList.remove('opacity-100', 'translate-y-0'); 
-                    setTimeout(() => e.classList.add('hidden'), 300); 
+                    runModalCalc();
+                }} else {{ 
+                    e.classList.add('hidden'); 
                 }}
             }}
 
-            function toggleLimitInput(c) {{ document.getElementById('limitInput').disabled = !c; if(c) document.getElementById('limitInput').focus(); }}
-
             function validateForm() {{
-                const any = ['checkEmail', 'checkLimit', 'checkImport'].some(id => document.getElementById(id).checked);
-                document.getElementById('btnSubmitInquiry').disabled = !any;
+                const anyChecked = ['checkEmail', 'checkLimit', 'checkImport'].some(id => document.getElementById(id).checked);
+                const hasName = document.getElementById('userName').value.trim().length > 1;
+                const hasEmail = document.getElementById('userEmail').value.trim().includes('@');
+                document.getElementById('btnSubmitInquiry').disabled = !anyChecked || !hasName || !hasEmail;
+            }}
+
+            // Listener for input validation
+            document.getElementById('userName').addEventListener('input', validateForm);
+            document.getElementById('userEmail').addEventListener('input', validateForm);
+
+            function runModalCalc() {{
+                if (!currentCarId) return;
+                const car = cars.find(c => c.id === currentCarId);
+                const netto = parseFloat(document.getElementById('modalLimitInput').value) || 0;
+                
+                const auctionFees = (netto * 1.19 * 0.035) + 140;
+                const transport = car.transport;
+                const registration = 800; // Fixwert AT
+                const serviceFee = 500;   // Vermittlungsprovision
+                
+                // Optionen
+                const warranty = parseFloat(document.getElementById('optWarranty').value);
+                const wash = document.getElementById('optWash').checked ? 49 : 0;
+                const cleaning = document.getElementById('optCleaning').checked ? 99 : 0;
+                const optionsTotal = warranty + wash + cleaning;
+
+                const totalNetto = netto + auctionFees + transport + registration + serviceFee + optionsTotal;
+                const totalBrutto = totalNetto * 1.20;
+
+                // UI Update
+                document.getElementById('resNetto').innerText = fmt.format(netto);
+                document.getElementById('resTransport').innerText = fmt.format(transport);
+                document.getElementById('resProvision').innerText = fmt.format(auctionFees + serviceFee);
+                
+                const optRow = document.getElementById('resOptionsRow');
+                if (optionsTotal > 0) {{
+                    optRow.classList.remove('hidden');
+                    document.getElementById('resOptions').innerText = fmt.format(optionsTotal);
+                }} else {{
+                    optRow.classList.add('hidden');
+                }}
+
+                document.getElementById('resTotalBrutto').innerText = fmt.format(totalBrutto);
+                document.getElementById('resTotalNetto').innerText = "Netto: " + fmt.format(totalNetto);
             }}
 
             function sendInquiry() {{
+                const car = cars.find(c => c.id === currentCarId);
+                const isLimitChecked = document.getElementById('checkLimit').checked;
+                
+                // Kalkulations-Daten sammeln
+                let calcDetails = null;
+                if (isLimitChecked) {{
+                    const netto = parseFloat(document.getElementById('modalLimitInput').value) || 0;
+                    const auctionFees = (netto * 1.19 * 0.035) + 140;
+                    const warranty = parseFloat(document.getElementById('optWarranty').value);
+                    const wash = document.getElementById('optWash').checked ? 49 : 0;
+                    const cleaning = document.getElementById('optCleaning').checked ? 99 : 0;
+                    const totalNetto = netto + auctionFees + car.transport + 800 + 500 + warranty + wash + cleaning;
+                    
+                    calcDetails = {{
+                        gebotNetto: netto,
+                        transport: car.transport,
+                        anmeldung: 800,
+                        provision: auctionFees + 500,
+                        garantie: warranty,
+                        reinigung: wash + cleaning,
+                        gesamtBrutto: totalNetto * 1.20
+                    }};
+                }}
+
                 const data = {{
                     type: 'vehicle_inquiry',
                     carName: document.getElementById('modalCarName').innerText,
                     carId: document.getElementById('modalCarId').innerText,
                     options: {{
                         report: document.getElementById('checkEmail').checked,
-                        limit: document.getElementById('checkLimit').checked,
+                        limit: isLimitChecked,
                         import: document.getElementById('checkImport').checked
                     }},
                     userData: {{
                         name: document.getElementById('userName').value,
                         email: document.getElementById('userEmail').value,
-                        limitAmount: document.getElementById('limitInput').value
+                        message: document.getElementById('userMessage').value,
+                        limitAmount: isLimitChecked ? document.getElementById('modalLimitInput').value : ""
                     }},
+                    calculation: calcDetails, // Neue Detail-Informationen
                     recipient: 'office@newera-mobility.at'
                 }};
 
-                // Als String senden
                 window.parent.postMessage(JSON.stringify(data), "*");
                 
                 document.getElementById('btnSubmitInquiry').disabled = true;
@@ -471,13 +609,13 @@ def process_bca():
                 if (!car) return;
                 const netto = parseFloat(val) || 0;
                 const auctionPct = (netto * 1.19) * 0.035;
-                const totalNetto = netto + auctionPct + 140 + car.transport + 800;
+                const totalNetto = netto + auctionPct + 140 + car.transport + 800 + 500;
                 const totalBrutto = totalNetto * 1.20;
                 
                 const elPct = document.getElementById(`auctionPct_${{id}}`);
                 const elNet = document.getElementById(`totalNetto_${{id}}`);
                 const elMain = document.getElementById(`mainPrice_${{id}}`);
-                if(elPct) elPct.innerText = fmt.format(auctionPct + 140);
+                if(elPct) elPct.innerText = fmt.format(auctionPct + 140 + 500);
                 if(elNet) elNet.innerText = fmt.format(totalNetto);
                 if(elMain) elMain.innerText = fmt.format(totalBrutto);
             }}
@@ -506,11 +644,11 @@ def process_bca():
                             <div class="mt-auto space-y-4">
                                 <div class="flex items-end justify-between">
                                     <div class="flex flex-col"><span class="text-[10px] font-bold text-slate-400 uppercase">Gebot Netto</span><input type="number" value="${{car.bca_price}}" oninput="updateCalc('${{car.id}}', this.value)" class="w-24 px-2 py-1 rounded-lg text-sm font-bold bg-slate-50 border outline-none focus:border-blue-300"></div>
-                                    <div class="text-right"><span class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Endpreis AT Brutto</span><div id="mainPrice_${{car.id}}" class="text-xl font-bold text-blue-600">${{fmt.format(car.details.total_brutto_at)}}</div></div>
+                                    <div class="text-right"><span class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Endpreis AT Brutto</span><div id="mainPrice_${{car.id}}" class="text-xl font-bold text-blue-600">${{fmt.format((car.details.total_netto + 500) * 1.20)}}</div></div>
                                 </div>
                                 <div class="calc-box p-3 rounded-2xl text-[11px] text-slate-600 space-y-1">
-                                    <div class="flex justify-between"><span>BCA Gebühren:</span><span id="auctionPct_${{car.id}}">${{fmt.format(car.details.auction_percent + car.details.auction_fix)}}</span></div>
-                                    <div class="flex justify-between font-bold pt-1 border-t"><span>Gesamt Netto:</span><span id="totalNetto_${{car.id}}">${{fmt.format(car.details.total_netto)}}</span></div>
+                                    <div class="flex justify-between"><span>Provision / Geb.:</span><span id="auctionPct_${{car.id}}">${{fmt.format(car.details.auction_percent + car.details.auction_fix + 500)}}</span></div>
+                                    <div class="flex justify-between font-bold pt-1 border-t"><span>Gesamt Netto:</span><span id="totalNetto_${{car.id}}">${{fmt.format(car.details.total_netto + 500)}}</span></div>
                                 </div>
                                 <button onclick="openModal('${{car.name.replace(/'/g, "\\'")}}', '${{car.id}}', '${{car.img}}')" class="w-full bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-600 font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 text-sm group"><i data-lucide="message-square" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>Anfrage senden</button>
                             </div>
@@ -538,7 +676,6 @@ def process_bca():
             function changePage(p) {{ currentPage = p; render(); window.scrollTo(0,0); }}
             initFilters(); render();
             
-            // Hide sync button on live site (GitHub/Wix) but keep it on local file:// or localhost
             const isLocal = window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
             if (!isLocal) {{
                 const syncBtn = document.getElementById('syncGitHub');
