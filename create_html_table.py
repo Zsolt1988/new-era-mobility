@@ -222,6 +222,41 @@ def process_bca():
             #modalScrollArea::-webkit-scrollbar {{ width: 6px; }}
             #modalScrollArea::-webkit-scrollbar-track {{ background: transparent; }}
             #modalScrollArea::-webkit-scrollbar-thumb {{ background: #cbd5e1; border-radius: 10px; }}
+
+            /* Animation & Transition Classes */
+            .fade-enter {{ opacity: 0; transform: translateY(10px); }}
+            .fade-enter-active {{ opacity: 1; transform: translateY(0); transition: all 0.3s ease-out; }}
+            .message-hidden {{ display: none; opacity: 0; max-height: 0; overflow: hidden; }}
+            .message-visible {{ display: block; opacity: 1; max-height: 200px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }}
+            
+            .success-overlay {{
+                position: absolute;
+                inset: 0;
+                background: white;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                z-index: 200;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.5s ease;
+            }}
+            .success-overlay.active {{ opacity: 1; pointer-events: auto; }}
+            
+            .checkmark-circle {{
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                background: #f0fdf4;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 1.5rem;
+                transform: scale(0.5);
+                transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }}
+            .success-overlay.active .checkmark-circle {{ transform: scale(1); }}
         </style>
     </head>
     <body class="p-4 sm:p-8 bg-slate-50 text-slate-800">
@@ -233,8 +268,18 @@ def process_bca():
         </div>
 
         <!-- Anfrage Modal -->
-        <div id="modalBackdrop" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-start justify-center p-4 transition-opacity duration-300 opacity-0 min-h-full">
-            <div id="modalContainer" class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col my-8 max-h-[90vh]">
+        <div id="modalBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-start justify-center p-4 transition-opacity duration-300 opacity-0 min-h-full">
+            <div id="modalContainer" class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col my-8 max-h-[90vh] relative">
+                
+                <!-- Success Overlay -->
+                <div id="successOverlay" class="success-overlay">
+                    <div class="checkmark-circle">
+                        <i data-lucide="check" class="w-10 h-10 text-emerald-600"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Anfrage gesendet!</h3>
+                    <p class="text-slate-500 text-center px-8">Vielen Dank für Ihr Interesse. Wir werden uns in Kürze bei Ihnen melden.</p>
+                    <button onclick="closeModal()" class="mt-8 px-8 py-3 bg-blue-600 text-white font-bold rounded-2xl shadow-lg hover:bg-blue-700 transition-colors">Schließen</button>
+                </div>
                 
                 <!-- Modal Header (Static) -->
                 <div class="relative h-40 bg-slate-100 flex-shrink-0">
@@ -264,7 +309,7 @@ def process_bca():
                             </label>
 
                             <label class="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group">
-                                <input type="checkbox" id="checkImport" onchange="validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
+                                <input type="checkbox" id="checkImport" onchange="toggleMessageField(this.checked); validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
                                 <div class="flex flex-col">
                                     <span class="text-slate-800 font-semibold group-hover:text-blue-600 transition-colors">Allgemeine Frage</span>
                                     <span class="text-xs text-slate-400 uppercase font-bold tracking-wider">Frage zum Import-Ablauf</span>
@@ -314,21 +359,38 @@ def process_bca():
                                     </div>
 
                                     <!-- Kostenaufstellung -->
-                                    <div class="space-y-2 text-sm pt-4 border-t border-slate-200">
-                                        <div class="flex justify-between"><span>Netto Preis:</span><span id="resNetto" class="font-bold">0 €</span></div>
-                                        <div class="flex justify-between"><span>Transport:</span><span id="resTransport">0 €</span></div>
-                                        <div class="flex justify-between"><span>Anmeldung AT:</span><span>800 €</span></div>
-                                        <div class="flex justify-between text-slate-400"><span>Provision / Gebühren:</span><span id="resProvision">0 €</span></div>
-                                        <div id="resOptionsRow" class="flex justify-between text-blue-600 hidden"><span>Zusatzoptionen:</span><span id="resOptions">0 €</span></div>
+                                    <div class="space-y-3 text-sm pt-6 border-t border-slate-200">
+                                        <div class="flex justify-between items-center text-slate-600">
+                                            <span>Netto Preis:</span>
+                                            <span id="resNetto" class="font-bold text-slate-900">0 €</span>
+                                        </div>
+                                        <div class="flex justify-between items-center text-slate-600">
+                                            <span>Transport:</span>
+                                            <span id="resTransport" class="font-medium">0 €</span>
+                                        </div>
+                                        <div class="flex justify-between items-center text-slate-600">
+                                            <span>Anmeldung AT:</span>
+                                            <span class="font-medium">800 €</span>
+                                        </div>
+                                        <div class="flex justify-between items-center text-slate-400 italic">
+                                            <span>Provision / Gebühren:</span>
+                                            <span id="resProvision">0 €</span>
+                                        </div>
+                                        <div id="resOptionsRow" class="flex justify-between items-center text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg hidden">
+                                            <span class="font-medium">Zusatzoptionen:</span>
+                                            <span id="resOptions" class="font-bold">0 €</span>
+                                        </div>
                                         
-                                        <div class="pt-4 mt-2 border-t border-slate-300">
-                                            <div class="flex justify-between items-end">
-                                                <span class="text-xs font-bold text-slate-400 uppercase">Gesamtpreis Brutto</span>
-                                                <span id="resTotalBrutto" class="text-2xl font-bold text-blue-600">0 €</span>
+                                        <div class="pt-6 mt-4 border-t border-slate-300">
+                                            <div class="flex justify-between items-baseline">
+                                                <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Gesamtpreis Brutto</span>
+                                                <div class="text-right">
+                                                    <span id="resTotalBrutto" class="text-3xl font-black text-blue-600 tracking-tight">0 €</span>
+                                                </div>
                                             </div>
-                                            <div class="flex justify-between text-[10px] font-bold text-slate-400 uppercase mt-1">
-                                                <span>Inkl. 20% MwSt</span>
-                                                <span id="resTotalNetto">Netto: 0 €</span>
+                                            <div class="flex justify-between items-center mt-2">
+                                                <span class="text-[10px] font-bold text-slate-400 uppercase">Inkl. 20% MwSt</span>
+                                                <span id="resTotalNetto" class="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">Netto: 0 €</span>
                                             </div>
                                         </div>
                                     </div>
@@ -347,7 +409,7 @@ def process_bca():
                                     <input type="email" id="userEmail" placeholder="Ihre E-Mail" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
                                 </div>
                             </div>
-                            <div class="space-y-1">
+                            <div id="messageContainer" class="space-y-1 message-hidden">
                                 <textarea id="userMessage" rows="3" placeholder="Ihre Nachricht / Anliegen (optional)" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm resize-none"></textarea>
                             </div>
                         </div>
@@ -356,11 +418,11 @@ def process_bca():
 
                 <!-- Modal Footer -->
                 <div class="p-6 bg-white border-t border-slate-100 flex flex-col sm:flex-row gap-3 flex-shrink-0">
-                    <button id="btnSubmitInquiry" disabled onclick="sendInquiry()" class="flex-[2] bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white font-bold py-4 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-2 group">
+                    <button id="btnSubmitInquiry" disabled onclick="sendInquiry()" class="flex-[2] bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:cursor-not-allowed text-white font-bold py-4 rounded-2xl shadow-xl shadow-blue-100 transition-all flex items-center justify-center gap-2 group active:scale-95">
                         <i data-lucide="send" class="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
                         <span id="btnText">Anfrage senden</span>
                     </button>
-                    <button onclick="closeModal()" class="flex-1 bg-white hover:bg-slate-100 text-slate-600 font-bold py-4 rounded-2xl border border-slate-200 transition-colors">Abbrechen</button>
+                    <button onclick="closeModal()" class="flex-1 bg-white hover:bg-slate-50 text-slate-500 font-bold py-4 rounded-2xl border border-slate-200 transition-all active:scale-95">Abbrechen</button>
                 </div>
             </div>
         </div>
@@ -479,8 +541,22 @@ def process_bca():
                 document.getElementById('optCleaning').checked = false;
                 document.getElementById('optWarranty').value = "0";
                 document.getElementById('userMessage').value = "";
+                document.getElementById('successOverlay').classList.remove('active');
                 toggleCalculator(false);
+                toggleMessageField(false);
                 validateForm();
+            }}
+            
+            function toggleMessageField(show) {{
+                const container = document.getElementById('messageContainer');
+                if (show) {{
+                    container.classList.remove('message-hidden');
+                    container.classList.add('message-visible');
+                }} else {{
+                    container.classList.add('message-hidden');
+                    container.classList.remove('message-visible');
+                    document.getElementById('userMessage').value = "";
+                }}
             }}
             
             function closeModal() {{
@@ -596,8 +672,14 @@ def process_bca():
                 document.getElementById('btnSubmitInquiry').disabled = true;
                 document.getElementById('btnText').innerText = "Anfrage wird gesendet...";
                 
+                // Show Success Overlay
+                setTimeout(() => {{
+                    document.getElementById('successOverlay').classList.add('active');
+                    lucide.createIcons();
+                }}, 800);
+
                 showToast("Anfrage wurde übermittelt!", "success");
-                setTimeout(closeModal, 1500);
+                
                 setTimeout(() => {{ 
                     document.getElementById('btnText').innerText = "Anfrage senden";
                     validateForm();
