@@ -203,6 +203,25 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
             self.send_error(404)
 
     def do_GET(self):
+        if self.path == '/api/archive':
+            try:
+                archive_path = os.path.join(BASE_DIR, 'sold_archive.json')
+                if os.path.exists(archive_path):
+                    with open(archive_path, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                else:
+                    data = []
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps(data).encode('utf-8'))
+            except Exception as e:
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
+            return
+
         if self.path == '/api/get-status':
             status = "Bereit"
             if os.path.exists('status.txt'):
