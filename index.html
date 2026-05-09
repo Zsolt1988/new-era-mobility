@@ -8,59 +8,48 @@
         <script src="https://unpkg.com/lucide@latest"></script>
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
         <style>
-            body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; position: relative; min-height: 100vh; }
+            body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; position: relative; min-height: 100vh; -webkit-font-smoothing: antialiased; }
             .glass-card { background: white; border: 1px solid #e2e8f0; }
             .calc-box { background: #f1f5f9; border: 1px dashed #cbd5e1; }
             .ausstattung-badge { background-color: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
             .filter-select { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 8px 12px; }
             .glass-modal { background: white; backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); }
+            
             #toast { position: fixed; bottom: 2rem; right: 2rem; padding: 1rem 1.5rem; border-radius: 1rem; background: white; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; display: none; z-index: 9999; animation: slideUp 0.3s ease-out; }
             @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+            
             .sync-btn { background: #059669; color: white; transition: all 0.3s; cursor: pointer; }
             .sync-btn:hover { background: #047857; transform: translateY(-1px); }
             
-            /* Custom Scrollbar for Modal */
             #modalScrollArea::-webkit-scrollbar { width: 6px; }
             #modalScrollArea::-webkit-scrollbar-track { background: transparent; }
             #modalScrollArea::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
-            /* Animation & Transition Classes */
-            .fade-enter { opacity: 0; transform: translateY(10px); }
-            .fade-enter-active { opacity: 1; transform: translateY(0); transition: all 0.3s ease-out; }
             .message-hidden { display: none; opacity: 0; max-height: 0; overflow: hidden; }
             .message-visible { display: block; opacity: 1; max-height: 200px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
             
-            .success-overlay {
-                position: absolute;
-                inset: 0;
-                background: white;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                z-index: 200;
-                opacity: 0;
-                pointer-events: none;
-                transition: opacity 0.5s ease;
-            }
+            .success-overlay { position: absolute; inset: 0; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
             .success-overlay.active { opacity: 1; pointer-events: auto; }
             
-            .checkmark-circle {
-                width: 80px;
-                height: 80px;
-                border-radius: 50%;
-                background: #f0fdf4;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-bottom: 1.5rem;
-                transform: scale(0.5);
-                transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            }
+            .checkmark-circle { width: 80px; height: 80px; border-radius: 50%; background: #f0fdf4; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; transform: scale(0.5); transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
             .success-overlay.active .checkmark-circle { transform: scale(1); }
+
+            /* Hide arrows on number inputs */
+            input[type=number]::-webkit-inner-spin-button, 
+            input[type=number]::-webkit-outer-spin-button { 
+                -webkit-appearance: none; 
+                margin: 0; 
+            }
+            input[type=number] { -moz-appearance: textfield; }
+
+            @media (max-width: 480px) {
+                .card-padding { padding: 0.75rem !important; }
+                .card-title { font-size: 0.9rem !important; }
+                .card-specs { font-size: 9px !important; }
+            }
         </style>
     </head>
-    <body class="p-4 sm:p-8 bg-slate-50 text-slate-800">
+    <body class="p-4 md:p-8 bg-slate-50 text-slate-800">
         <div id="toast" onclick="this.style.display='none'">
             <div class="flex items-center gap-3">
                 <div id="toastIcon"></div>
@@ -70,7 +59,7 @@
 
         <!-- Anfrage Modal -->
         <div id="modalBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-start justify-center p-4 transition-opacity duration-300 opacity-0 min-h-full">
-            <div id="modalContainer" class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col my-8 max-h-[90vh] relative">
+            <div id="modalContainer" class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col my-4 md:my-8 max-h-[95vh] relative">
                 
                 <!-- Success Overlay -->
                 <div id="successOverlay" class="success-overlay">
@@ -78,120 +67,72 @@
                         <i data-lucide="check" class="w-10 h-10 text-emerald-600"></i>
                     </div>
                     <h3 class="text-2xl font-bold text-slate-800 mb-2">Anfrage gesendet!</h3>
-                    <p class="text-slate-500 text-center px-8">Vielen Dank für Ihr Interesse. Wir werden uns in Kürze bei Ihnen melden.</p>
-                    <button onclick="closeModal()" class="mt-8 px-8 py-3 bg-blue-600 text-white font-bold rounded-2xl shadow-lg hover:bg-blue-700 transition-colors">Schließen</button>
+                    <p class="text-slate-500 text-center px-8">Wir melden uns in Kürze bei Ihnen.</p>
+                    <button onclick="closeModal()" class="mt-8 px-8 py-3 bg-blue-600 text-white font-bold rounded-2xl shadow-lg">Schließen</button>
                 </div>
-                
-                <!-- Modal Header (Static) -->
-                <div class="relative h-40 bg-slate-100 flex-shrink-0">
+
+                <!-- Modal Header -->
+                <div class="relative h-32 md:h-48 bg-slate-100 flex-shrink-0">
                     <img id="modalCarImg" src="" class="w-full h-full object-cover" alt="Auto">
                     <div class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
-                    <button onclick="closeModal()" class="absolute top-4 right-4 p-2 bg-white/80 hover:bg-white rounded-full text-slate-600 shadow-sm transition-colors">
+                    <button onclick="closeModal()" class="absolute top-4 right-4 p-2 bg-white/80 hover:bg-white rounded-full text-slate-600 shadow-sm">
                         <i data-lucide="x" class="w-6 h-6"></i>
                     </button>
-                    <div class="absolute bottom-4 left-8">
-                         <h3 id="modalCarName" class="text-2xl font-bold text-slate-800 leading-tight">...</h3>
-                         <p class="text-sm text-slate-500 font-medium">ID: <span id="modalCarId">...</span></p>
+                    <div class="absolute bottom-4 left-6 md:left-8">
+                         <h3 id="modalCarName" class="text-xl md:text-2xl font-bold text-slate-800 leading-tight">...</h3>
+                         <p class="text-xs md:text-sm text-slate-500 font-medium">ID: <span id="modalCarId">...</span></p>
                     </div>
                 </div>
 
-                <!-- Modal Content (Scrollable) -->
-                <div id="modalScrollArea" class="p-8 pt-4 overflow-y-auto flex-grow">
-                    
-                    <div class="space-y-6">
-                        <!-- Basis Optionen -->
+                <!-- Modal Content -->
+                <div id="modalScrollArea" class="p-4 md:p-8 pt-4 overflow-y-auto flex-grow">
+                    <div class="space-y-4 md:space-y-6">
                         <div class="grid grid-cols-1 gap-3">
                             <label class="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group">
-                                <input type="checkbox" id="checkEmail" onchange="validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
+                                <input type="checkbox" id="checkEmail" onchange="validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded">
                                 <div class="flex flex-col">
-                                    <span class="text-slate-800 font-semibold group-hover:text-blue-600 transition-colors">Technischer Zustandsbericht</span>
-                                    <span class="text-xs text-slate-400 uppercase font-bold tracking-wider">Per E-Mail erhalten</span>
+                                    <span class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Zustandsbericht</span>
+                                    <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Per E-Mail erhalten</span>
                                 </div>
                             </label>
 
                             <label class="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group">
-                                <input type="checkbox" id="checkImport" onchange="toggleMessageField(this.checked); validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
+                                <input type="checkbox" id="checkImport" onchange="toggleMessageField(this.checked); validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded">
                                 <div class="flex flex-col">
-                                    <span class="text-slate-800 font-semibold group-hover:text-blue-600 transition-colors">Allgemeine Frage</span>
-                                    <span class="text-xs text-slate-400 uppercase font-bold tracking-wider">Frage zum Import-Ablauf</span>
+                                    <span class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Allgemeine Frage</span>
+                                    <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Zum Import-Ablauf</span>
                                 </div>
                             </label>
 
-                            <!-- Gebotslimit & Kalkulator -->
-                            <div class="rounded-2xl border border-slate-100 overflow-hidden transition-all duration-300" id="calcContainer">
+                            <div class="rounded-2xl border border-slate-100 overflow-hidden" id="calcContainer">
                                 <label class="flex items-center gap-4 p-4 bg-white hover:bg-slate-50 transition-all cursor-pointer group">
-                                    <input type="checkbox" id="checkLimit" onchange="toggleCalculator(this.checked); validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
+                                    <input type="checkbox" id="checkLimit" onchange="toggleCalculator(this.checked); validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded">
                                     <div class="flex flex-col">
-                                        <span class="text-slate-800 font-semibold group-hover:text-blue-600 transition-colors">Gebotslimit prüfen & kalkulieren</span>
-                                        <span class="text-xs text-slate-400 uppercase font-bold tracking-wider">Detaillierte Kostenaufstellung</span>
+                                        <span class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Kalkulieren</span>
+                                        <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Kostenaufstellung</span>
                                     </div>
                                 </label>
-
-                                <div id="detailedCalc" class="hidden bg-slate-50 border-t border-slate-100 p-6 space-y-6">
+                                <div id="detailedCalc" class="hidden bg-slate-50 border-t border-slate-100 p-4 md:p-6 space-y-4">
                                     <div class="flex items-center justify-between">
-                                        <span class="text-sm font-bold text-slate-500 uppercase">Max. Gebot (Netto)</span>
-                                        <div class="relative w-32">
-                                            <input type="number" id="modalLimitInput" oninput="runModalCalc()" value="0" class="w-full pl-3 pr-8 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500">
+                                        <span class="text-[10px] font-bold text-slate-500 uppercase">Gebot Netto</span>
+                                        <div class="relative w-28 md:w-32">
+                                            <input type="number" id="modalLimitInput" oninput="runModalCalc()" value="0" class="w-full pl-3 pr-8 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold outline-none">
                                             <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold">€</span>
                                         </div>
                                     </div>
-
-                                    <!-- Service Optionen -->
-                                    <div class="space-y-3">
-                                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Optionale Services</label>
-                                        
-                                        <select id="optWarranty" onchange="runModalCalc()" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500">
-                                            <option value="0">Keine Zusatzgarantie</option>
-                                            <option value="390">Fahrzeuggarantie (12 Monate) - 390 €</option>
-                                            <option value="590">Fahrzeuggarantie (24 Monate) - 590 €</option>
-                                            <option value="790">Fahrzeuggarantie (36 Monate) - 790 €</option>
-                                        </select>
-
-                                        <div class="grid grid-cols-2 gap-3">
-                                            <label class="flex items-center gap-2 p-3 bg-white border border-slate-200 rounded-xl cursor-pointer">
-                                                <input type="checkbox" id="optWash" onchange="runModalCalc()" class="w-4 h-4 text-blue-600">
-                                                <span class="text-xs text-slate-600">Handwäsche (49€)</span>
-                                            </label>
-                                            <label class="flex items-center gap-2 p-3 bg-white border border-slate-200 rounded-xl cursor-pointer">
-                                                <input type="checkbox" id="optCleaning" onchange="runModalCalc()" class="w-4 h-4 text-blue-600">
-                                                <span class="text-xs text-slate-600">Innenreinigung (99€)</span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <!-- Kostenaufstellung -->
-                                    <div class="space-y-3 text-sm pt-6 border-t border-slate-200">
-                                        <div class="flex justify-between items-center text-slate-600">
-                                            <span>Netto Preis:</span>
-                                            <span id="resNetto" class="font-bold text-slate-900">0 €</span>
-                                        </div>
-                                        <div class="flex justify-between items-center text-slate-600">
-                                            <span>Transport:</span>
-                                            <span id="resTransport" class="font-medium">0 €</span>
-                                        </div>
-                                        <div class="flex justify-between items-center text-slate-600">
-                                            <span>Anmeldung AT:</span>
-                                            <span class="font-medium">800 €</span>
-                                        </div>
-                                        <div class="flex justify-between items-center text-slate-400 italic">
-                                            <span>Provision / Gebühren:</span>
-                                            <span id="resProvision">0 €</span>
-                                        </div>
-                                        <div id="resOptionsRow" class="flex justify-between items-center text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg hidden">
-                                            <span class="font-medium">Zusatzoptionen:</span>
-                                            <span id="resOptions" class="font-bold">0 €</span>
-                                        </div>
-                                        
-                                        <div class="pt-6 mt-4 border-t border-slate-300">
+                                    <select id="optWarranty" onchange="runModalCalc()" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm outline-none">
+                                        <option value="0">Keine Zusatzgarantie</option>
+                                    </select>
+                                    <div class="space-y-2 text-[11px] md:text-sm pt-4 border-t border-slate-200">
+                                        <div class="flex justify-between"><span>Netto Gebot:</span><span id="resNetto" class="font-bold">0 €</span></div>
+                                        <div class="flex justify-between"><span>Transport:</span><span id="resTransport">0 €</span></div>
+                                        <div class="flex justify-between"><span>Anmeldung AT:</span><span>800 €</span></div>
+                                        <div class="flex justify-between text-slate-400 italic"><span>Gebühren:</span><span id="resProvision">0 €</span></div>
+                                        <div id="resOptionsRow" class="flex justify-between text-blue-600 hidden"><span>Optionen:</span><span id="resOptions">0 €</span></div>
+                                        <div class="pt-4 border-t border-slate-300">
                                             <div class="flex justify-between items-baseline">
-                                                <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Gesamtpreis Brutto</span>
-                                                <div class="text-right">
-                                                    <span id="resTotalBrutto" class="text-3xl font-black text-blue-600 tracking-tight">0 €</span>
-                                                </div>
-                                            </div>
-                                            <div class="flex justify-between items-center mt-2">
-                                                <span class="text-[10px] font-bold text-slate-400 uppercase">Inkl. 20% MwSt</span>
-                                                <span id="resTotalNetto" class="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">Netto: 0 €</span>
+                                                <span class="text-[10px] font-black text-slate-400 uppercase">Gesamt Brutto</span>
+                                                <span id="resTotalBrutto" class="text-xl md:text-3xl font-black text-blue-600">0 €</span>
                                             </div>
                                         </div>
                                     </div>
@@ -199,74 +140,121 @@
                             </div>
                         </div>
 
-                        <!-- Kontaktdaten (Immer sichtbar, vor dem Button) -->
-                        <div class="p-6 bg-blue-50/50 rounded-3xl border border-blue-100 space-y-4">
-                            <label class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block">Ihre Kontaktdaten</label>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div class="space-y-1">
-                                    <input type="text" id="userName" placeholder="Ihr Name" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
-                                </div>
-                                <div class="space-y-1">
-                                    <input type="email" id="userEmail" placeholder="Ihre E-Mail" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
-                                </div>
+                        <div class="p-4 md:p-6 bg-blue-50/50 rounded-3xl border border-blue-100 space-y-4">
+                            <label class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block">Kontaktdaten</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <input type="text" id="userName" placeholder="Name" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm">
+                                <input type="email" id="userEmail" placeholder="E-Mail" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm">
                             </div>
-                            <div id="messageContainer" class="space-y-1 message-hidden">
-                                <textarea id="userMessage" rows="3" placeholder="Ihre Nachricht / Anliegen (optional)" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm resize-none"></textarea>
+                            <div id="messageContainer" class="message-hidden">
+                                <textarea id="userMessage" rows="2" placeholder="Nachricht (optional)" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm resize-none"></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Modal Footer -->
-                <div class="p-6 bg-white border-t border-slate-100 flex flex-col sm:flex-row gap-3 flex-shrink-0">
-                    <button id="btnSubmitInquiry" disabled onclick="sendInquiry()" class="flex-[2] bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:cursor-not-allowed text-white font-bold py-4 rounded-2xl shadow-xl shadow-blue-100 transition-all flex items-center justify-center gap-2 group active:scale-95">
-                        <i data-lucide="send" class="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                <div class="p-4 md:p-6 bg-white border-t border-slate-100 flex flex-col md:flex-row gap-3 flex-shrink-0">
+                    <button id="btnSubmitInquiry" disabled onclick="sendInquiry()" class="flex-[2] bg-blue-600 disabled:bg-slate-200 text-white font-bold py-4 rounded-2xl shadow-xl flex items-center justify-center gap-2">
+                        <i data-lucide="send" class="w-5 h-5"></i>
                         <span id="btnText">Anfrage senden</span>
                     </button>
-                    <button onclick="closeModal()" class="flex-1 bg-white hover:bg-slate-50 text-slate-500 font-bold py-4 rounded-2xl border border-slate-200 transition-all active:scale-95">Abbrechen</button>
+                    <button onclick="closeModal()" class="flex-1 bg-white text-slate-500 font-bold py-4 rounded-2xl border border-slate-200 text-sm">Abbrechen</button>
                 </div>
             </div>
         </div>
 
-        <div id="mainContainer" class="max-w-7xl mx-auto">
-            <header class="mb-10">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
-                    <div>
-                        <h1 class="text-4xl font-bold text-slate-800 mb-2">Auktionsfahrzeuge</h1>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <button id="syncGitHub" onclick="syncToGitHub()" class="sync-btn px-6 py-3 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2">
-                            <i data-lucide="refresh-cw" class="w-5 h-5"></i>
-                            Live-Update
+        <!-- Main Container -->
+        <div id="mainContainer" class="max-w-[1600px] mx-auto">
+            <header class="mb-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                    <h1 class="text-3xl md:text-4xl font-bold text-slate-800">Auktionsfahrzeuge</h1>
+                    <div class="flex flex-col sm:flex-row items-center gap-3">
+                        <button id="syncGitHub" onclick="syncToGitHub()" class="sync-btn w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2">
+                            <i data-lucide="refresh-cw" class="w-4 h-4"></i> Live-Update
                         </button>
-                        <input type="text" id="searchInput" placeholder="Suche..." class="px-4 py-3 border rounded-xl outline-none w-full sm:w-64">
+                        <div class="relative w-full sm:w-64">
+                            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                            <input type="text" id="searchInput" placeholder="Suchen..." class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl outline-none bg-white shadow-sm">
+                        </div>
                     </div>
                 </div>
                 
-                <div class="flex flex-wrap items-end gap-6 p-5 bg-white rounded-2xl border border-slate-200 shadow-sm">
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1">Marke</label>
-                        <select id="makeFilter" class="filter-select min-w-[160px] outline-none">
+                <div class="flex flex-col md:flex-row items-end gap-4 p-4 md:p-5 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="w-full md:w-32">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Marke</label>
+                        <select id="makeFilter" class="filter-select w-full outline-none text-sm">
                             <option value="">Alle Marken</option>
                         </select>
                     </div>
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1">Baujahr</label>
+                    <div class="w-full md:w-auto">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Baujahr</label>
                         <div class="flex items-center gap-2">
-                            <input type="number" id="yearMin" placeholder="von" class="filter-select w-20 px-2 py-1.5 outline-none">
-                            <input type="number" id="yearMax" placeholder="bis" class="filter-select w-20 px-2 py-1.5 outline-none">
+                            <select id="yearMin" class="filter-select w-full md:w-24 outline-none text-sm">
+                                <option value="0">Jahr von</option>
+                            </select>
+                            <select id="yearMax" class="filter-select w-full md:w-24 outline-none text-sm">
+                                <option value="9999">Jahr bis</option>
+                            </select>
                         </div>
                     </div>
-                    <button onclick="resetFilters()" class="text-xs text-blue-500 font-bold mb-2.5 transition-colors">Reset</button>
+                    <div class="w-full md:w-auto">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Kilometer</label>
+                        <div class="flex items-center gap-2">
+                            <select id="kmMin" class="filter-select w-full md:w-28 outline-none text-sm">
+                                <option value="0">KM von</option>
+                                <option value="0">0 KM</option>
+                                <option value="10000">10.000 KM</option>
+                                <option value="20000">20.000 KM</option>
+                                <option value="30000">30.000 KM</option>
+                                <option value="40000">40.000 KM</option>
+                                <option value="50000">50.000 KM</option>
+                                <option value="60000">60.000 KM</option>
+                                <option value="70000">70.000 KM</option>
+                                <option value="80000">80.000 KM</option>
+                                <option value="90000">90.000 KM</option>
+                                <option value="100000">100.000 KM</option>
+                                <option value="125000">125.000 KM</option>
+                                <option value="150000">150.000 KM</option>
+                                <option value="200000">200.000 KM</option>
+                            </select>
+                            <select id="kmMax" class="filter-select w-full md:w-28 outline-none text-sm">
+                                <option value="9999999">KM bis</option>
+                                <option value="10000">10.000 KM</option>
+                                <option value="20000">20.000 KM</option>
+                                <option value="30000">30.000 KM</option>
+                                <option value="40000">40.000 KM</option>
+                                <option value="50000">50.000 KM</option>
+                                <option value="60000">60.000 KM</option>
+                                <option value="70000">70.000 KM</option>
+                                <option value="80000">80.000 KM</option>
+                                <option value="90000">90.000 KM</option>
+                                <option value="100000">100.000 KM</option>
+                                <option value="125000">125.000 KM</option>
+                                <option value="150000">150.000 KM</option>
+                                <option value="200000">200.000 KM</option>
+                                <option value="9999999">Beliebig</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-48">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Ausstattung</label>
+                        <select id="featureFilter" class="filter-select w-full outline-none text-sm">
+                            <option value="">Alle Merkmale</option>
+                        </select>
+                    </div>
+                    <button onclick="resetFilters()" class="w-full md:w-auto px-4 py-2.5 text-xs text-blue-500 font-bold hover:bg-blue-50 rounded-lg transition-colors">Filter Reset</button>
                 </div>
             </header>
             
-            <div id="carGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12"></div>
+            <!-- Grid: Mobil 2 Spalten, Desktop erweitert sich dynamisch -->
+            <div id="carGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 md:gap-6 mb-12"></div>
             <div id="pagination" class="flex justify-center items-center gap-2 pb-12"></div>
         </div>
 
         <script>
-            const cars = [{"id": "68", "name": "Audi E-tron sportback", "ausfuehrung": "55 QUATTRO BUSINESS EDITION PLUS 95 KWH - NL", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=K-752-HS-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "31.12.2020", "km": "99.910", "km_raw": 99910, "year_raw": 2020, "ps": "409", "kraftstoff": "BEV - battery electr", "ausstattung": ["Klimaanlage", "Leichtmetallfelgen", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Parksensoren vorne", "Servolenkung"], "ausstattung_full": ["Klimaanlage", "Leichtmetallfelgen", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Parksensoren vorne", "Servolenkung", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Regensensor", "Parksensoren hinten", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Sonnendach"], "location": "The Netherlands - Barneveld)", "car_type": "SUV", "bca_price": 16694.0, "transport": 600, "details": {"netto_basis": 16694.0, "auction_percent": 695.3051, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 18929.3051, "total_brutto_at": 22715.16612, "car_type": "SUV"}}];
+            const cars = [{"id": "2", "name": "Volvo C40", "ausfuehrung": "RECHARGE SINGLE MOTOR - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117078953-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "11.01.2023", "km": "30.904", "km_raw": 30904, "year_raw": 2023, "ps": "231", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Fensterheber elektrisch - Vorne und Hinten", "Regensensor", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle", "Sonnendach"], "location": "Germany - 41460 Neuss", "car_type": "SUV", "bca_price": 0.0, "transport": 600, "details": {"netto_basis": 0.0, "auction_percent": 0.0, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 2340.0, "total_brutto_at": 2808.0, "car_type": "SUV"}, "warranty_options": {"Standard": 223, "Komfort": 418, "Premium": 643}}, {"id": "4", "name": "Volvo C40", "ausfuehrung": "RECHARGE SINGLE MOTOR - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117065169-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "20.12.2022", "km": "13.897", "km_raw": 13897, "year_raw": 2022, "ps": "231", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Soundsystem", "Parksensoren vorne", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle", "Sonnendach"], "location": "Germany - 41460 Neuss", "car_type": "SUV", "bca_price": 0.0, "transport": 600, "details": {"netto_basis": 0.0, "auction_percent": 0.0, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 2340.0, "total_brutto_at": 2808.0, "car_type": "SUV"}, "warranty_options": {"Standard": 223, "Komfort": 418, "Premium": 643}}, {"id": "5", "name": "Zeekr 001", "ausfuehrung": "ZEEKR 001 PRIVILEGE AWD - DK", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=EK27624-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "03.06.2025", "km": "10.330", "km_raw": 10330, "year_raw": 2025, "ps": "544", "kraftstoff": "BEV - battery electr", "ausstattung": [], "ausstattung_full": [], "location": "EXTERNAL LOCATION - Delivery may take +4 days. Only transport price from BCA will be invoiced.", "car_type": "PKW", "bca_price": 0.0, "transport": 600, "details": {"netto_basis": 0.0, "auction_percent": 0.0, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 2340.0, "total_brutto_at": 2808.0, "car_type": "PKW"}, "warranty_options": null}, {"id": "6", "name": "Hyundai Ioniq 5", "ausfuehrung": "73 KWH VANGUARD - PT", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=AJ38CO-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "26.08.2021", "km": "123.003", "km_raw": 123003, "year_raw": 2021, "ps": "218", "kraftstoff": "BEV - battery electr", "ausstattung": ["Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Parksensoren vorne", "Servolenkung"], "ausstattung_full": ["Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Parksensoren vorne", "Servolenkung", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Navigationssystem", "Traktionskontrolle"], "location": "PORTUGAL - BCA Porto", "car_type": "SUV", "bca_price": 0.0, "transport": 600, "details": {"netto_basis": 0.0, "auction_percent": 0.0, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 2340.0, "total_brutto_at": 2808.0, "car_type": "SUV"}, "warranty_options": {"Standard": 223, "Komfort": 418, "Premium": 643}}, {"id": "7", "name": "Mercedes-Benz Eqa h243", "ausfuehrung": "250 - ES", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=2150MBD-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "13.09.2022", "km": "30.564", "km_raw": 30564, "year_raw": 2022, "ps": "190", "kraftstoff": "BEV - battery electr", "ausstattung": ["Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne"], "ausstattung_full": ["Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Servolenkung", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Stabilit\u00e4tskontrolle", "Traktionskontrolle"], "location": "SPAIN - Azuqueca de Henares", "car_type": "PKW", "bca_price": 0.0, "transport": 600, "details": {"netto_basis": 0.0, "auction_percent": 0.0, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 2340.0, "total_brutto_at": 2808.0, "car_type": "PKW"}, "warranty_options": {"Standard": 223, "Komfort": 418, "Premium": 643}}, {"id": "9", "name": "Mercedes-Benz Eqb x243", "ausfuehrung": "50 - ES", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0921MDK-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "17.01.2023", "km": "20.559", "km_raw": 20559, "year_raw": 2023, "ps": "190", "kraftstoff": "BEV - battery electr", "ausstattung": ["Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne"], "ausstattung_full": ["Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Aussenspiegel beheizbar", "Servolenkung", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Regensensor", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle", "Traktionskontrolle"], "location": "SPAIN - Azuqueca de Henares", "car_type": "PKW", "bca_price": 0.0, "transport": 600, "details": {"netto_basis": 0.0, "auction_percent": 0.0, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 2340.0, "total_brutto_at": 2808.0, "car_type": "PKW"}, "warranty_options": {"Standard": 223, "Komfort": 418, "Premium": 643}}, {"id": "13", "name": "Polestar 04", "ausfuehrung": "SINGLE MOTOR LONG RANGE - ES", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=1882NCJ-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "01.06.2025", "km": "6.190", "km_raw": 6190, "year_raw": 2025, "ps": "272", "kraftstoff": "BEV - battery electr", "ausstattung": ["Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar"], "ausstattung_full": ["Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Aussenspiegel beheizbar", "Servolenkung", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Regensensor", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Stabilit\u00e4tskontrolle", "Sonnendach", "Traktionskontrolle"], "location": "SPAIN - Azuqueca de Henares", "car_type": "PKW", "bca_price": 0.0, "transport": 600, "details": {"netto_basis": 0.0, "auction_percent": 0.0, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 2340.0, "total_brutto_at": 2808.0, "car_type": "PKW"}, "warranty_options": {"Standard": 223, "Komfort": 418, "Premium": 643}}, {"id": "18", "name": "Mercedes-Benz Eqe", "ausfuehrung": "350+ - ES", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=7714LYF-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "30.05.2022", "km": "27.272", "km_raw": 27272, "year_raw": 2022, "ps": "292", "kraftstoff": "BEV - battery electr", "ausstattung": ["Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar"], "ausstattung_full": ["Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Nebelscheinwerfer", "Parksensoren vorne", "Servolenkung", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle", "Sonnendach", "Traktionskontrolle"], "location": "SPAIN - Azuqueca de Henares", "car_type": "PKW", "bca_price": 0.0, "transport": 600, "details": {"netto_basis": 0.0, "auction_percent": 0.0, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 2340.0, "total_brutto_at": 2808.0, "car_type": "PKW"}, "warranty_options": {"Standard": 403, "Komfort": 643, "Premium": 1093}}];
+            
             const fmt = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
             let currentPage = 1;
             const itemsPerPage = 50;
@@ -274,36 +262,36 @@
 
             async function syncToGitHub() {
                 const btn = document.getElementById('syncGitHub');
-                const oldContent = btn.innerHTML;
-                btn.disabled = true;
-                btn.innerHTML = 'Synchronisiere...';
-                
+                const old = btn.innerHTML;
+                btn.disabled = true; btn.innerText = 'Syncing...';
                 try {
-                    const response = await fetch('http://localhost:8085/api/push-github');
-                    const data = await response.json();
-                    
-                    if (data.status === 'success') {
-                        showToast('Erfolgreich! Deine WIX-Seite wird in Kürze aktualisiert.', 'success');
-                    } else {
-                        showToast('Fehler: ' + data.message, 'error');
-                    }
-                } catch (e) {
-                    showToast('Verbindung zum lokalen Server fehlgeschlagen. Läuft server.py?', 'error');
-                } finally {
-                    btn.disabled = false;
-                    btn.innerHTML = oldContent;
-                    lucide.createIcons();
-                }
+                    const res = await fetch('/api/push-github');
+                    const data = await res.json();
+                    showToast(data.status === 'success' ? 'Update Live!' : 'Fehler', data.status);
+                } catch (e) { showToast('Server Fehler', 'error'); }
+                finally { btn.disabled = false; btn.innerHTML = old; lucide.createIcons(); }
             }
 
             function initFilters() {
-                lucide.createIcons();
                 const makes = [...new Set(cars.map(c => c.name.split(' ')[0]))].sort();
                 const mFilter = document.getElementById('makeFilter');
                 makes.forEach(m => { const opt = document.createElement('option'); opt.value = m; opt.innerText = m; mFilter.appendChild(opt); });
-                ['makeFilter', 'yearMin', 'yearMax', 'searchInput'].forEach(id => { 
-                    const el = document.getElementById(id);
-                    if(el) el.addEventListener('input', () => { currentPage = 1; render(); }); 
+
+                const years = [...new Set(cars.map(c => c.year_raw))].sort((a,b) => b-a);
+                const yMin = document.getElementById('yearMin');
+                const yMax = document.getElementById('yearMax');
+                years.forEach(y => {
+                    const opt1 = document.createElement('option'); opt1.value = y; opt1.innerText = y; yMin.appendChild(opt1);
+                    const opt2 = document.createElement('option'); opt2.value = y; opt2.innerText = y; yMax.appendChild(opt2);
+                });
+
+                const features = [...new Set(cars.flatMap(c => c.ausstattung_full))].sort();
+                const fFilter = document.getElementById('featureFilter');
+                features.forEach(f => { if(f) { const opt = document.createElement('option'); opt.value = f; opt.innerText = f; fFilter.appendChild(opt); } });
+
+                ['makeFilter', 'yearMin', 'yearMax', 'kmMin', 'kmMax', 'featureFilter', 'searchInput'].forEach(id => {
+                    document.getElementById(id).addEventListener('change', () => { currentPage = 1; render(); });
+                    document.getElementById(id).addEventListener('input', () => { currentPage = 1; render(); });
                 });
             }
 
@@ -312,8 +300,7 @@
                 document.getElementById('toastMessage').innerText = msg;
                 document.getElementById('toastIcon').innerHTML = type === 'success' ? '<i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>' : '<i data-lucide="alert-circle" class="w-5 h-5 text-red-500"></i>';
                 lucide.createIcons();
-                toast.style.display = 'block';
-                setTimeout(() => { toast.style.display = 'none'; }, 4000);
+                toast.style.display = 'block'; setTimeout(() => { toast.style.display = 'none'; }, 3000);
             }
 
             function openModal(name, id, img) {
@@ -324,42 +311,26 @@
                 document.getElementById('modalCarImg').src = img || 'https://via.placeholder.com/600x400';
                 document.getElementById('modalLimitInput').value = car.bca_price;
                 
+                const wSelect = document.getElementById('optWarranty');
+                wSelect.innerHTML = '<option value="0">Keine Zusatzgarantie</option>';
+                if (car.warranty_options) {
+                    Object.entries(car.warranty_options).forEach(([level, price]) => {
+                        const opt = document.createElement('option'); opt.value = price; opt.innerText = `12M ${level} - ${price}€`;
+                        wSelect.appendChild(opt);
+                    });
+                }
+
                 const backdrop = document.getElementById('modalBackdrop');
                 backdrop.classList.remove('hidden');
+                setTimeout(() => { backdrop.classList.add('opacity-100'); document.getElementById('modalContainer').classList.add('scale-100', 'opacity-100'); }, 10);
                 
-                window.parent.postMessage(JSON.stringify({ type: 'scroll_to_top' }), '*');
-
-                setTimeout(() => { 
-                    backdrop.classList.add('opacity-100'); 
-                    document.getElementById('modalContainer').classList.add('scale-100', 'opacity-100'); 
-                }, 10);
-                
-                // Reset form
                 document.getElementById('checkEmail').checked = false;
                 document.getElementById('checkLimit').checked = false;
                 document.getElementById('checkImport').checked = false;
-                document.getElementById('optWash').checked = false;
-                document.getElementById('optCleaning').checked = false;
-                document.getElementById('optWarranty').value = "0";
-                document.getElementById('userMessage').value = "";
                 document.getElementById('successOverlay').classList.remove('active');
-                toggleCalculator(false);
-                toggleMessageField(false);
-                validateForm();
+                toggleCalculator(false); toggleMessageField(false); validateForm();
             }
-            
-            function toggleMessageField(show) {
-                const container = document.getElementById('messageContainer');
-                if (show) {
-                    container.classList.remove('message-hidden');
-                    container.classList.add('message-visible');
-                } else {
-                    container.classList.add('message-hidden');
-                    container.classList.remove('message-visible');
-                    document.getElementById('userMessage').value = "";
-                }
-            }
-            
+
             function closeModal() {
                 const backdrop = document.getElementById('modalBackdrop');
                 backdrop.classList.remove('opacity-100');
@@ -367,24 +338,16 @@
                 setTimeout(() => { backdrop.classList.add('hidden'); }, 300);
             }
 
-            function toggleCalculator(s) {
-                const e = document.getElementById('detailedCalc');
-                if(s) { 
-                    e.classList.remove('hidden'); 
-                    runModalCalc();
-                } else { 
-                    e.classList.add('hidden'); 
-                }
-            }
+            function toggleCalculator(s) { document.getElementById('detailedCalc').classList.toggle('hidden', !s); if(s) runModalCalc(); }
+            function toggleMessageField(s) { document.getElementById('messageContainer').classList.toggle('message-hidden', !s); if(s) document.getElementById('messageContainer').classList.add('message-visible'); }
 
             function validateForm() {
-                const anyChecked = ['checkEmail', 'checkLimit', 'checkImport'].some(id => document.getElementById(id).checked);
-                const hasName = document.getElementById('userName').value.trim().length > 1;
-                const hasEmail = document.getElementById('userEmail').value.trim().includes('@');
-                document.getElementById('btnSubmitInquiry').disabled = !anyChecked || !hasName || !hasEmail;
+                const any = ['checkEmail', 'checkLimit', 'checkImport'].some(id => document.getElementById(id).checked);
+                const name = document.getElementById('userName').value.trim().length > 1;
+                const mail = document.getElementById('userEmail').value.trim().includes('@');
+                document.getElementById('btnSubmitInquiry').disabled = !any || !name || !mail;
             }
 
-            // Listener for input validation
             document.getElementById('userName').addEventListener('input', validateForm);
             document.getElementById('userEmail').addEventListener('input', validateForm);
 
@@ -392,148 +355,92 @@
                 if (!currentCarId) return;
                 const car = cars.find(c => c.id === currentCarId);
                 const netto = parseFloat(document.getElementById('modalLimitInput').value) || 0;
-                
-                const auctionFees = (netto * 1.19 * 0.035) + 140;
-                const transport = car.transport;
-                const registration = 800; // Fixwert AT
-                const serviceFee = 500;   // Vermittlungsprovision
-                
-                // Optionen
+                const fees = (netto * 1.19 * 0.035) + 140;
+                const transport = car.transport * 1.5;
+                const commission = Math.max(500, netto * 0.02);
                 const warranty = parseFloat(document.getElementById('optWarranty').value);
-                const wash = document.getElementById('optWash').checked ? 49 : 0;
-                const cleaning = document.getElementById('optCleaning').checked ? 99 : 0;
-                const optionsTotal = warranty + wash + cleaning;
-
-                const totalNetto = netto + auctionFees + transport + registration + serviceFee + optionsTotal;
-                const totalBrutto = totalNetto * 1.20;
-
-                // UI Update
+                const totalNetto = netto + fees + transport + 800 + commission + warranty;
+                
                 document.getElementById('resNetto').innerText = fmt.format(netto);
                 document.getElementById('resTransport').innerText = fmt.format(transport);
-                document.getElementById('resProvision').innerText = fmt.format(auctionFees + serviceFee);
+                document.getElementById('resProvision').innerText = fmt.format(fees + commission);
+                document.getElementById('resTotalBrutto').innerText = fmt.format(totalNetto * 1.20);
                 
                 const optRow = document.getElementById('resOptionsRow');
-                if (optionsTotal > 0) {
-                    optRow.classList.remove('hidden');
-                    document.getElementById('resOptions').innerText = fmt.format(optionsTotal);
-                } else {
-                    optRow.classList.add('hidden');
-                }
-
-                document.getElementById('resTotalBrutto').innerText = fmt.format(totalBrutto);
-                document.getElementById('resTotalNetto').innerText = "Netto: " + fmt.format(totalNetto);
+                if(warranty > 0) { optRow.classList.remove('hidden'); document.getElementById('resOptions').innerText = fmt.format(warranty); }
+                else { optRow.classList.add('hidden'); }
             }
 
             function sendInquiry() {
                 const car = cars.find(c => c.id === currentCarId);
-                const isLimitChecked = document.getElementById('checkLimit').checked;
-                
-                // Kalkulations-Daten sammeln
-                let calcDetails = null;
-                if (isLimitChecked) {
-                    const netto = parseFloat(document.getElementById('modalLimitInput').value) || 0;
-                    const auctionFees = (netto * 1.19 * 0.035) + 140;
-                    const warranty = parseFloat(document.getElementById('optWarranty').value);
-                    const wash = document.getElementById('optWash').checked ? 49 : 0;
-                    const cleaning = document.getElementById('optCleaning').checked ? 99 : 0;
-                    const totalNetto = netto + auctionFees + car.transport + 800 + 500 + warranty + wash + cleaning;
-                    
-                    calcDetails = {
-                        gebotNetto: netto,
-                        transport: car.transport,
-                        anmeldung: 800,
-                        provision: auctionFees + 500,
-                        garantie: warranty,
-                        reinigung: wash + cleaning,
-                        gesamtBrutto: totalNetto * 1.20
-                    };
-                }
-
-                const data = {
-                    type: 'vehicle_inquiry',
-                    carName: document.getElementById('modalCarName').innerText,
-                    carId: document.getElementById('modalCarId').innerText,
-                    options: {
-                        report: document.getElementById('checkEmail').checked,
-                        limit: isLimitChecked,
-                        import: document.getElementById('checkImport').checked
-                    },
-                    userData: {
-                        name: document.getElementById('userName').value,
-                        email: document.getElementById('userEmail').value,
-                        message: document.getElementById('userMessage').value,
-                        limitAmount: isLimitChecked ? document.getElementById('modalLimitInput').value : ""
-                    },
-                    calculation: calcDetails, // Neue Detail-Informationen
-                    recipient: 'office@newera-mobility.at'
-                };
-
+                const data = { type: 'vehicle_inquiry', carId: currentCarId, carName: car.name, userData: { name: document.getElementById('userName').value, email: document.getElementById('userEmail').value } };
                 window.parent.postMessage(JSON.stringify(data), "*");
-                
                 document.getElementById('btnSubmitInquiry').disabled = true;
-                document.getElementById('btnText').innerText = "Anfrage wird gesendet...";
-                
-                // Show Success Overlay
-                setTimeout(() => {
-                    document.getElementById('successOverlay').classList.add('active');
-                    lucide.createIcons();
-                }, 800);
-
-                showToast("Anfrage wurde übermittelt!", "success");
-                
-                setTimeout(() => { 
-                    document.getElementById('btnText').innerText = "Anfrage senden";
-                    validateForm();
-                }, 2000);
+                setTimeout(() => { document.getElementById('successOverlay').classList.add('active'); lucide.createIcons(); }, 800);
             }
 
             function updateCalc(id, val) {
                 const car = cars.find(c => c.id === id);
                 if (!car) return;
                 const netto = parseFloat(val) || 0;
-                const auctionPct = (netto * 1.19) * 0.035;
-                const totalNetto = netto + auctionPct + 140 + car.transport + 800 + 500;
-                const totalBrutto = totalNetto * 1.20;
-                
-                const elPct = document.getElementById(`auctionPct_${id}`);
-                const elNet = document.getElementById(`totalNetto_${id}`);
-                const elMain = document.getElementById(`mainPrice_${id}`);
-                if(elPct) elPct.innerText = fmt.format(auctionPct + 140 + 500);
-                if(elNet) elNet.innerText = fmt.format(totalNetto);
-                if(elMain) elMain.innerText = fmt.format(totalBrutto);
+                const fees = (netto * 1.19) * 0.035 + 140;
+                const comm = Math.max(500, netto * 0.02);
+                const transport = car.transport * 1.5;
+                const totalBrutto = (netto + fees + transport + 800 + comm) * 1.20;
+                const el = document.getElementById(`mainPrice_${id}`);
+                if(el) el.innerText = fmt.format(totalBrutto);
             }
 
             function render() {
                 const grid = document.getElementById('carGrid');
                 const term = document.getElementById('searchInput').value.toLowerCase();
-                const makeVal = document.getElementById('makeFilter').value;
+                const make = document.getElementById('makeFilter').value;
                 const yMin = parseInt(document.getElementById('yearMin').value) || 0;
                 const yMax = parseInt(document.getElementById('yearMax').value) || 9999;
+                const kMin = parseInt(document.getElementById('kmMin').value) || 0;
+                const kMax = parseInt(document.getElementById('kmMax').value) || 9999999;
+                const feature = document.getElementById('featureFilter').value.toLowerCase();
+                
                 const filtered = cars.filter(c => {
-                    return (c.name.toLowerCase().includes(term) || c.id.includes(term)) && (!makeVal || c.name.startsWith(makeVal)) && (c.year_raw >= yMin && c.year_raw <= yMax);
+                    const matchesTerm = (c.name.toLowerCase().includes(term) || c.id.includes(term));
+                    const matchesMake = (!make || c.name.startsWith(make));
+                    const matchesYear = (c.year_raw >= yMin && c.year_raw <= yMax);
+                    const matchesKm = (c.km_raw >= kMin && c.km_raw <= kMax);
+                    const matchesFeature = (!feature || c.ausstattung_full.some(a => a.toLowerCase().includes(feature)));
+                    return matchesTerm && matchesMake && matchesYear && matchesKm && matchesFeature;
                 });
-                const pageItems = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-                grid.innerHTML = pageItems.map(car => `
-                    <div class="glass-card rounded-3xl overflow-hidden flex flex-col shadow-sm hover:shadow-xl transition-all duration-300">
-                        <div class="relative h-48 bg-slate-100">
-                            <img src="${car.img || 'https://via.placeholder.com/400'}" class="w-full h-full object-cover" alt="${car.name}">
-                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold text-slate-600 shadow-sm">ID: ${car.id}</div>
-                            <div class="absolute top-3 right-3 bg-blue-600 px-3 py-1 rounded-full text-[10px] font-bold text-white shadow-sm">${car.car_type}</div>
+                const items = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+                
+                grid.innerHTML = items.map(car => `
+                    <div class="glass-card rounded-2xl md:rounded-3xl overflow-hidden flex flex-col shadow-sm hover:shadow-lg transition-all duration-300">
+                        <div class="relative h-32 md:h-44 bg-slate-100">
+                            <img src="${car.img}" class="w-full h-full object-cover" alt="${car.name}">
+                            <div class="absolute top-2 left-2 bg-white/90 px-2 py-0.5 rounded-full text-[8px] md:text-[10px] font-bold text-slate-600">ID: ${car.id}</div>
+                            <div class="absolute top-2 right-2 bg-blue-600 px-2 py-0.5 rounded-full text-[8px] md:text-[10px] font-bold text-white shadow-sm">${car.car_type}</div>
                         </div>
-                        <div class="p-5 flex flex-col flex-grow">
-                            <div class="title-section mb-3"><h3 class="text-lg font-bold text-slate-800 leading-tight">${car.name}</h3><p class="text-xs text-slate-500">${car.ausfuehrung}</p></div>
-                            <div class="specs-section flex gap-4 text-[10px] font-bold text-slate-400 uppercase mb-4"><span>${car.ez}</span> &bull; <span>${car.km} KM</span></div>
-                            <div class="ausstattung-section flex flex-wrap gap-1.5 mb-6">${car.ausstattung.map(a => `<span class="ausstattung-badge px-2 py-0.5 rounded text-[10px]">${a}</span>`).join('')}</div>
-                            <div class="mt-auto space-y-4">
-                                <div class="flex items-end justify-between">
-                                    <div class="flex flex-col"><span class="text-[10px] font-bold text-slate-400 uppercase">Gebot Netto</span><input type="number" value="${car.bca_price}" oninput="updateCalc('${car.id}', this.value)" class="w-24 px-2 py-1 rounded-lg text-sm font-bold bg-slate-50 border outline-none focus:border-blue-300"></div>
-                                    <div class="text-right"><span class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Endpreis AT Brutto</span><div id="mainPrice_${car.id}" class="text-xl font-bold text-blue-600">${fmt.format((car.details.total_netto + 500) * 1.20)}</div></div>
+                        <div class="p-3 md:p-5 flex flex-col flex-grow card-padding">
+                            <div class="mb-2">
+                                <h3 class="text-sm md:text-lg font-bold text-slate-800 leading-tight card-title">${car.name}</h3>
+                                <p class="text-[9px] md:text-xs text-slate-500 line-clamp-1">${car.ausfuehrung}</p>
+                            </div>
+                            <div class="flex gap-2 md:gap-4 text-[8px] md:text-[10px] font-bold text-slate-400 uppercase mb-3 card-specs">
+                                <span>${car.ez.split('.')[2]}</span> &bull; <span>${car.km} KM</span>
+                            </div>
+                            <div class="flex flex-wrap gap-1 mb-4">
+                                ${car.ausstattung.slice(0,3).map(a => `<span class="ausstattung-badge px-1.5 py-0.5 rounded text-[8px] md:text-[9px]">${a}</span>`).join('')}
+                            </div>
+                            <div class="mt-auto space-y-3">
+                                <div class="flex flex-col">
+                                    <span class="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase mb-1">Gebot Netto</span>
+                                    <input type="number" value="${car.bca_price}" oninput="updateCalc('${car.id}', this.value)" class="w-full px-2 py-1 rounded-lg text-xs md:text-sm font-bold bg-slate-50 border outline-none">
                                 </div>
-                                <div class="calc-box p-3 rounded-2xl text-[11px] text-slate-600 space-y-1">
-                                    <div class="flex justify-between"><span>Provision / Geb.:</span><span id="auctionPct_${car.id}">${fmt.format(car.details.auction_percent + car.details.auction_fix + 500)}</span></div>
-                                    <div class="flex justify-between font-bold pt-1 border-t"><span>Gesamt Netto:</span><span id="totalNetto_${car.id}">${fmt.format(car.details.total_netto + 500)}</span></div>
+                                <div class="pt-2 border-t border-slate-100">
+                                    <span class="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase block mb-0.5">Endpreis Brutto</span>
+                                    <div id="mainPrice_${car.id}" class="text-sm md:text-xl font-bold text-blue-600">${fmt.format(car.details.total_brutto_at)}</div>
                                 </div>
-                                <button onclick="openModal('${car.name.replace(/'/g, "\'")}', '${car.id}', '${car.img}')" class="w-full bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-600 font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 text-sm group"><i data-lucide="message-square" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>Anfrage senden</button>
+                                <button onclick="openModal('${car.name.replace(/'/g, "\\'")}', '${car.id}', '${car.img}')" class="w-full bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-600 font-bold py-2 md:py-3 rounded-xl transition-all text-[10px] md:text-xs flex items-center justify-center gap-1">
+                                    <i data-lucide="message-square" class="w-3 h-3 md:w-4 h-4"></i>Anfrage
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -543,28 +450,22 @@
                 sendHeightToWix();
             }
 
-            function sendHeightToWix() {
-                const c = document.getElementById('mainContainer');
-                if (c) { window.parent.postMessage({ type: 'resize', height: Math.ceil(c.getBoundingClientRect().height) + 100 }, '*'); }
-            }
+            function resetFilters() { document.querySelectorAll('.filter-select, #searchInput').forEach(e => e.value = ''); currentPage = 1; render(); }
+            
+            function sendHeightToWix() { const c = document.getElementById('mainContainer'); if (c) window.parent.postMessage({ type: 'resize', height: Math.ceil(c.getBoundingClientRect().height) + 100 }, '*'); }
             
             function renderPagination(t) {
                 const pag = document.getElementById('pagination');
                 if (t <= 1) { pag.innerHTML = ''; return; }
-                let h = `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} class="pagination-btn px-4 py-2 rounded-xl text-sm font-bold">Zurück</button>`;
-                for (let i = 1; i <= t; i++) h += `<button onclick="changePage(${i})" class="pagination-btn w-10 h-10 rounded-xl text-sm font-bold ${currentPage === i ? 'active' : ''}">${i}</button>`;
-                h += `<button onclick="changePage(${currentPage + 1})" ${currentPage === t ? 'disabled' : ''} class="pagination-btn px-4 py-2 rounded-xl text-sm font-bold">Weiter</button>`;
+                let h = `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} class="px-3 py-1.5 bg-white border rounded-lg text-xs font-bold disabled:opacity-50">Zurück</button>`;
+                h += `<span class="text-xs font-bold px-3">Seite ${currentPage}</span>`;
+                h += `<button onclick="changePage(${currentPage + 1})" ${currentPage === t ? 'disabled' : ''} class="px-3 py-1.5 bg-white border rounded-lg text-xs font-bold disabled:opacity-50">Weiter</button>`;
                 pag.innerHTML = h;
             }
-            function changePage(p) { currentPage = p; render(); window.scrollTo(0,0); }
-            initFilters(); render();
             
-            const isLocal = window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            if (!isLocal) {
-                const syncBtn = document.getElementById('syncGitHub');
-                if (syncBtn) syncBtn.style.display = 'none';
-            }
+            function changePage(p) { currentPage = p; render(); window.scrollTo({top: 0, behavior: 'smooth'}); }
 
+            initFilters(); render();
             if (window.ResizeObserver) { new ResizeObserver(() => sendHeightToWix()).observe(document.getElementById('mainContainer')); }
             setTimeout(sendHeightToWix, 1000);
         </script>
