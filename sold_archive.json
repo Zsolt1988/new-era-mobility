@@ -55,6 +55,8 @@
             "car_type": "SUV"
         },
         "warranty_options": null,
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "0116994793",
         "raw_data": {
             "Katalognummer_x": 2,
             "Inventarnummer": "0116994793     ",
@@ -78,9 +80,10 @@
             "Katalognummer_y": 2,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994793-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 85283 Wolnzach",
-            "BCA_HTML_Price": 20840.0
+            "BCA_HTML_Price": 20840.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
-        "archive_date": "2026-05-09"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "4",
@@ -138,6 +141,8 @@
             "Komfort": 793,
             "Premium": 1393
         },
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "0116959623",
         "raw_data": {
             "Katalognummer_x": 4,
             "Inventarnummer": "0116959623     ",
@@ -162,84 +167,10 @@
             "Katalognummer_y": 4,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959623-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
-            "BCA_HTML_Price": 28908.0
+            "BCA_HTML_Price": 28908.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
-        "archive_date": "2026-05-09"
-    },
-    {
-        "id": "5",
-        "category": "Auktionsfahrzeuge",
-        "name": "Smart SMART",
-        "ausfuehrung": "FORTWO CABRIO ELECTRIC DRIVE - DE",
-        "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=1987346-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-        "ez": "26.10.2017",
-        "km": "77.497",
-        "km_raw": 77497,
-        "year_raw": 2017,
-        "ps": "82",
-        "kraftstoff": "BEV - battery electr",
-        "ausstattung": [
-            "Airbags",
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "ABS",
-            "Fensterheber elektrisch - Vorne",
-            "Zentralverriegelung mit Fernbedienung"
-        ],
-        "ausstattung_full": [
-            "Airbags",
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "ABS",
-            "Fensterheber elektrisch - Vorne",
-            "Zentralverriegelung mit Fernbedienung",
-            "Sitzheizung - Vorne",
-            "Stabilitätskontrolle"
-        ],
-        "location": "Germany - 04509 Wiedemar",
-        "car_type": "PKW",
-        "bca_price": 4034.0,
-        "transport": 402,
-        "details": {
-            "netto_basis": 4034.0,
-            "auction_percent": 168.01610000000002,
-            "auction_fix": 140,
-            "transport": 402,
-            "import_fee": 800,
-            "total_netto": 6245.0161,
-            "total_brutto_at": 7494.019319999999,
-            "car_type": "PKW"
-        },
-        "warranty_options": {
-            "Standard": 298,
-            "Komfort": 493,
-            "Premium": 718
-        },
-        "raw_data": {
-            "Katalognummer_x": 5,
-            "Inventarnummer": "1987346        ",
-            "Hersteller": "Smart",
-            "Modell": "SMART",
-            "Motor": "0,0",
-            "Ausführung": "FORTWO CABRIO ELECTRIC DRIVE - DE",
-            "Ausstattungsvariante": "prime",
-            "Karosserietyp": "Cabrio",
-            "Kraftstoff": "BEV - battery electric vehicle  100% electric",
-            "Farbe": "Grün ",
-            "PS": 82,
-            "KM Stand": 77.497,
-            "Erstzulassung": "26.10.2017",
-            "Nutzung": "unbekannt",
-            "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Fensterheber elektrisch - Vorne, Zentralverriegelung mit Fernbedienung, Sitzheizung - Vorne, Stabilitätskontrolle",
-            "Fahrzeugquelle": "Unbekannt",
-            "Link": "de.bca-europe.com/Lot?id=23579649",
-            "Katalognummer_Num": 5,
-            "Katalognummer_y": 5,
-            "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=1987346-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-            "BCA_Standort": "Germany - 04509 Wiedemar",
-            "BCA_HTML_Price": 4034.0
-        },
-        "archive_date": "2026-05-09"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "6",
@@ -300,6 +231,8 @@
             "Komfort": 643,
             "Premium": 1093
         },
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "0116959694",
         "raw_data": {
             "Katalognummer_x": 6,
             "Inventarnummer": "0116959694     ",
@@ -324,9 +257,10 @@
             "Katalognummer_y": 6,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959694-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
-            "BCA_HTML_Price": 26050.0
+            "BCA_HTML_Price": 26050.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
-        "archive_date": "2026-05-09"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "7",
@@ -382,6 +316,8 @@
             "Komfort": 418,
             "Premium": 643
         },
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "0117041355",
         "raw_data": {
             "Katalognummer_x": 7,
             "Inventarnummer": "0117041355     ",
@@ -405,9 +341,97 @@
             "Katalognummer_y": 7,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117041355-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
-            "BCA_HTML_Price": 11800.0
+            "BCA_HTML_Price": 11800.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
-        "archive_date": "2026-05-09"
+        "archive_date": "2026-05-14"
+    },
+    {
+        "id": "8",
+        "category": "Auktionsfahrzeuge",
+        "name": "Ford Capri",
+        "ausfuehrung": "79KWH AWD - DE",
+        "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116989093-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
+        "ez": "12.02.2025",
+        "km": "7.638",
+        "km_raw": 7638,
+        "year_raw": 2025,
+        "ps": "340",
+        "kraftstoff": "BEV - battery electr",
+        "ausstattung": [
+            "Airbags",
+            "Klimaanlage",
+            "Leichtmetallfelgen",
+            "ABS",
+            "Bluetooth-Telefon-Schnittstelle",
+            "Aussenspiegel elektrisch anklappbar"
+        ],
+        "ausstattung_full": [
+            "Airbags",
+            "Klimaanlage",
+            "Leichtmetallfelgen",
+            "ABS",
+            "Bluetooth-Telefon-Schnittstelle",
+            "Aussenspiegel elektrisch anklappbar",
+            "Parksensoren vorne",
+            "Fensterheber elektrisch - Vorne und Hinten",
+            "Radio",
+            "Parksensoren hinten",
+            "Aussenspiegel elektrisch verstellbar",
+            "Zentralverriegelung mit Fernbedienung",
+            "Navigationssystem",
+            "Sitzheizung - Vorne",
+            "Stabilitätskontrolle"
+        ],
+        "location": "Germany - 89520 Heidenheim",
+        "car_type": "PKW",
+        "bca_price": 29244.0,
+        "transport": 600,
+        "details": {
+            "netto_basis": 29244.0,
+            "auction_percent": 1218.0126000000002,
+            "auction_fix": 140,
+            "transport": 600,
+            "import_fee": 800,
+            "total_netto": 32886.8926,
+            "total_brutto_at": 39464.27112,
+            "car_type": "PKW"
+        },
+        "warranty_options": {
+            "Standard": 583,
+            "Komfort": 793,
+            "Premium": 1393
+        },
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "0116989093",
+        "raw_data": {
+            "Katalognummer_x": 8,
+            "Inventarnummer": "0116989093     ",
+            "Hersteller": "Ford",
+            "Modell": "Capri",
+            "Motor": "0,0",
+            "Ausführung": "79KWH AWD - DE",
+            "Ausstattungsvariante": "Premium",
+            "Karosserietyp": "Limousine",
+            "Kraftstoff": "BEV - battery electric vehicle  100% electric",
+            "Farbe": "Schwarz Metallic",
+            "Herstellerfarbe": "AGATE BLACK",
+            "PS": 340,
+            "KM Stand": 7.638,
+            "Erstzulassung": "12.02.2025",
+            "Nutzung": "unbekannt",
+            "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilitätskontrolle",
+            "Fahrzeugquelle": "Hersteller",
+            "Optischer Zustand": "Optischer Zustand 1",
+            "Link": "de.bca-europe.com/Lot?id=23579669",
+            "Katalognummer_Num": 8,
+            "Katalognummer_y": 8,
+            "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116989093-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
+            "BCA_Standort": "Germany - 89520 Heidenheim",
+            "BCA_HTML_Price": 29244.0,
+            "expiry_date": "2026-05-15 12:39:36"
+        },
+        "archive_date": "2026-05-14"
     },
     {
         "id": "9",
@@ -470,6 +494,8 @@
             "Komfort": 793,
             "Premium": 1393
         },
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "6255LWK",
         "raw_data": {
             "Katalognummer_x": 9,
             "Inventarnummer": "6255LWK        ",
@@ -492,416 +518,8 @@
             "Katalognummer_y": 9,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=6255LWK-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "SPAIN - Bellvei",
-            "BCA_HTML_Price": 28000.0
-        },
-        "archive_date": "2026-05-09"
-    },
-    {
-        "id": "13",
-        "category": "Auktionsfahrzeuge",
-        "name": "Ford Capri",
-        "ausfuehrung": "79KWH AWD - DE",
-        "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959692-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-        "ez": "12.02.2025",
-        "km": "327.000",
-        "km_raw": 327000,
-        "year_raw": 2025,
-        "ps": "340",
-        "kraftstoff": "BEV - battery electr",
-        "ausstattung": [
-            "Airbags",
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "ABS",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Sitze elektrisch verstellbar"
-        ],
-        "ausstattung_full": [
-            "Airbags",
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "ABS",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Sitze elektrisch verstellbar",
-            "Aussenspiegel elektrisch anklappbar",
-            "Soundsystem",
-            "Parksensoren vorne",
-            "Aussenspiegel beheizbar",
-            "Fensterheber elektrisch - Vorne und Hinten",
-            "Regensensor",
-            "Parksensoren hinten",
-            "Aussenspiegel elektrisch verstellbar",
-            "Zentralverriegelung mit Fernbedienung",
-            "Navigationssystem",
-            "Sitzheizung - Vorne",
-            "Stabilitätskontrolle"
-        ],
-        "location": "15366 Hoppegarten",
-        "car_type": "PKW",
-        "bca_price": 29748.0,
-        "transport": 600,
-        "details": {
-            "netto_basis": 29748.0,
-            "auction_percent": 1239.0041999999999,
-            "auction_fix": 140,
-            "transport": 600,
-            "import_fee": 800,
-            "total_netto": 33421.964199999995,
-            "total_brutto_at": 40106.357039999995,
-            "car_type": "PKW"
-        },
-        "warranty_options": null,
-        "raw_data": {
-            "Katalognummer_x": 13,
-            "Inventarnummer": "0116959692     ",
-            "Hersteller": "Ford",
-            "Modell": "Capri",
-            "Motor": "0,0",
-            "Ausführung": "79KWH AWD - DE",
-            "Ausstattungsvariante": "Premium",
-            "Karosserietyp": "Limousine",
-            "Kraftstoff": "BEV - battery electric vehicle  100% electric",
-            "Farbe": "Grau ",
-            "Herstellerfarbe": "MAGNETIC",
-            "PS": 340,
-            "KM Stand": 327.0,
-            "Erstzulassung": "12.02.2025",
-            "Nutzung": "unbekannt",
-            "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Soundsystem, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Regensensor, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilitätskontrolle",
-            "Fahrzeugquelle": "Hersteller",
-            "Optischer Zustand": "Optischer Zustand 1",
-            "Link": "de.bca-europe.com/Lot?id=23579670",
-            "Katalognummer_Num": 13,
-            "Katalognummer_y": 13,
-            "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959692-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-            "BCA_Standort": "15366 Hoppegarten",
-            "BCA_HTML_Price": 29748.0
-        },
-        "archive_date": "2026-05-09"
-    },
-    {
-        "id": "18",
-        "category": "Auktionsfahrzeuge",
-        "name": "Ford Capri",
-        "ausfuehrung": "79KWH AWD - DE",
-        "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019887-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-        "ez": "12.02.2025",
-        "km": "2.210",
-        "km_raw": 2210,
-        "year_raw": 2025,
-        "ps": "340",
-        "kraftstoff": "BEV - battery electr",
-        "ausstattung": [
-            "Airbags",
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "ABS",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Sitze elektrisch verstellbar"
-        ],
-        "ausstattung_full": [
-            "Airbags",
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "ABS",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Sitze elektrisch verstellbar",
-            "Aussenspiegel elektrisch anklappbar",
-            "Parksensoren vorne",
-            "Aussenspiegel beheizbar",
-            "Fensterheber elektrisch - Vorne und Hinten",
-            "Radio",
-            "Parksensoren hinten",
-            "Aussenspiegel elektrisch verstellbar",
-            "Zentralverriegelung mit Fernbedienung",
-            "Navigationssystem",
-            "Sitzheizung - Vorne",
-            "Stabilitätskontrolle"
-        ],
-        "location": "Germany - 89520 Heidenheim",
-        "car_type": "PKW",
-        "bca_price": 29748.0,
-        "transport": 600,
-        "details": {
-            "netto_basis": 29748.0,
-            "auction_percent": 1239.0041999999999,
-            "auction_fix": 140,
-            "transport": 600,
-            "import_fee": 800,
-            "total_netto": 33421.964199999995,
-            "total_brutto_at": 40106.357039999995,
-            "car_type": "PKW"
-        },
-        "warranty_options": {
-            "Standard": 583,
-            "Komfort": 793,
-            "Premium": 1393
-        },
-        "raw_data": {
-            "Katalognummer_x": 18,
-            "Inventarnummer": "0117019887     ",
-            "Hersteller": "Ford",
-            "Modell": "Capri",
-            "Motor": "0,0",
-            "Ausführung": "79KWH AWD - DE",
-            "Ausstattungsvariante": "Premium",
-            "Karosserietyp": "Limousine",
-            "Kraftstoff": "BEV - battery electric vehicle  100% electric",
-            "Farbe": "Grau ",
-            "Herstellerfarbe": "MAGNETIC",
-            "PS": 340,
-            "KM Stand": 2.21,
-            "Erstzulassung": "12.02.2025",
-            "Nutzung": "unbekannt",
-            "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilitätskontrolle",
-            "Fahrzeugquelle": "Hersteller",
-            "Optischer Zustand": "Optischer Zustand 1",
-            "Link": "de.bca-europe.com/Lot?id=23579671",
-            "Katalognummer_Num": 18,
-            "Katalognummer_y": 18,
-            "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019887-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-            "BCA_Standort": "Germany - 89520 Heidenheim",
-            "BCA_HTML_Price": 29748.0
-        },
-        "archive_date": "2026-05-09"
-    },
-    {
-        "id": "1",
-        "category": "Auktionsfahrzeuge",
-        "name": "Mercedes-Benz B-klasse",
-        "ausfuehrung": "ELECTRIC DRIVE AMBITION 28 KWH - NL",
-        "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=R-831-FB-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-        "ez": "30.11.2015",
-        "km": "167.965",
-        "km_raw": 167965,
-        "year_raw": 2015,
-        "ps": "184",
-        "kraftstoff": "BEV - battery electr",
-        "ausstattung": [
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Parksensoren vorne",
-            "Servolenkung",
-            "Fensterheber elektrisch - Vorne und Hinten"
-        ],
-        "ausstattung_full": [
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Parksensoren vorne",
-            "Servolenkung",
-            "Fensterheber elektrisch - Vorne und Hinten",
-            "Radio",
-            "Regensensor",
-            "Parksensoren hinten",
-            "Zentralverriegelung mit Fernbedienung",
-            "Navigationssystem",
-            "Sitzheizung - Vorne",
-            "Xenon-Scheinwerfer"
-        ],
-        "location": "The Netherlands - Barneveld",
-        "car_type": "PKW",
-        "bca_price": 3000.0,
-        "transport": 600,
-        "details": {
-            "netto_basis": 3000.0,
-            "auction_percent": 124.95000000000002,
-            "auction_fix": 140,
-            "transport": 600,
-            "import_fee": 800,
-            "total_netto": 5464.95,
-            "total_brutto_at": 6557.94,
-            "car_type": "PKW"
-        },
-        "warranty_options": {
-            "Standard": 373,
-            "Komfort": 568,
-            "Premium": 793
-        },
-        "raw_data": {
-            "Katalognummer_x": 1,
-            "Inventarnummer": "R-831-FB       ",
-            "Hersteller": "Mercedes-Benz",
-            "Modell": "B-klasse",
-            "Motor": "0,0",
-            "Ausführung": "ELECTRIC DRIVE AMBITION 28 KWH - NL",
-            "Karosserietyp": "Mehrzweckfahrzeug",
-            "Kraftstoff": "BEV - battery electric vehicle  100% electric",
-            "Farbe": "Grau Metallic",
-            "PS": 184,
-            "KM Stand": 167.965,
-            "Erstzulassung": "30.11.2015",
-            "Nutzung": "unbekannt",
-            "Ausstattung": "Klimaanlage, Leichtmetallfelgen, Bluetooth-Telefon-Schnittstelle, Parksensoren vorne, Servolenkung, Fensterheber elektrisch - Vorne und Hinten, Radio, Regensensor, Parksensoren hinten, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Xenon-Scheinwerfer",
-            "Fahrzeugquelle": "Finanzierung",
-            "Optischer Zustand": "Optischer Zustand 5",
-            "Link": "de.bca-europe.com/Lot?id=23579648",
-            "Katalognummer_Num": 1,
-            "Katalognummer_y": 1,
-            "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=R-831-FB-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-            "BCA_Standort": "The Netherlands - Barneveld",
-            "BCA_HTML_Price": 3000.0
-        },
-        "archive_date": "2026-05-14"
-    },
-    {
-        "id": "3",
-        "category": "Auktionsfahrzeuge",
-        "name": "Peugeot E-208",
-        "ausfuehrung": "EV ALLURE 50 KWH - NL",
-        "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=R-480-PG-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-        "ez": "28.04.2021",
-        "km": "108.693",
-        "km_raw": 108693,
-        "year_raw": 2021,
-        "ps": "136",
-        "kraftstoff": "BEV - battery electr",
-        "ausstattung": [
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Servolenkung",
-            "Fensterheber elektrisch - Vorne und Hinten",
-            "Radio"
-        ],
-        "ausstattung_full": [
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Servolenkung",
-            "Fensterheber elektrisch - Vorne und Hinten",
-            "Radio",
-            "Regensensor",
-            "Parksensoren hinten",
-            "Zentralverriegelung mit Fernbedienung"
-        ],
-        "location": "The Netherlands - Barneveld",
-        "car_type": "PKW",
-        "bca_price": 7769.0,
-        "transport": 600,
-        "details": {
-            "netto_basis": 7769.0,
-            "auction_percent": 323.57885,
-            "auction_fix": 140,
-            "transport": 600,
-            "import_fee": 800,
-            "total_netto": 10432.57885,
-            "total_brutto_at": 12519.09462,
-            "car_type": "PKW"
-        },
-        "warranty_options": {
-            "Standard": 223,
-            "Komfort": 418,
-            "Premium": 643
-        },
-        "raw_data": {
-            "Katalognummer_x": 3,
-            "Inventarnummer": "R-480-PG       ",
-            "Hersteller": "Peugeot",
-            "Modell": "E-208",
-            "Motor": "0,0",
-            "Ausführung": "EV ALLURE 50 KWH - NL",
-            "Karosserietyp": "Fließheck",
-            "Kraftstoff": "BEV - battery electric vehicle  100% electric",
-            "Farbe": "Grau Metallic",
-            "PS": 136,
-            "KM Stand": 108.693,
-            "Erstzulassung": "28.04.2021",
-            "Nutzung": "unbekannt",
-            "Ausstattung": "Klimaanlage, Leichtmetallfelgen, Bluetooth-Telefon-Schnittstelle, Servolenkung, Fensterheber elektrisch - Vorne und Hinten, Radio, Regensensor, Parksensoren hinten, Zentralverriegelung mit Fernbedienung",
-            "Fahrzeugquelle": "Leasing",
-            "Optischer Zustand": "Optischer Zustand 3",
-            "Link": "de.bca-europe.com/Lot?id=23579654",
-            "Katalognummer_Num": 3,
-            "Katalognummer_y": 3,
-            "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=R-480-PG-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-            "BCA_Standort": "The Netherlands - Barneveld",
-            "BCA_HTML_Price": 7769.0
-        },
-        "archive_date": "2026-05-14"
-    },
-    {
-        "id": "8",
-        "category": "Auktionsfahrzeuge",
-        "name": "Ford Capri",
-        "ausfuehrung": "79KWH AWD - DE",
-        "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116989093-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-        "ez": "12.02.2025",
-        "km": "7.638",
-        "km_raw": 7638,
-        "year_raw": 2025,
-        "ps": "340",
-        "kraftstoff": "BEV - battery electr",
-        "ausstattung": [
-            "Airbags",
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "ABS",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Aussenspiegel elektrisch anklappbar"
-        ],
-        "ausstattung_full": [
-            "Airbags",
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "ABS",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Aussenspiegel elektrisch anklappbar",
-            "Parksensoren vorne",
-            "Fensterheber elektrisch - Vorne und Hinten",
-            "Radio",
-            "Parksensoren hinten",
-            "Aussenspiegel elektrisch verstellbar",
-            "Zentralverriegelung mit Fernbedienung",
-            "Navigationssystem",
-            "Sitzheizung - Vorne",
-            "Stabilitätskontrolle"
-        ],
-        "location": "Germany - 89520 Heidenheim",
-        "car_type": "PKW",
-        "bca_price": 29244.0,
-        "transport": 600,
-        "details": {
-            "netto_basis": 29244.0,
-            "auction_percent": 1218.0126000000002,
-            "auction_fix": 140,
-            "transport": 600,
-            "import_fee": 800,
-            "total_netto": 32886.8926,
-            "total_brutto_at": 39464.27112,
-            "car_type": "PKW"
-        },
-        "warranty_options": {
-            "Standard": 583,
-            "Komfort": 793,
-            "Premium": 1393
-        },
-        "raw_data": {
-            "Katalognummer_x": 8,
-            "Inventarnummer": "0116989093     ",
-            "Hersteller": "Ford",
-            "Modell": "Capri",
-            "Motor": "0,0",
-            "Ausführung": "79KWH AWD - DE",
-            "Ausstattungsvariante": "Premium",
-            "Karosserietyp": "Limousine",
-            "Kraftstoff": "BEV - battery electric vehicle  100% electric",
-            "Farbe": "Schwarz Metallic",
-            "Herstellerfarbe": "AGATE BLACK",
-            "PS": 340,
-            "KM Stand": 7.638,
-            "Erstzulassung": "12.02.2025",
-            "Nutzung": "unbekannt",
-            "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilitätskontrolle",
-            "Fahrzeugquelle": "Hersteller",
-            "Optischer Zustand": "Optischer Zustand 1",
-            "Link": "de.bca-europe.com/Lot?id=23579669",
-            "Katalognummer_Num": 8,
-            "Katalognummer_y": 8,
-            "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116989093-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-            "BCA_Standort": "Germany - 89520 Heidenheim",
-            "BCA_HTML_Price": 29244.0
+            "BCA_HTML_Price": 28000.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
         "archive_date": "2026-05-14"
     },
@@ -961,6 +579,8 @@
             "Komfort": 643,
             "Premium": 1093
         },
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "0116989137",
         "raw_data": {
             "Katalognummer_x": 10,
             "Inventarnummer": "0116989137     ",
@@ -985,7 +605,8 @@
             "Katalognummer_y": 10,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116989137-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
-            "BCA_HTML_Price": 26723.0
+            "BCA_HTML_Price": 26723.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
         "archive_date": "2026-05-14"
     },
@@ -1040,6 +661,8 @@
             "Komfort": 418,
             "Premium": 643
         },
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "K-207-HS",
         "raw_data": {
             "Katalognummer_x": 11,
             "Inventarnummer": "K-207-HS       ",
@@ -1062,7 +685,8 @@
             "Katalognummer_y": 11,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=K-207-HS-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "The Netherlands - Barneveld",
-            "BCA_HTML_Price": 10579.0
+            "BCA_HTML_Price": 10579.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
         "archive_date": "2026-05-14"
     },
@@ -1124,6 +748,8 @@
             "Komfort": 643,
             "Premium": 1093
         },
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "0116994326",
         "raw_data": {
             "Katalognummer_x": 12,
             "Inventarnummer": "0116994326     ",
@@ -1146,166 +772,94 @@
             "Katalognummer_y": 12,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994326-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 85283 Wolnzach",
-            "BCA_HTML_Price": 17647.0
+            "BCA_HTML_Price": 17647.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "14",
+        "id": "13",
         "category": "Auktionsfahrzeuge",
-        "name": "Aiways U5",
-        "ausfuehrung": "63KWH PREMIUM - NL",
-        "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=X-702-TF-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-        "ez": "17.08.2022",
-        "km": "49.349",
-        "km_raw": 49349,
-        "year_raw": 2022,
-        "ps": "204",
+        "name": "Ford Capri",
+        "ausfuehrung": "79KWH AWD - DE",
+        "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959692-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
+        "ez": "12.02.2025",
+        "km": "327.000",
+        "km_raw": 327000,
+        "year_raw": 2025,
+        "ps": "340",
         "kraftstoff": "BEV - battery electr",
         "ausstattung": [
+            "Airbags",
             "Klimaanlage",
             "Leichtmetallfelgen",
+            "ABS",
             "Bluetooth-Telefon-Schnittstelle",
-            "Sitze elektrisch verstellbar",
-            "Parksensoren vorne",
-            "Servolenkung"
+            "Sitze elektrisch verstellbar"
         ],
         "ausstattung_full": [
+            "Airbags",
             "Klimaanlage",
             "Leichtmetallfelgen",
+            "ABS",
             "Bluetooth-Telefon-Schnittstelle",
             "Sitze elektrisch verstellbar",
+            "Aussenspiegel elektrisch anklappbar",
+            "Soundsystem",
             "Parksensoren vorne",
-            "Servolenkung",
+            "Aussenspiegel beheizbar",
             "Fensterheber elektrisch - Vorne und Hinten",
-            "Radio",
             "Regensensor",
             "Parksensoren hinten",
-            "Zentralverriegelung mit Fernbedienung",
-            "Sitzheizung - Vorne",
-            "Sonnendach"
-        ],
-        "location": "The Netherlands - Barneveld",
-        "car_type": "SUV",
-        "bca_price": 14000.0,
-        "transport": 600,
-        "details": {
-            "netto_basis": 14000.0,
-            "auction_percent": 583.1,
-            "auction_fix": 140,
-            "transport": 600,
-            "import_fee": 800,
-            "total_netto": 16923.1,
-            "total_brutto_at": 20307.719999999998,
-            "car_type": "SUV"
-        },
-        "warranty_options": {
-            "Standard": 223,
-            "Komfort": 418,
-            "Premium": 643
-        },
-        "raw_data": {
-            "Katalognummer_x": 14,
-            "Inventarnummer": "X-702-TF       ",
-            "Hersteller": "Aiways",
-            "Modell": "U5",
-            "Motor": "0,0",
-            "Ausführung": "63KWH PREMIUM - NL",
-            "Karosserietyp": "SUV",
-            "Kraftstoff": "BEV - battery electric vehicle  100% electric",
-            "Farbe": "Weiss Metallic",
-            "PS": 204,
-            "KM Stand": 49.349,
-            "Erstzulassung": "17.08.2022",
-            "Nutzung": "unbekannt",
-            "Ausstattung": "Klimaanlage, Leichtmetallfelgen, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Parksensoren vorne, Servolenkung, Fensterheber elektrisch - Vorne und Hinten, Radio, Regensensor, Parksensoren hinten, Zentralverriegelung mit Fernbedienung, Sitzheizung - Vorne, Sonnendach",
-            "Fahrzeugquelle": "PartExchange",
-            "Optischer Zustand": "Optischer Zustand 2",
-            "Link": "de.bca-europe.com/Lot?id=23579656",
-            "Katalognummer_Num": 14,
-            "Katalognummer_y": 14,
-            "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=X-702-TF-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-            "BCA_Standort": "The Netherlands - Barneveld",
-            "BCA_HTML_Price": 14000.0
-        },
-        "archive_date": "2026-05-14"
-    },
-    {
-        "id": "15",
-        "category": "Auktionsfahrzeuge",
-        "name": "Nissan Leaf",
-        "ausfuehrung": "ACENTA 40 KWH - NL",
-        "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=XD-053-L-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-        "ez": "17.12.2018",
-        "km": "111.702",
-        "km_raw": 111702,
-        "year_raw": 2018,
-        "ps": "150",
-        "kraftstoff": "BEV - battery electr",
-        "ausstattung": [
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "ABS",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Servolenkung",
-            "Fensterheber elektrisch - Vorne und Hinten"
-        ],
-        "ausstattung_full": [
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "ABS",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Servolenkung",
-            "Fensterheber elektrisch - Vorne und Hinten",
-            "Radio",
-            "Regensensor",
+            "Aussenspiegel elektrisch verstellbar",
             "Zentralverriegelung mit Fernbedienung",
             "Navigationssystem",
-            "Sitzheizung - Vorne und Hinten",
+            "Sitzheizung - Vorne",
             "Stabilitätskontrolle"
         ],
-        "location": "The Netherlands - Barneveld",
+        "location": "15366 Hoppegarten",
         "car_type": "PKW",
-        "bca_price": 6500.0,
+        "bca_price": 29748.0,
         "transport": 600,
         "details": {
-            "netto_basis": 6500.0,
-            "auction_percent": 270.725,
+            "netto_basis": 29748.0,
+            "auction_percent": 1239.0041999999999,
             "auction_fix": 140,
             "transport": 600,
             "import_fee": 800,
-            "total_netto": 9110.725,
-            "total_brutto_at": 10932.87,
+            "total_netto": 33421.964199999995,
+            "total_brutto_at": 40106.357039999995,
             "car_type": "PKW"
         },
-        "warranty_options": {
-            "Standard": 223,
-            "Komfort": 418,
-            "Premium": 643
-        },
+        "warranty_options": null,
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "0116959692",
         "raw_data": {
-            "Katalognummer_x": 15,
-            "Inventarnummer": "XD-053-L       ",
-            "Hersteller": "Nissan",
-            "Modell": "Leaf",
+            "Katalognummer_x": 13,
+            "Inventarnummer": "0116959692     ",
+            "Hersteller": "Ford",
+            "Modell": "Capri",
             "Motor": "0,0",
-            "Ausführung": "ACENTA 40 KWH - NL",
-            "Karosserietyp": "Fließheck",
+            "Ausführung": "79KWH AWD - DE",
+            "Ausstattungsvariante": "Premium",
+            "Karosserietyp": "Limousine",
             "Kraftstoff": "BEV - battery electric vehicle  100% electric",
-            "Farbe": "Grau Metallic",
-            "PS": 150,
-            "KM Stand": 111.702,
-            "Erstzulassung": "17.12.2018",
+            "Farbe": "Grau ",
+            "Herstellerfarbe": "MAGNETIC",
+            "PS": 340,
+            "KM Stand": 327.0,
+            "Erstzulassung": "12.02.2025",
             "Nutzung": "unbekannt",
-            "Ausstattung": "Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Servolenkung, Fensterheber elektrisch - Vorne und Hinten, Radio, Regensensor, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne und Hinten, Stabilitätskontrolle",
-            "Fahrzeugquelle": "PartExchange",
-            "Optischer Zustand": "Optischer Zustand 4",
-            "Link": "de.bca-europe.com/Lot?id=23579651",
-            "Katalognummer_Num": 15,
-            "Katalognummer_y": 15,
-            "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=XD-053-L-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-            "BCA_Standort": "The Netherlands - Barneveld",
-            "BCA_HTML_Price": 6500.0
+            "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Soundsystem, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Regensensor, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilitätskontrolle",
+            "Fahrzeugquelle": "Hersteller",
+            "Optischer Zustand": "Optischer Zustand 1",
+            "Link": "de.bca-europe.com/Lot?id=23579670",
+            "Katalognummer_Num": 13,
+            "Katalognummer_y": 13,
+            "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959692-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
+            "BCA_Standort": "15366 Hoppegarten",
+            "BCA_HTML_Price": 29748.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
         "archive_date": "2026-05-14"
     },
@@ -1366,6 +920,8 @@
             "Komfort": 793,
             "Premium": 1393
         },
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "0117019888",
         "raw_data": {
             "Katalognummer_x": 16,
             "Inventarnummer": "0117019888     ",
@@ -1390,7 +946,8 @@
             "Katalognummer_y": 16,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019888-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
-            "BCA_HTML_Price": 29916.0
+            "BCA_HTML_Price": 29916.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
         "archive_date": "2026-05-14"
     },
@@ -1455,6 +1012,8 @@
             "Komfort": 793,
             "Premium": 1393
         },
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "0116922370",
         "raw_data": {
             "Katalognummer_x": 17,
             "Inventarnummer": "0116922370     ",
@@ -1479,7 +1038,97 @@
             "Katalognummer_y": 17,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116922370-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 64560 RIEDSTADT-Goddelau",
-            "BCA_HTML_Price": 21681.0
+            "BCA_HTML_Price": 21681.0,
+            "expiry_date": "2026-05-15 12:39:36"
+        },
+        "archive_date": "2026-05-14"
+    },
+    {
+        "id": "18",
+        "category": "Auktionsfahrzeuge",
+        "name": "Ford Capri",
+        "ausfuehrung": "79KWH AWD - DE",
+        "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019887-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
+        "ez": "12.02.2025",
+        "km": "2.210",
+        "km_raw": 2210,
+        "year_raw": 2025,
+        "ps": "340",
+        "kraftstoff": "BEV - battery electr",
+        "ausstattung": [
+            "Airbags",
+            "Klimaanlage",
+            "Leichtmetallfelgen",
+            "ABS",
+            "Bluetooth-Telefon-Schnittstelle",
+            "Sitze elektrisch verstellbar"
+        ],
+        "ausstattung_full": [
+            "Airbags",
+            "Klimaanlage",
+            "Leichtmetallfelgen",
+            "ABS",
+            "Bluetooth-Telefon-Schnittstelle",
+            "Sitze elektrisch verstellbar",
+            "Aussenspiegel elektrisch anklappbar",
+            "Parksensoren vorne",
+            "Aussenspiegel beheizbar",
+            "Fensterheber elektrisch - Vorne und Hinten",
+            "Radio",
+            "Parksensoren hinten",
+            "Aussenspiegel elektrisch verstellbar",
+            "Zentralverriegelung mit Fernbedienung",
+            "Navigationssystem",
+            "Sitzheizung - Vorne",
+            "Stabilitätskontrolle"
+        ],
+        "location": "Germany - 89520 Heidenheim",
+        "car_type": "PKW",
+        "bca_price": 29748.0,
+        "transport": 600,
+        "details": {
+            "netto_basis": 29748.0,
+            "auction_percent": 1239.0041999999999,
+            "auction_fix": 140,
+            "transport": 600,
+            "import_fee": 800,
+            "total_netto": 33421.964199999995,
+            "total_brutto_at": 40106.357039999995,
+            "car_type": "PKW"
+        },
+        "warranty_options": {
+            "Standard": 583,
+            "Komfort": 793,
+            "Premium": 1393
+        },
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "0117019887",
+        "raw_data": {
+            "Katalognummer_x": 18,
+            "Inventarnummer": "0117019887     ",
+            "Hersteller": "Ford",
+            "Modell": "Capri",
+            "Motor": "0,0",
+            "Ausführung": "79KWH AWD - DE",
+            "Ausstattungsvariante": "Premium",
+            "Karosserietyp": "Limousine",
+            "Kraftstoff": "BEV - battery electric vehicle  100% electric",
+            "Farbe": "Grau ",
+            "Herstellerfarbe": "MAGNETIC",
+            "PS": 340,
+            "KM Stand": 2.21,
+            "Erstzulassung": "12.02.2025",
+            "Nutzung": "unbekannt",
+            "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilitätskontrolle",
+            "Fahrzeugquelle": "Hersteller",
+            "Optischer Zustand": "Optischer Zustand 1",
+            "Link": "de.bca-europe.com/Lot?id=23579671",
+            "Katalognummer_Num": 18,
+            "Katalognummer_y": 18,
+            "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019887-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
+            "BCA_Standort": "Germany - 89520 Heidenheim",
+            "BCA_HTML_Price": 29748.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
         "archive_date": "2026-05-14"
     },
@@ -1537,6 +1186,8 @@
             "Komfort": 793,
             "Premium": 1393
         },
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "S-896-BL",
         "raw_data": {
             "Katalognummer_x": 19,
             "Inventarnummer": "S-896-BL       ",
@@ -1559,7 +1210,8 @@
             "Katalognummer_y": 19,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=S-896-BL-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "The Netherlands - Barneveld",
-            "BCA_HTML_Price": 37521.0
+            "BCA_HTML_Price": 37521.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
         "archive_date": "2026-05-14"
     },
@@ -1620,6 +1272,8 @@
             "Komfort": 643,
             "Premium": 1093
         },
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "0117019884",
         "raw_data": {
             "Katalognummer_x": 20,
             "Inventarnummer": "0117019884     ",
@@ -1644,7 +1298,8 @@
             "Katalognummer_y": 20,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019884-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
-            "BCA_HTML_Price": 26387.0
+            "BCA_HTML_Price": 26387.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
         "archive_date": "2026-05-14"
     },
@@ -1702,6 +1357,8 @@
             "car_type": "SUV"
         },
         "warranty_options": null,
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "0116994828",
         "raw_data": {
             "Katalognummer_x": 21,
             "Inventarnummer": "0116994828     ",
@@ -1726,7 +1383,8 @@
             "Katalognummer_y": 21,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994828-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 85283 Wolnzach",
-            "BCA_HTML_Price": 27059.0
+            "BCA_HTML_Price": 27059.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
         "archive_date": "2026-05-14"
     },
@@ -1784,6 +1442,8 @@
             "Komfort": 493,
             "Premium": 718
         },
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "4003JSY",
         "raw_data": {
             "Katalognummer_x": 22,
             "Inventarnummer": "4003JSY        ",
@@ -1806,163 +1466,8 @@
             "Katalognummer_y": 22,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=4003JSY-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "SPAIN - Alicante",
-            "BCA_HTML_Price": 5100.0
-        },
-        "archive_date": "2026-05-14"
-    },
-    {
-        "id": "23",
-        "category": "Auktionsfahrzeuge",
-        "name": "Renault Zoe",
-        "ausfuehrung": "R90 INTENS 41 KWH - NL",
-        "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=PG-592-D-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-        "ez": "26.06.2017",
-        "km": "85.614",
-        "km_raw": 85614,
-        "year_raw": 2017,
-        "ps": "89",
-        "kraftstoff": "BEV - battery electr",
-        "ausstattung": [
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Servolenkung",
-            "Fensterheber elektrisch - Vorne und Hinten",
-            "Radio"
-        ],
-        "ausstattung_full": [
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Servolenkung",
-            "Fensterheber elektrisch - Vorne und Hinten",
-            "Radio",
-            "Regensensor",
-            "Parksensoren hinten",
-            "Zentralverriegelung mit Fernbedienung",
-            "Navigationssystem",
-            "Sitzheizung - Vorne"
-        ],
-        "location": "The Netherlands - Barneveld",
-        "car_type": "PKW",
-        "bca_price": 4700.0,
-        "transport": 600,
-        "details": {
-            "netto_basis": 4700.0,
-            "auction_percent": 195.75500000000002,
-            "auction_fix": 140,
-            "transport": 600,
-            "import_fee": 800,
-            "total_netto": 7235.755,
-            "total_brutto_at": 8682.905999999999,
-            "car_type": "PKW"
-        },
-        "warranty_options": {
-            "Standard": 298,
-            "Komfort": 493,
-            "Premium": 718
-        },
-        "raw_data": {
-            "Katalognummer_x": 23,
-            "Inventarnummer": "PG-592-D       ",
-            "Hersteller": "Renault",
-            "Modell": "Zoe",
-            "Motor": "0,0",
-            "Ausführung": "R90 INTENS 41 KWH - NL",
-            "Karosserietyp": "Fließheck",
-            "Kraftstoff": "BEV - battery electric vehicle  100% electric",
-            "Farbe": "Grau Metallic",
-            "PS": 89,
-            "KM Stand": 85.614,
-            "Erstzulassung": "26.06.2017",
-            "Nutzung": "unbekannt",
-            "Ausstattung": "Klimaanlage, Leichtmetallfelgen, Bluetooth-Telefon-Schnittstelle, Servolenkung, Fensterheber elektrisch - Vorne und Hinten, Radio, Regensensor, Parksensoren hinten, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne",
-            "Fahrzeugquelle": "PartExchange",
-            "Optischer Zustand": "Optischer Zustand 3",
-            "Link": "de.bca-europe.com/Lot?id=23579650",
-            "Katalognummer_Num": 23,
-            "Katalognummer_y": 23,
-            "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=PG-592-D-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-            "BCA_Standort": "The Netherlands - Barneveld",
-            "BCA_HTML_Price": 4700.0
-        },
-        "archive_date": "2026-05-14"
-    },
-    {
-        "id": "24",
-        "category": "Auktionsfahrzeuge",
-        "name": "Mercedes-Benz Esprinter",
-        "ausfuehrung": "STANDARD 55/47 KWH - DE",
-        "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117078402-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-        "ez": "13.12.2021",
-        "km": "46.429",
-        "km_raw": 46429,
-        "year_raw": 2021,
-        "ps": "116",
-        "kraftstoff": "BEV - battery electr",
-        "ausstattung": [
-            "Airbags",
-            "Klimaanlage",
-            "ABS",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Fensterheber elektrisch - Vorne",
-            "Radio"
-        ],
-        "ausstattung_full": [
-            "Airbags",
-            "Klimaanlage",
-            "ABS",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Fensterheber elektrisch - Vorne",
-            "Radio",
-            "Aussenspiegel elektrisch verstellbar",
-            "Zentralverriegelung mit Fernbedienung",
-            "Sitzheizung - Vorne",
-            "Stabilitätskontrolle"
-        ],
-        "location": "Germany - 41460 Neuss",
-        "car_type": "LCV",
-        "bca_price": 7227.0,
-        "transport": 600,
-        "details": {
-            "netto_basis": 7227.0,
-            "auction_percent": 301.00455,
-            "auction_fix": 140,
-            "transport": 600,
-            "import_fee": 800,
-            "total_netto": 9868.00455,
-            "total_brutto_at": 11841.605459999999,
-            "car_type": "LCV"
-        },
-        "warranty_options": {
-            "Standard": 223,
-            "Komfort": 418,
-            "Premium": 643
-        },
-        "raw_data": {
-            "Katalognummer_x": 24,
-            "Inventarnummer": "0117078402     ",
-            "Hersteller": "Mercedes-Benz",
-            "Modell": "Esprinter",
-            "Motor": "0,0",
-            "Ausführung": "STANDARD 55/47 KWH - DE",
-            "Karosserietyp": "Kastenwagen Hoch",
-            "Kraftstoff": "BEV - battery electric vehicle  100% electric",
-            "Farbe": "Weiss ",
-            "Herstellerfarbe": "ARKTIKWEIß",
-            "PS": 116,
-            "KM Stand": 46.429,
-            "Erstzulassung": "13.12.2021",
-            "Nutzung": "unbekannt",
-            "Ausstattung": "Airbags, Klimaanlage, ABS, Bluetooth-Telefon-Schnittstelle, Fensterheber elektrisch - Vorne, Radio, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Sitzheizung - Vorne, Stabilitätskontrolle",
-            "Fahrzeugquelle": "Unbekannt",
-            "Optischer Zustand": "Optischer Zustand 4",
-            "Link": "de.bca-europe.com/Lot?id=23579653",
-            "Katalognummer_Num": 24,
-            "Katalognummer_y": 24,
-            "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117078402-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-            "BCA_Standort": "Germany - 41460 Neuss",
-            "BCA_HTML_Price": 7227.0
+            "BCA_HTML_Price": 5100.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
         "archive_date": "2026-05-14"
     },
@@ -2026,6 +1531,8 @@
             "Komfort": 793,
             "Premium": 1393
         },
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "0116959901",
         "raw_data": {
             "Katalognummer_x": 25,
             "Inventarnummer": "0116959901     ",
@@ -2050,7 +1557,8 @@
             "Katalognummer_y": 25,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959901-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
-            "BCA_HTML_Price": 29076.0
+            "BCA_HTML_Price": 29076.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
         "archive_date": "2026-05-14"
     },
@@ -2112,6 +1620,8 @@
             "Komfort": 793,
             "Premium": 1393
         },
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "0116938938",
         "raw_data": {
             "Katalognummer_x": 26,
             "Inventarnummer": "0116938938     ",
@@ -2136,7 +1646,8 @@
             "Katalognummer_y": 26,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116938938-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 85283 Wolnzach",
-            "BCA_HTML_Price": 18319.0
+            "BCA_HTML_Price": 18319.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
         "archive_date": "2026-05-14"
     },
@@ -2197,6 +1708,8 @@
             "Komfort": 793,
             "Premium": 1393
         },
+        "expiry_date": "2026-05-15 12:39:36",
+        "uid": "0117019925",
         "raw_data": {
             "Katalognummer_x": 27,
             "Inventarnummer": "0117019925     ",
@@ -2221,7 +1734,8 @@
             "Katalognummer_y": 27,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019925-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
-            "BCA_HTML_Price": 29076.0
+            "BCA_HTML_Price": 29076.0,
+            "expiry_date": "2026-05-15 12:39:36"
         },
         "archive_date": "2026-05-14"
     }

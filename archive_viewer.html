@@ -9,22 +9,129 @@
     <title>BCA Archiv Viewer</title>
     <style>
         body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; }
-        .glass-card { background: white; border: 1px solid #e2e8f0; }
+        .glass-card { background: white; border: 1px solid #e2e8f0; transition: all 0.3s ease; }
         .sold-badge { background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; }
         .date-badge { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
+        .filter-select { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 8px 12px; transition: border-color 0.2s; }
+        .filter-select:focus { border-color: #3b82f6; outline: none; }
+        .timer-badge { transition: background-color 0.5s ease; }
     </style>
 </head>
 <body class="p-8">
     <div class="max-w-7xl mx-auto">
-        <header class="mb-10 flex justify-between items-end">
+        <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
             <div>
                 <h1 class="text-4xl font-bold text-slate-800 mb-2">Verkaufs-Historie</h1>
                 <p class="text-slate-500">Diese Fahrzeuge wurden in den letzten 30 Tagen im System erfasst.</p>
             </div>
-            <div class="text-right">
+            <div class="text-right flex flex-wrap items-center justify-end gap-3 w-full md:w-auto">
+                <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
+                    <label for="maxAgeInput" class="text-xs font-bold text-slate-500">Max Alter (Tage):</label>
+                    <input type="number" id="maxAgeInput" value="7" min="0" class="w-12 text-sm font-bold text-slate-800 focus:outline-none text-center">
+                </div>
+                <button id="genIndexBtn" onclick="generateIndex()" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 transition-colors text-white rounded-full font-bold text-sm shadow-lg flex items-center gap-2">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i> Index.html updaten
+                </button>
                 <span id="carCount" class="px-4 py-2 bg-blue-600 text-white rounded-full font-bold text-sm shadow-lg">0 Fahrzeuge</span>
             </div>
         </header>
+
+        <!-- Navigation Bar -->
+        <div class="mb-6 flex flex-wrap gap-3">
+            <a href="bca_merge_tool.html" target="_blank" class="px-4 py-2 bg-white border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-200 transition-all rounded-xl font-bold text-xs shadow-sm flex items-center gap-2">
+                <i data-lucide="git-merge" class="w-4 h-4"></i> BCA Merge
+            </a>
+            <a href="launcher.html" target="_blank" class="px-4 py-2 bg-white border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-200 transition-all rounded-xl font-bold text-xs shadow-sm flex items-center gap-2">
+                <i data-lucide="bot" class="w-4 h-4"></i> Agent 1
+            </a>
+            <a href="index.html" target="_blank" class="px-4 py-2 bg-white border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-200 transition-all rounded-xl font-bold text-xs shadow-sm flex items-center gap-2">
+                <i data-lucide="layout" class="w-4 h-4"></i> index.html
+            </a>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="mb-8 space-y-4">
+            <div class="flex flex-col md:flex-row gap-4 p-5 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                <!-- Search -->
+                <div class="flex-grow">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Suche</label>
+                    <div class="relative">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                        <input type="text" id="searchInput" placeholder="Modell, ID..." class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl outline-none text-sm focus:border-blue-500 transition-colors">
+                    </div>
+                </div>
+                
+                <!-- Marke -->
+                <div class="w-full md:w-40">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Marke</label>
+                    <select id="makeFilter" class="filter-select w-full outline-none text-sm">
+                        <option value="">Alle Marken</option>
+                    </select>
+                </div>
+
+                <!-- Baujahr -->
+                <div class="w-full md:w-auto">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Baujahr</label>
+                    <div class="flex items-center gap-2">
+                        <select id="yearMin" class="filter-select w-full md:w-24 outline-none text-sm">
+                            <option value="0">von</option>
+                        </select>
+                        <select id="yearMax" class="filter-select w-full md:w-24 outline-none text-sm">
+                            <option value="9999">bis</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Kilometer -->
+                <div class="w-full md:w-auto">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Kilometer</label>
+                    <div class="flex items-center gap-2">
+                        <select id="kmMin" class="filter-select w-full md:w-28 outline-none text-sm">
+                            <option value="0">KM von</option>
+                            <option value="0">0 KM</option>
+                            <option value="10000">10k KM</option>
+                            <option value="50000">50k KM</option>
+                            <option value="100000">100k KM</option>
+                        </select>
+                        <select id="kmMax" class="filter-select w-full md:w-28 outline-none text-sm">
+                            <option value="9999999">KM bis</option>
+                            <option value="10000">10k KM</option>
+                            <option value="50000">50k KM</option>
+                            <option value="100000">100k KM</option>
+                            <option value="200000">200k KM</option>
+                            <option value="9999999">Beliebig</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sortierung -->
+                <div class="w-full md:w-40">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Sortierung</label>
+                    <select id="sortOrder" class="filter-select w-full outline-none text-sm">
+                        <option value="newest">Neueste zuerst</option>
+                        <option value="oldest">Älteste zuerst</option>
+                        <option value="price-asc">Preis aufst.</option>
+                        <option value="price-desc">Preis abst.</option>
+                        <option value="km-asc">KM aufst.</option>
+                        <option value="id-asc">ID aufst.</option>
+                        <option value="id-desc">ID abst.</option>
+                    </select>
+                </div>
+
+                <!-- Ausstattung -->
+                <div class="w-full md:w-48">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Ausstattung</label>
+                    <select id="featureFilter" class="filter-select w-full outline-none text-sm">
+                        <option value="">Alle Merkmale</option>
+                    </select>
+                </div>
+
+                <!-- Reset -->
+                <div class="flex items-end">
+                    <button onclick="resetFilters()" class="px-4 py-2.5 text-xs text-blue-500 font-bold hover:bg-blue-50 rounded-lg transition-colors whitespace-nowrap">Filter Reset</button>
+                </div>
+            </div>
+        </div>
 
         <div id="archiveGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <!-- Loading State -->
@@ -62,12 +169,13 @@
 
         async function loadArchive() {
             try {
-                const response = await fetch('http://localhost:8085/api/archive');
+                const response = await fetch('/api/archive');
                 const cars = await response.json();
                 currentCars = cars;
                 
                 document.getElementById('carCount').innerText = `${cars.length} Fahrzeuge`;
-                render(cars);
+                initFilters();
+                render();
             } catch (e) {
                 document.getElementById('archiveGrid').innerHTML = `
                     <div class="col-span-full py-20 text-center text-red-500 font-bold">
@@ -77,17 +185,90 @@
             }
         }
 
-        function render(cars) {
+        function initFilters() {
+            const makes = [...new Set(currentCars.map(c => c.name.split(' ')[0]))].sort();
+            const mFilter = document.getElementById('makeFilter');
+            // Keep first option "Alle Marken"
+            mFilter.innerHTML = '<option value="">Alle Marken</option>';
+            makes.forEach(m => { const opt = document.createElement('option'); opt.value = m; opt.innerText = m; mFilter.appendChild(opt); });
+
+            const years = [...new Set(currentCars.map(c => c.year_raw))].filter(y => y).sort((a,b) => b-a);
+            const yMin = document.getElementById('yearMin');
+            const yMax = document.getElementById('yearMax');
+            yMin.innerHTML = '<option value="0">von</option>';
+            yMax.innerHTML = '<option value="9999">bis</option>';
+            years.forEach(y => {
+                const opt1 = document.createElement('option'); opt1.value = y; opt1.innerText = y; yMin.appendChild(opt1);
+                const opt2 = document.createElement('option'); opt2.value = y; opt2.innerText = y; yMax.appendChild(opt2);
+            });
+
+            const features = [...new Set(currentCars.flatMap(c => c.ausstattung_full || []))].filter(f => f).sort();
+            const fFilter = document.getElementById('featureFilter');
+            fFilter.innerHTML = '<option value="">Alle Merkmale</option>';
+            features.forEach(f => { const opt = document.createElement('option'); opt.value = f; opt.innerText = f; fFilter.appendChild(opt); });
+
+            // Re-bind listeners (if not already done)
+            const inputs = ['searchInput', 'makeFilter', 'yearMin', 'yearMax', 'kmMin', 'kmMax', 'sortOrder', 'featureFilter'];
+            inputs.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && !el.dataset.listener) {
+                    el.addEventListener('input', render);
+                    el.addEventListener('change', render);
+                    el.dataset.listener = "true";
+                }
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('makeFilter').value = '';
+            document.getElementById('yearMin').value = '0';
+            document.getElementById('yearMax').value = '9999';
+            document.getElementById('kmMin').value = '0';
+            document.getElementById('kmMax').value = '9999999';
+            document.getElementById('sortOrder').value = 'newest';
+            document.getElementById('featureFilter').value = '';
+            render();
+        }
+
+        function render() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const make = document.getElementById('makeFilter').value;
+            const yMin = parseInt(document.getElementById('yearMin').value) || 0;
+            const yMax = parseInt(document.getElementById('yearMax').value) || 9999;
+            const kMin = parseInt(document.getElementById('kmMin').value) || 0;
+            const kMax = parseInt(document.getElementById('kmMax').value) || 9999999;
+            const sort = document.getElementById('sortOrder').value;
+            const feature = document.getElementById('featureFilter').value;
+
+            let filtered = currentCars.filter(car => {
+                const matchesTerm = car.name.toLowerCase().includes(term) || car.id.toString().includes(term) || (car.ausfuehrung && car.ausfuehrung.toLowerCase().includes(term));
+                const matchesMake = !make || car.name.toLowerCase().startsWith(make.toLowerCase());
+                const matchesYear = (car.year_raw || 0) >= yMin && (car.year_raw || 0) <= yMax;
+                const matchesKm = (car.km_raw || 0) >= kMin && (car.km_raw || 0) <= kMax;
+                const matchesFeature = !feature || (car.ausstattung_full && car.ausstattung_full.includes(feature));
+                return matchesTerm && matchesMake && matchesYear && matchesKm && matchesFeature;
+            });
+
+            // Sorting
+            filtered.sort((a, b) => {
+                if (sort === 'newest') return new Date(b.archive_date) - new Date(a.archive_date);
+                if (sort === 'oldest') return new Date(a.archive_date) - new Date(b.archive_date);
+                if (sort === 'price-asc') return (a.details?.total_brutto_at || 0) - (b.details?.total_brutto_at || 0);
+                if (sort === 'price-desc') return (b.details?.total_brutto_at || 0) - (a.details?.total_brutto_at || 0);
+                if (sort === 'km-asc') return (a.km_raw || 0) - (b.km_raw || 0);
+                if (sort === 'id-asc') return parseInt(a.id) - parseInt(b.id);
+                if (sort === 'id-desc') return parseInt(b.id) - parseInt(a.id);
+                return 0;
+            });
+
             const grid = document.getElementById('archiveGrid');
-            if (cars.length === 0) {
-                grid.innerHTML = '<div class="col-span-full py-20 text-center text-slate-400 font-bold">Keine Fahrzeuge im Archiv gefunden.</div>';
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="col-span-full py-20 text-center text-slate-400 font-bold">Keine Fahrzeuge mit diesen Filtern gefunden.</div>';
                 return;
             }
 
-            // Sort by date (newest first)
-            cars.sort((a, b) => new Date(b.archive_date) - new Date(a.archive_date));
-
-            grid.innerHTML = cars.map(car => `
+            grid.innerHTML = filtered.map(car => `
                 <div class="glass-card rounded-3xl overflow-hidden flex flex-col shadow-sm hover:shadow-md transition-all">
                     <div class="relative h-48 bg-slate-100">
                         <img src="${car.img || 'https://via.placeholder.com/400'}" class="w-full h-full object-cover opacity-80" alt="${car.name}">
@@ -97,7 +278,7 @@
                     </div>
                     <div class="p-5 flex flex-col flex-grow">
                         <div class="mb-3">
-                            <h3 class="text-lg font-bold text-slate-800 leading-tight">${car.name}</h3>
+                            <h3 class="text-lg font-bold text-slate-800 leading-tight">#${car.id} - ${car.name}</h3>
                             <p class="text-xs text-slate-500">${car.ausfuehrung}</p>
                         </div>
                         <div class="flex gap-4 text-[10px] font-bold text-slate-400 uppercase mb-4">
@@ -114,9 +295,14 @@
                                     <span class="text-[9px] font-medium text-slate-400 block italic">Inkl. NoVA & Provision</span>
                                 </div>
                             </div>
-                            <button onclick="showDetails('${car.id}')" class="w-full py-2 bg-slate-50 hover:bg-blue-50 text-blue-600 font-bold text-sm rounded-xl border border-slate-200 transition-colors flex justify-center items-center gap-2">
-                                <i data-lucide="file-text" class="w-4 h-4"></i> Alle Details
-                            </button>
+                            <div class="flex gap-2">
+                                <button onclick="showDetails('${car.id}')" class="flex-grow py-2 bg-slate-50 hover:bg-blue-50 text-blue-600 font-bold text-sm rounded-xl border border-slate-200 transition-colors flex justify-center items-center gap-2">
+                                    <i data-lucide="file-text" class="w-4 h-4"></i> Alle Details
+                                </button>
+                                <button id="delete-btn-${car.id}" type="button" onclick="event.preventDefault(); event.stopPropagation(); confirmDelete('${car.id}')" class="py-2 px-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl border border-red-200 transition-colors flex justify-center items-center min-w-[40px]" title="Fahrzeug aus Datenbank löschen">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -203,6 +389,101 @@
                 textEl.innerText = timerStr;
             });
         }, 1000);
+
+        async function generateIndex() {
+            const maxAge = document.getElementById('maxAgeInput').value;
+            const btn = document.getElementById('genIndexBtn');
+            const originalText = btn.innerHTML;
+            
+            try {
+                btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Generiere...';
+                btn.disabled = true;
+                lucide.createIcons();
+                
+                const response = await fetch('/api/generate-index', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ maxAge: parseInt(maxAge) || 7 })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Erfolgreich (${data.count} Fzg.)`;
+                    btn.classList.replace('bg-emerald-500', 'bg-green-600');
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.classList.replace('bg-green-600', 'bg-emerald-500');
+                        btn.disabled = false;
+                        lucide.createIcons();
+                    }, 3000);
+                } else {
+                    alert('Fehler beim Generieren der Index.html: ' + (data.message || 'Unbekannter Fehler'));
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    lucide.createIcons();
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Netzwerkfehler: Konnte /api/generate-index nicht aufrufen.');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        }
+
+        let deleteTimeouts = {};
+
+        function confirmDelete(id) {
+            const btn = document.getElementById(`delete-btn-${id}`);
+            if (!btn) return;
+
+            if (btn.classList.contains('confirm-state')) {
+                executeDelete(id);
+            } else {
+                // Change to confirmation state
+                btn.classList.add('confirm-state');
+                btn.classList.replace('bg-red-50', 'bg-red-600');
+                btn.classList.replace('text-red-600', 'text-white');
+                btn.innerHTML = '<span class="text-[10px] font-bold">Sicher?</span>';
+                
+                // Reset after 4 seconds
+                if (deleteTimeouts[id]) clearTimeout(deleteTimeouts[id]);
+                deleteTimeouts[id] = setTimeout(() => {
+                    if (btn) {
+                        btn.classList.remove('confirm-state');
+                        btn.classList.replace('bg-red-600', 'bg-red-50');
+                        btn.classList.replace('text-white', 'text-red-600');
+                        btn.innerHTML = '<i data-lucide="trash-2" class="w-4 h-4"></i>';
+                        lucide.createIcons();
+                    }
+                }, 4000);
+            }
+        }
+
+        async function executeDelete(id) {
+            const btn = document.getElementById(`delete-btn-${id}`);
+            if (btn) btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>';
+            
+            try {
+                const response = await fetch('/api/archive/delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: id })
+                });
+                
+                const data = await response.json();
+                if(data.status === 'success') {
+                    loadArchive();
+                } else {
+                    alert('Fehler beim Löschen: ' + (data.message || 'Unbekannt'));
+                    loadArchive(); // Reset UI
+                }
+            } catch(e) {
+                alert('Netzwerkfehler beim Löschen.');
+                loadArchive(); // Reset UI
+            }
+        }
 
         loadArchive();
     </script>

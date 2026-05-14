@@ -198,6 +198,96 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(500)
                 self.end_headers()
                 self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
+        elif self.path == '/api/generate-index':
+            try:
+                from datetime import datetime, timedelta
+                content_length = int(self.headers['Content-Length'])
+                post_data = self.rfile.read(content_length)
+                data = json.loads(post_data.decode('utf-8'))
+                max_age_days = int(data.get('maxAge', 7))
+                
+                archive_path = os.path.join(BASE_DIR, 'sold_archive.json')
+                if os.path.exists(archive_path):
+                    with open(archive_path, 'r', encoding='utf-8') as f:
+                        archive_data = json.load(f)
+                else:
+                    archive_data = []
+                
+                filtered_data = []
+                now = datetime.now()
+                for car in archive_data:
+                    cat = car.get('category', '')
+                    if cat == 'Direktverkauf':
+                        continue
+                    
+                    is_auction = (cat == 'Auktionsfahrzeuge')
+                    is_recent = False
+                    arch_date_str = car.get('archive_date', '')
+                    if arch_date_str:
+                        try:
+                            arch_date = datetime.strptime(arch_date_str, '%Y-%m-%d')
+                            if (now - arch_date).days <= max_age_days:
+                                is_recent = True
+                        except:
+                            pass
+                    
+                    if is_auction or is_recent:
+                        filtered_data.append(car)
+                        
+                index_path = os.path.join(BASE_DIR, 'index.html')
+                if os.path.exists(index_path):
+                    with open(index_path, 'r', encoding='utf-8') as f:
+                        index_content = f.read()
+                    
+                    import re
+                    new_js = f"const cars = {json.dumps(filtered_data)};"
+                    new_content = re.sub(r'const cars = \[.*?\];', lambda m: new_js, index_content, flags=re.DOTALL)
+                    
+                    with open(index_path, 'w', encoding='utf-8') as f:
+                        f.write(new_content)
+                        
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'application/json')
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"status": "success", "count": len(filtered_data)}).encode('utf-8'))
+                else:
+                    self.send_response(500)
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"status": "error", "message": "index.html not found"}).encode('utf-8'))
+            except Exception as e:
+                self.send_response(500)
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
+
+        elif self.path == '/api/archive/delete':
+            try:
+                content_length = int(self.headers['Content-Length'])
+                post_data = self.rfile.read(content_length)
+                data = json.loads(post_data.decode('utf-8'))
+                car_id = data.get('id')
+                
+                archive_path = os.path.join(BASE_DIR, 'sold_archive.json')
+                if os.path.exists(archive_path) and car_id:
+                    with open(archive_path, 'r', encoding='utf-8') as f:
+                        archive_data = json.load(f)
+                    
+                    new_data = [c for c in archive_data if c.get('id') != car_id]
+                    
+                    with open(archive_path, 'w', encoding='utf-8') as f:
+                        json.dump(new_data, f, indent=4, ensure_ascii=False)
+                        
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'application/json')
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"status": "success"}).encode('utf-8'))
+                else:
+                    self.send_response(404)
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"status": "error", "message": "File not found or missing ID"}).encode('utf-8'))
+            except Exception as e:
+                self.send_response(500)
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
 
         else:
             self.send_error(404)

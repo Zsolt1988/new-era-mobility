@@ -6,6 +6,7 @@ import argparse
 import sys
 import os
 import json
+from datetime import datetime, timedelta
 
 def parse_args():
     parser = argparse.ArgumentParser(description='BCA Daten Mergen')
@@ -14,6 +15,28 @@ def parse_args():
     parser.add_argument('--out', type=str, default='index.html')
     parser.add_argument('--archive-days', type=int, default=30, help='How many days to keep vehicles in the archive')
     return parser.parse_args()
+
+def parse_expiry_date(listing_html):
+    # Try "Ende: 28.04 10:00"
+    ende_match = re.search(r'Ende:\s*(\d{2})\.(\d{2})\s+(\d{2}):(\d{2})', listing_html)
+    if ende_match:
+        day, month, hour, minute = map(int, ende_match.groups())
+        now = datetime.now()
+        year = now.year
+        # If month is earlier than current month, it's likely next year (rare for auctions)
+        expiry = datetime(year, month, day, hour, minute)
+        if expiry < now - timedelta(days=1): # If it's in the past (more than 1 day), assume next year
+            expiry = expiry.replace(year=year + 1)
+        return expiry.strftime('%Y-%m-%d %H:%M:%S')
+
+    # Try "3Tag(e) 0Std. 21Min."
+    countdown_match = re.search(r'(\d+)Tag\(e\)\s*(\d+)Std\.\s*(\d+)Min\.', listing_html)
+    if countdown_match:
+        days, hours, mins = map(int, countdown_match.groups())
+        expiry = datetime.now() + timedelta(days=days, hours=hours, minutes=mins)
+        return expiry.strftime('%Y-%m-%d %H:%M:%S')
+    
+    return None
 
 TRANSPORT_COSTS = {
     "Bad Hersfeld": {"pkw": 374, "suv": 487, "lcv": 537},
@@ -181,17 +204,16 @@ def update_archive(new_data, days_limit):
             archive = []
 
     # 2. Add current date to new entries and merge
-    archive_map = {str(item['id']): item for item in archive}
+    archive_map = {str(item.get('uid')): item for item in archive if 'uid' in item}
     
     for item in new_data:
-        item_id = str(item['id'])
-        # Add or update
-        if item_id in archive_map:
-            # Keep original archive_date if it exists
-            item['archive_date'] = archive_map[item_id].get('archive_date', now.strftime('%Y-%m-%d'))
+        item_uid = str(item.get('uid'))
+        if item_uid in archive_map:
+            # Keep original archive_date
+            item['archive_date'] = archive_map[item_uid].get('archive_date', now.strftime('%Y-%m-%d'))
         else:
             item['archive_date'] = now.strftime('%Y-%m-%d')
-        archive_map[item_id] = item
+        archive_map[item_uid] = item
 
     # 3. Filter by date limit
     final_archive = []
@@ -203,13 +225,19 @@ def update_archive(new_data, days_limit):
             if item_date >= limit_date:
                 final_archive.append(item)
         except:
-            final_archive.append(item) # Keep if date parsing fails
+            final_archive.append(item)
+    
+    # Sort by ID (numeric)
+    try:
+        final_archive.sort(key=lambda x: int(x['id']))
+    except:
+        pass
 
     # 4. Save back to file
     with open(archive_path, 'w', encoding='utf-8') as f:
         json.dump(final_archive, f, ensure_ascii=False, indent=4)
     
-    print(f"Archiv aktualisiert: {len(final_archive)} Fahrzeuge gespeichert (Limit: {days_limit} Tage).")
+    print(f"Archiv aktualisiert: {len(final_archive)} Fahrzeuge gespeichert.")
     return final_archive
 
 def process_bca():
@@ -253,7 +281,8 @@ def process_bca():
                     "Katalognummer": int(lot_match.group(1)),
                     "BCA_Bild_URL": img_url,
                     "BCA_Standort": "Unbekannt",
-                    "BCA_HTML_Price": 0.0
+                    "BCA_HTML_Price": 0.0,
+                    "expiry_date": parse_expiry_date(l)
                 })
                 p_match = re.search(r'>\s*([\d.]+)\s*(?:€|\x80|â‚¬|EUR)', l)
                 if p_match: extracted_html_data[-1]["BCA_HTML_Price"] = float(p_match.group(1).replace('.', ''))
@@ -274,8 +303,35 @@ def process_bca():
             if pd.isna(val): return default
             return val
 
+        # Load Archive for ID consistency
+        archive_path = 'sold_archive.json'
+        archive = []
+        if os.path.exists(archive_path):
+            try:
+                with open(archive_path, 'r', encoding='utf-8') as f:
+                    archive = json.load(f)
+            except: pass
+        
+        archive_map = {str(item.get('uid')): item for item in archive if 'uid' in item}
+        max_id = 0
+        for item in archive:
+            try:
+                vid = int(item['id'])
+                if vid > max_id: max_id = vid
+            except: pass
+        next_new_id = max_id + 1
+
         js_data = []
         for _, row in final_df.iterrows():
+            item_uid = str(clean_val(row.get('Inventarnummer', row.get('Katalognummer_Num', '')))).strip()
+            
+            # Determine Unique ID
+            if item_uid in archive_map:
+                car_id = archive_map[item_uid]['id']
+            else:
+                car_id = str(next_new_id)
+                next_new_id += 1
+
             html_price = row.get('BCA_HTML_Price', 0.0)
             if not pd.isna(html_price) and html_price > 0:
                 p_netto = float(html_price)
@@ -305,7 +361,7 @@ def process_bca():
             warranty_options = calculate_warranty_prices(ps, age, km_raw, fuel_type)
 
             js_data.append({
-                "id": str(clean_val(row.get('Katalognummer_Num', ''), '')).split('.')[0],
+                "id": car_id,
                 "category": "Auktionsfahrzeuge",
                 "name": f"{clean_val(row.get('Hersteller', ''))} {clean_val(row.get('Modell', ''))}".strip(),
                 "ausfuehrung": str(clean_val(row.get('Ausführung', ''))).replace('nan', ''),
@@ -324,6 +380,8 @@ def process_bca():
                 "transport": calc['transport'],
                 "details": calc,
                 "warranty_options": warranty_options,
+                "expiry_date": clean_val(row.get('expiry_date', None), None),
+                "uid": item_uid,
                 "raw_data": {str(k): (v if type(v) in (int, float, str, bool) else str(v)) for k, v in row.items() if pd.notna(v)}
             })
 
@@ -366,13 +424,8 @@ def process_bca():
             .checkmark-circle {{ width: 80px; height: 80px; border-radius: 50%; background: #f0fdf4; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; transform: scale(0.5); transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }}
             .success-overlay.active .checkmark-circle {{ transform: scale(1); }}
 
-            /* Hide arrows on number inputs */
-            input[type=number]::-webkit-inner-spin-button, 
-            input[type=number]::-webkit-outer-spin-button {{ 
-                -webkit-appearance: none; 
-                margin: 0; 
-            }}
-            input[type=number] {{ -moz-appearance: textfield; }}
+            input[type=number] {{ -moz-appearance: textfield; appearance: textfield; }}
+            .timer-badge {{ transition: background-color 0.5s ease; }}
 
             @media (max-width: 480px) {{
                 .card-padding {{ padding: 0.75rem !important; }}
@@ -497,7 +550,7 @@ def process_bca():
         </div>
 
         <!-- Main Container -->
-        <div id="mainContainer" class="max-w-[1600px] mx-auto">
+        <div id="mainContainer" class="max-w-7xl mx-auto">
             <header class="mb-8">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
                     <h1 class="text-3xl md:text-4xl font-bold text-slate-800">Auktionsfahrzeuge</h1>
@@ -575,12 +628,24 @@ def process_bca():
                             <option value="">Alle Merkmale</option>
                         </select>
                     </div>
+                    <div class="w-full md:w-40">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Sortierung</label>
+                        <select id="sortOrder" class="filter-select w-full outline-none text-sm">
+                            <option value="newest">Neueste zuerst</option>
+                            <option value="oldest">Älteste zuerst</option>
+                            <option value="price-asc">Preis aufst.</option>
+                            <option value="price-desc">Preis abst.</option>
+                            <option value="km-asc">KM aufst.</option>
+                            <option value="id-asc">ID aufst.</option>
+                            <option value="id-desc">ID abst.</option>
+                        </select>
+                    </div>
                     <button onclick="resetFilters()" class="w-full md:w-auto px-4 py-2.5 text-xs text-blue-500 font-bold hover:bg-blue-50 rounded-lg transition-colors">Filter Reset</button>
                 </div>
             </header>
             
-            <!-- Grid: Mobil 2 Spalten, Desktop erweitert sich dynamisch -->
-            <div id="carGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 md:gap-6 mb-12"></div>
+            <!-- Grid: Mobil 2 Spalten, Desktop 4 Spalten -->
+            <div id="carGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6 mb-12"></div>
             <div id="pagination" class="flex justify-center items-center gap-2 pb-12"></div>
         </div>
 
@@ -621,7 +686,7 @@ def process_bca():
                 const fFilter = document.getElementById('featureFilter');
                 features.forEach(f => {{ if(f) {{ const opt = document.createElement('option'); opt.value = f; opt.innerText = f; fFilter.appendChild(opt); }} }});
 
-                ['makeFilter', 'yearMin', 'yearMax', 'kmMin', 'kmMax', 'featureFilter', 'searchInput'].forEach(id => {{
+                ['makeFilter', 'yearMin', 'yearMax', 'kmMin', 'kmMax', 'featureFilter', 'searchInput', 'sortOrder'].forEach(id => {{
                     document.getElementById(id).addEventListener('change', () => {{ currentPage = 1; render(); }});
                     document.getElementById(id).addEventListener('input', () => {{ currentPage = 1; render(); }});
                 }});
@@ -741,6 +806,19 @@ def process_bca():
                     const matchesFeature = (!feature || c.ausstattung_full.some(a => a.toLowerCase().includes(feature)));
                     return matchesTerm && matchesMake && matchesYear && matchesKm && matchesFeature;
                 }});
+
+                const sort = document.getElementById('sortOrder').value;
+                filtered.sort((a, b) => {{
+                    if (sort === 'newest') return new Date(b.archive_date) - new Date(a.archive_date);
+                    if (sort === 'oldest') return new Date(a.archive_date) - new Date(b.archive_date);
+                    if (sort === 'price-asc') return a.bca_price - b.bca_price;
+                    if (sort === 'price-desc') return b.bca_price - a.bca_price;
+                    if (sort === 'km-asc') return a.km_raw - b.km_raw;
+                    if (sort === 'id-asc') return parseInt(a.id) - parseInt(b.id);
+                    if (sort === 'id-desc') return parseInt(b.id) - parseInt(a.id);
+                    return 0;
+                }});
+
                 const items = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
                 
                 grid.innerHTML = items.map(car => `
@@ -748,7 +826,8 @@ def process_bca():
                         <div class="relative h-32 md:h-44 bg-slate-100">
                             <img src="${{car.img}}" class="w-full h-full object-cover" alt="${{car.name}}">
                             <div class="absolute top-2 left-2 bg-white/90 px-2 py-0.5 rounded-full text-[8px] md:text-[10px] font-bold text-slate-600">ID: ${{car.id}}</div>
-                            <div class="absolute top-2 right-2 bg-blue-600 px-2 py-0.5 rounded-full text-[8px] md:text-[10px] font-bold text-white shadow-sm">${{car.car_type}}</div>
+                            <div class="absolute top-2 right-2 bg-amber-100 text-amber-600 border border-amber-200 px-2 py-0.5 rounded-full text-[8px] md:text-[10px] font-bold shadow-sm uppercase tracking-wider flex items-center gap-1"><i data-lucide="gavel" class="w-2 h-2 md:w-3 h-3"></i> AUKTION</div>
+                            ${{car.expiry_date ? `<div class="absolute bottom-2 left-2 bg-slate-900/80 text-white px-2 py-0.5 rounded-md text-[9px] md:text-[11px] font-bold shadow-sm flex items-center gap-1 timer-badge" data-expiry="${{car.expiry_date}}"><i data-lucide="clock" class="w-2 h-2 md:w-3 h-3"></i> <span class="timer-text">Lade...</span></div>` : ''}}
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow card-padding">
                             <div class="mb-2">
@@ -778,9 +857,44 @@ def process_bca():
                     </div>
                 `).join('');
                 lucide.createIcons();
+                updateTimers();
                 renderPagination(Math.ceil(filtered.length / itemsPerPage));
                 sendHeightToWix();
             }}
+
+            function updateTimers() {{
+                const now = new Date().getTime();
+                document.querySelectorAll('.timer-badge').forEach(badge => {{
+                    const expiry = new Date(badge.dataset.expiry).getTime();
+                    const diff = expiry - now;
+                    const textEl = badge.querySelector('.timer-text');
+                    
+                    if (diff <= 0) {{
+                        badge.classList.remove('bg-slate-900/80');
+                        badge.classList.add('bg-red-600');
+                        textEl.innerText = "Beendet";
+                        return;
+                    }}
+
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+                    if (days > 0) {{
+                        textEl.innerText = `${{days}}d ${{hours}}h`;
+                    }} else if (hours > 0) {{
+                        textEl.innerText = `${{hours}}h ${{mins}}m`;
+                        if (hours < 1) badge.classList.replace('bg-slate-900/80', 'bg-orange-600');
+                    }} else {{
+                        textEl.innerText = `${{mins}}m ${{secs}}s`;
+                        badge.classList.remove('bg-slate-900/80');
+                        badge.classList.add('bg-orange-600');
+                    }}
+                }});
+            }}
+
+            setInterval(updateTimers, 1000);
 
             function resetFilters() {{ document.querySelectorAll('.filter-select, #searchInput').forEach(e => e.value = ''); currentPage = 1; render(); }}
             
