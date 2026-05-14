@@ -300,10 +300,10 @@
                                 <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Verkaufspreis (manuell)</label>
                                 <div class="flex gap-2">
                                     <div class="relative flex-grow">
-                                        <input type="number" id="vp-${{car.id}}" value="${{car.verkaufspreis || 0}}" class="w-full pl-3 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold outline-none focus:border-blue-400 transition-colors">
+                                        <input type="number" id="vp-${car.id}" value="${car.verkaufspreis || 0}" class="w-full pl-3 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold outline-none focus:border-blue-400 transition-colors">
                                         <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">€</span>
                                     </div>
-                                    <button onclick="saveVerkaufspreis('${{car.id}}')" id="save-vp-${{car.id}}" class="p-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all shadow-sm flex items-center justify-center min-w-[42px]" title="Verkaufspreis speichern">
+                                    <button onclick="saveVerkaufspreis('${car.id}')" id="save-vp-${car.id}" class="p-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all shadow-sm flex items-center justify-center min-w-[42px]" title="Verkaufspreis speichern">
                                         <i data-lucide="save" class="w-4 h-4"></i>
                                     </button>
                                 </div>
