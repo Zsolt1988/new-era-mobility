@@ -673,8 +673,8 @@ def process_bca():
                 </div>
             </header>
             
-            <!-- Grid: Mobil 2 Spalten, Desktop 4 Spalten -->
-            <div id="carGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6 mb-12"></div>
+            <!-- Grid: Mobil 1 Spalte, Desktop 4 Spalten -->
+            <div id="carGrid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-12"></div>
             <div id="pagination" class="flex justify-center items-center gap-2 pb-12"></div>
         </div>
 

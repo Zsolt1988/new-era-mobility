@@ -295,6 +295,20 @@
                                     <span class="text-[9px] font-medium text-slate-400 block italic">Inkl. NoVA & Provision</span>
                                 </div>
                             </div>
+                            
+                            <div class="mb-4 pt-4 border-t border-slate-100">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Verkaufspreis (manuell)</label>
+                                <div class="flex gap-2">
+                                    <div class="relative flex-grow">
+                                        <input type="number" id="vp-${{car.id}}" value="${{car.verkaufspreis || 0}}" class="w-full pl-3 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold outline-none focus:border-blue-400 transition-colors">
+                                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">€</span>
+                                    </div>
+                                    <button onclick="saveVerkaufspreis('${{car.id}}')" id="save-vp-${{car.id}}" class="p-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all shadow-sm flex items-center justify-center min-w-[42px]" title="Verkaufspreis speichern">
+                                        <i data-lucide="save" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+
                             <div class="flex gap-2">
                                 <button onclick="showDetails('${car.id}')" class="flex-grow py-2 bg-slate-50 hover:bg-blue-50 text-blue-600 font-bold text-sm rounded-xl border border-slate-200 transition-colors flex justify-center items-center gap-2">
                                     <i data-lucide="file-text" class="w-4 h-4"></i> Alle Details
@@ -389,6 +403,48 @@
                 textEl.innerText = timerStr;
             });
         }, 1000);
+
+        async function saveVerkaufspreis(id) {
+            const input = document.getElementById(`vp-${id}`);
+            const btn = document.getElementById(`save-vp-${id}`);
+            const vp = parseFloat(input.value) || 0;
+            
+            const originalHTML = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>';
+            lucide.createIcons();
+
+            try {
+                const response = await fetch('/api/archive/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: id, updates: { verkaufspreis: vp } })
+                });
+                const data = await response.json();
+                if (data.status === 'success') {
+                    btn.classList.replace('bg-blue-600', 'bg-emerald-500');
+                    btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i>';
+                    lucide.createIcons();
+                    setTimeout(() => {
+                        btn.classList.replace('bg-emerald-500', 'bg-blue-600');
+                        btn.innerHTML = originalHTML;
+                        btn.disabled = false;
+                        lucide.createIcons();
+                    }, 2000);
+                } else {
+                    alert('Fehler beim Speichern: ' + data.message);
+                    btn.innerHTML = originalHTML;
+                    btn.disabled = false;
+                    lucide.createIcons();
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Netzwerkfehler beim Speichern.');
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        }
 
         async function generateIndex() {
             const maxAge = document.getElementById('maxAgeInput').value;

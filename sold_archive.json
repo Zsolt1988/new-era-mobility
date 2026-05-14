@@ -55,8 +55,9 @@
             "car_type": "SUV"
         },
         "warranty_options": null,
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "0116994793",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 2,
             "Inventarnummer": "0116994793     ",
@@ -81,7 +82,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994793-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 85283 Wolnzach",
             "BCA_HTML_Price": 20840.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -141,8 +142,9 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "0116959623",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 4,
             "Inventarnummer": "0116959623     ",
@@ -168,7 +170,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959623-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
             "BCA_HTML_Price": 28908.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -231,8 +233,9 @@
             "Komfort": 643,
             "Premium": 1093
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "0116959694",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 6,
             "Inventarnummer": "0116959694     ",
@@ -258,7 +261,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959694-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
             "BCA_HTML_Price": 26050.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -316,8 +319,9 @@
             "Komfort": 418,
             "Premium": 643
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "0117041355",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 7,
             "Inventarnummer": "0117041355     ",
@@ -342,7 +346,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117041355-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
             "BCA_HTML_Price": 11800.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -402,8 +406,9 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "0116989093",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 8,
             "Inventarnummer": "0116989093     ",
@@ -429,7 +434,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116989093-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
             "BCA_HTML_Price": 29244.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -494,8 +499,9 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "6255LWK",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 9,
             "Inventarnummer": "6255LWK        ",
@@ -519,7 +525,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=6255LWK-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "SPAIN - Bellvei",
             "BCA_HTML_Price": 28000.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -579,8 +585,9 @@
             "Komfort": 643,
             "Premium": 1093
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "0116989137",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 10,
             "Inventarnummer": "0116989137     ",
@@ -606,7 +613,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116989137-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
             "BCA_HTML_Price": 26723.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -661,8 +668,9 @@
             "Komfort": 418,
             "Premium": 643
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "K-207-HS",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 11,
             "Inventarnummer": "K-207-HS       ",
@@ -686,7 +694,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=K-207-HS-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "The Netherlands - Barneveld",
             "BCA_HTML_Price": 10579.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -748,8 +756,9 @@
             "Komfort": 643,
             "Premium": 1093
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "0116994326",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 12,
             "Inventarnummer": "0116994326     ",
@@ -773,7 +782,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994326-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 85283 Wolnzach",
             "BCA_HTML_Price": 17647.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -832,8 +841,9 @@
             "car_type": "PKW"
         },
         "warranty_options": null,
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "0116959692",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 13,
             "Inventarnummer": "0116959692     ",
@@ -859,7 +869,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959692-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
             "BCA_HTML_Price": 29748.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -920,8 +930,9 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "0117019888",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 16,
             "Inventarnummer": "0117019888     ",
@@ -947,7 +958,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019888-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
             "BCA_HTML_Price": 29916.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -1012,8 +1023,9 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "0116922370",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 17,
             "Inventarnummer": "0116922370     ",
@@ -1039,7 +1051,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116922370-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 64560 RIEDSTADT-Goddelau",
             "BCA_HTML_Price": 21681.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -1101,8 +1113,9 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "0117019887",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 18,
             "Inventarnummer": "0117019887     ",
@@ -1128,7 +1141,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019887-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
             "BCA_HTML_Price": 29748.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -1186,8 +1199,9 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "S-896-BL",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 19,
             "Inventarnummer": "S-896-BL       ",
@@ -1211,7 +1225,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=S-896-BL-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "The Netherlands - Barneveld",
             "BCA_HTML_Price": 37521.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -1272,8 +1286,9 @@
             "Komfort": 643,
             "Premium": 1093
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "0117019884",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 20,
             "Inventarnummer": "0117019884     ",
@@ -1299,7 +1314,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019884-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
             "BCA_HTML_Price": 26387.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -1357,8 +1372,9 @@
             "car_type": "SUV"
         },
         "warranty_options": null,
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "0116994828",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 21,
             "Inventarnummer": "0116994828     ",
@@ -1384,7 +1400,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994828-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 85283 Wolnzach",
             "BCA_HTML_Price": 27059.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -1448,8 +1464,9 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "0116959901",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 25,
             "Inventarnummer": "0116959901     ",
@@ -1475,7 +1492,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959901-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
             "BCA_HTML_Price": 29076.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -1537,8 +1554,9 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "0116938938",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 26,
             "Inventarnummer": "0116938938     ",
@@ -1564,7 +1582,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116938938-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 85283 Wolnzach",
             "BCA_HTML_Price": 18319.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -1625,8 +1643,9 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "0117019925",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 27,
             "Inventarnummer": "0117019925     ",
@@ -1652,7 +1671,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019925-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
             "BCA_HTML_Price": 29076.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -1710,8 +1729,9 @@
             "Komfort": 568,
             "Premium": 793
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "R-831-FB",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 1,
             "Inventarnummer": "R-831-FB       ",
@@ -1735,7 +1755,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=R-831-FB-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "The Netherlands - Barneveld",
             "BCA_HTML_Price": 3000.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -1793,8 +1813,9 @@
             "Komfort": 493,
             "Premium": 718
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "4003JSY",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 22,
             "Inventarnummer": "4003JSY        ",
@@ -1818,7 +1839,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=4003JSY-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "SPAIN - Alicante",
             "BCA_HTML_Price": 5100.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     },
@@ -1873,8 +1894,9 @@
             "Komfort": 418,
             "Premium": 643
         },
-        "expiry_date": "2026-05-15 13:48:55",
+        "expiry_date": "2026-05-15 14:00:46",
         "uid": "0117078402",
+        "verkaufspreis": 0,
         "raw_data": {
             "Katalognummer_x": 24,
             "Inventarnummer": "0117078402     ",
@@ -1899,7 +1921,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117078402-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 41460 Neuss",
             "BCA_HTML_Price": 7227.0,
-            "expiry_date": "2026-05-15 13:48:55"
+            "expiry_date": "2026-05-15 14:00:46"
         },
         "archive_date": "2026-05-14"
     }
