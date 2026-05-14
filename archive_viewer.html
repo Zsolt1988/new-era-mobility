@@ -35,13 +35,36 @@
         </div>
     </div>
 
+    <!-- Details Modal -->
+    <div id="detailsModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity opacity-0 duration-300">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden transform transition-all scale-95 opacity-0 duration-300" id="modalContent">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-shrink-0">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800" id="modalTitle">Fahrzeug Details</h2>
+                    <p class="text-sm text-slate-500" id="modalSubtitle">Komplette Rohdaten</p>
+                </div>
+                <button onclick="closeDetails()" class="p-2 hover:bg-slate-200 rounded-full transition-colors">
+                    <i data-lucide="x" class="w-6 h-6 text-slate-500"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-grow bg-white">
+                <div id="rawDetailsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const fmt = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
 
+        let currentCars = [];
+
         async function loadArchive() {
             try {
-                const response = await fetch('http://localhost:8085/api/archive');
+                const response = await fetch('/api/archive');
                 const cars = await response.json();
+                currentCars = cars;
                 
                 document.getElementById('carCount').innerText = `${cars.length} Fahrzeuge`;
                 render(cars);
@@ -64,40 +87,148 @@
             // Sort by date (newest first)
             cars.sort((a, b) => new Date(b.archive_date) - new Date(a.archive_date));
 
-            grid.innerHTML = cars.map(car => `
+            grid.innerHTML = cars.map(car => {
+                const isAuction = car.category === 'Auktionsfahrzeuge';
+                const categoryColor = isAuction ? 'bg-amber-100 text-amber-700 border-amber-200' : 'bg-emerald-100 text-emerald-700 border-emerald-200';
+                
+                // Countdown logic integration
+                let timerHtml = '';
+                if (isAuction && car.expiry_date) {
+                    timerHtml = `<div class="absolute bottom-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-[10px] font-bold shadow-sm flex items-center gap-1 countdown-timer" data-expiry="${car.expiry_date}" data-id="${car.id}">
+                        <i data-lucide="timer" class="w-3 h-3"></i> 
+                        <span class="timer-text">${car.timer || '00:00:00'}</span>
+                    </div>`;
+                } else if (isAuction && car.timer && car.timer !== '00:00:00') {
+                    timerHtml = `<div class="absolute bottom-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-[10px] font-bold shadow-sm flex items-center gap-1">
+                        <i data-lucide="timer" class="w-3 h-3"></i> ${car.timer}
+                    </div>`;
+                }
+
+                return `
                 <div class="glass-card rounded-3xl overflow-hidden flex flex-col shadow-sm hover:shadow-md transition-all">
                     <div class="relative h-48 bg-slate-100">
                         <img src="${car.img || 'https://via.placeholder.com/400'}" class="w-full h-full object-cover opacity-80" alt="${car.name}">
                         <div class="absolute top-3 left-3 date-badge px-3 py-1 rounded-full text-[10px] font-bold shadow-sm">Erfasst: ${car.archive_date}</div>
-                        <div class="absolute top-3 right-3 sold-badge px-3 py-1 rounded-full text-[10px] font-bold shadow-sm uppercase tracking-wider">Referenzwert</div>
+                        <div class="absolute top-3 right-3 ${categoryColor} px-3 py-1 rounded-full text-[10px] font-bold shadow-sm uppercase tracking-wider border">${car.category || 'Archiv'}</div>
+                        ${timerHtml}
                     </div>
                     <div class="p-5 flex flex-col flex-grow">
                         <div class="mb-3">
-                            <h3 class="text-lg font-bold text-slate-800 leading-tight">${car.name}</h3>
+                            <div class="flex justify-between items-start gap-2 mb-1">
+                                <h3 class="text-lg font-bold text-slate-800 leading-tight">${car.name}</h3>
+                                <span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter">${car.intern_id || ''}</span>
+                            </div>
                             <p class="text-xs text-slate-500">${car.ausfuehrung}</p>
                         </div>
-                        <div class="flex gap-4 text-[10px] font-bold text-slate-400 uppercase mb-4">
+                        <div class="flex gap-4 text-[10px] font-bold text-slate-400 uppercase mb-3">
                             <span>${car.ez}</span> &bull; <span>${car.km} KM</span>
+                        </div>
+                        <div class="flex flex-wrap gap-1 mb-4">
+                            ${(car.ausstattung || []).slice(0,3).map(a => `<span class="bg-slate-50 text-slate-500 border border-slate-200 px-1.5 py-0.5 rounded text-[9px] font-medium">${a}</span>`).join('')}
                         </div>
                         
                         <div class="mt-auto pt-4 border-t border-slate-100">
-                            <div class="flex justify-between items-end">
+                            <div class="grid grid-cols-2 gap-4 mb-4">
                                 <div>
-                                    <span class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Archivierter Preis</span>
-                                    <div class="text-xl font-bold text-slate-700">${fmt.format(car.details.total_brutto_at)}</div>
+                                    <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Archivierter Preis</span>
+                                    <div class="text-lg font-bold text-slate-700">${fmt.format(car.details ? car.details.total_brutto_at : (car.carPrice || 0))}</div>
                                 </div>
+                                ${isAuction ? `
                                 <div class="text-right">
-                                    <span class="text-[9px] font-medium text-slate-400 block italic">Inkl. NoVA & Provision</span>
-                                </div>
+                                    <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Startpreis</span>
+                                    <div class="text-sm font-bold text-slate-500">${fmt.format(car.startpreis || 0)}</div>
+                                </div>` : ''}
                             </div>
+                            <button onclick="showDetails('${car.id}')" class="w-full py-2 bg-slate-50 hover:bg-blue-50 text-blue-600 font-bold text-sm rounded-xl border border-slate-200 transition-colors flex justify-center items-center gap-2">
+                                <i data-lucide="file-text" class="w-4 h-4"></i> Alle Details
+                            </button>
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
             lucide.createIcons();
         }
 
+        function showDetails(id) {
+            const car = currentCars.find(c => c.id === id);
+            if (!car) return;
+            
+            document.getElementById('modalTitle').innerText = car.name;
+            document.getElementById('modalSubtitle').innerText = car.ausfuehrung;
+            
+            const grid = document.getElementById('rawDetailsGrid');
+            if (car.raw_data && Object.keys(car.raw_data).length > 0) {
+                grid.innerHTML = Object.entries(car.raw_data).map(([key, value]) => `
+                    <div class="border-b border-slate-100 pb-2">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase block mb-1">${key}</span>
+                        <span class="text-sm text-slate-800 font-medium break-words">${value !== 'nan' && value !== 'NaN' ? value : '-'}</span>
+                    </div>
+                `).join('');
+            } else {
+                grid.innerHTML = `
+                    <div class="col-span-full py-10 text-center text-slate-500 bg-slate-50 rounded-2xl">
+                        <i data-lucide="info" class="w-8 h-8 mx-auto mb-2 text-slate-400"></i>
+                        <p class="font-bold">Keine Rohdaten verfügbar.</p>
+                        <p class="text-xs mt-1">Dieses Fahrzeug wurde vor dem Daten-Update archiviert.</p>
+                    </div>
+                `;
+            }
+            
+            const modal = document.getElementById('detailsModal');
+            const content = document.getElementById('modalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95', 'opacity-0');
+            }, 10);
+            lucide.createIcons();
+        }
+
+        function closeDetails() {
+            const modal = document.getElementById('detailsModal');
+            const content = document.getElementById('modalContent');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+            const syncBtn = document.getElementById('syncGitHub');
+            if(syncBtn) syncBtn.style.display = 'none';
+        }
+
         loadArchive();
+        startCountdown();
+
+        function startCountdown() {
+            setInterval(() => {
+                document.querySelectorAll('.countdown-timer').forEach(el => {
+                    const expiry = new Date(el.dataset.expiry);
+                    const now = new Date();
+                    const diff = expiry - now;
+                    
+                    const textEl = el.querySelector('.timer-text');
+                    
+                    if (diff <= 0) {
+                        textEl.innerText = 'ABGELAUFEN';
+                        el.classList.remove('bg-red-500');
+                        el.classList.add('bg-slate-500');
+                    } else {
+                        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+                        
+                        let display = '';
+                        if (days > 0) display += `${days}T `;
+                        display += `${hours}Std ${mins}Min ${secs}Sek`;
+                        textEl.innerText = display;
+                    }
+                });
+            }, 1000);
+        }
     </script>
 </body>
 </html>

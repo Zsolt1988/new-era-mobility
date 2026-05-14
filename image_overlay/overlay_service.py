@@ -1,5 +1,9 @@
 import io
-from rembg import remove
+try:
+    from rembg import remove
+    REMBG_AVAILABLE = True
+except ImportError:
+    REMBG_AVAILABLE = False
 from PIL import Image
 
 def process_car_overlay(car_image_path, background_image_path, output_path, position_y_offset=0):
@@ -14,6 +18,9 @@ def process_car_overlay(car_image_path, background_image_path, output_path, posi
                              um das Auto feinjustiert auf die Straße zu setzen.
     """
     
+    if not REMBG_AVAILABLE:
+        raise ImportError("Modul 'rembg' ist nicht installiert. Bitte installiere es mit 'pip install rembg'.")
+
     print(f"Lade Fahrzeugbild: {car_image_path}...")
     with open(car_image_path, 'rb') as i:
         input_image = i.read()

@@ -2,3 +2,5 @@ pandas
 beautifulsoup4
 openpyxl
 lxml
+rembg
+Pillow

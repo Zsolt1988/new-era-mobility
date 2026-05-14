@@ -199,6 +199,71 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
 
+        elif self.path == '/api/save-cars':
+            try:
+                content_length = int(self.headers['Content-Length'])
+                post_data = self.rfile.read(content_length)
+                data = json.loads(post_data.decode('utf-8'))
+                
+                cars = data.get('cars', [])
+                if not cars and 'title' in data: # Single car object
+                    cars = [data]
+                
+                archive_path = os.path.join(BASE_DIR, 'sold_archive.json')
+                archive = []
+                if os.path.exists(archive_path):
+                    with open(archive_path, 'r', encoding='utf-8') as f:
+                        archive = json.load(f)
+                
+                # Get max intern_id
+                max_intern_id = 0
+                for item in archive:
+                    if 'intern_id' in item:
+                        try:
+                            num = int(str(item['intern_id']).split('-')[-1])
+                            if num > max_intern_id: max_intern_id = num
+                        except: pass
+
+                import datetime
+                now_str = datetime.datetime.now().strftime('%Y-%m-%d')
+                
+                for car in cars:
+                    # Mark as Direktimport
+                    car['category'] = 'Direktimport'
+                    car['archive_date'] = now_str
+                    
+                    # Ensure it has an ID for the archive map (use carNumber or generate one)
+                    if not car.get('id'):
+                        car['id'] = car.get('carNumber') or f"agent_{int(datetime.datetime.now().timestamp())}"
+                    
+                    # Generate intern_id if missing
+                    if not car.get('intern_id'):
+                        max_intern_id += 1
+                        car['intern_id'] = f"NEM-{max_intern_id:05d}"
+                    
+                    # Add/Update in archive
+                    exists = False
+                    for i, existing in enumerate(archive):
+                        if str(existing.get('id')) == str(car.get('id')):
+                            archive[i] = car
+                            exists = True
+                            break
+                    if not exists:
+                        archive.append(car)
+
+                with open(archive_path, 'w', encoding='utf-8') as f:
+                    json.dump(archive, f, ensure_ascii=False, indent=4)
+
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "success"}).encode('utf-8'))
+            except Exception as e:
+                traceback.print_exc()
+                self.send_response(500)
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
+
         else:
             self.send_error(404)
 
