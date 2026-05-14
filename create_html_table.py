@@ -180,34 +180,17 @@ def update_archive(new_data, days_limit):
         except:
             archive = []
 
-    # 2. Add current date and internal ID to new entries and merge
+    # 2. Add current date to new entries and merge
     archive_map = {str(item['id']): item for item in archive}
     
-    # Get max intern_id to continue sequence
-    max_intern_id = 0
-    for item in archive:
-        if 'intern_id' in item:
-            try:
-                num = int(str(item['intern_id']).split('-')[-1])
-                if num > max_intern_id: max_intern_id = num
-            except: pass
-
     for item in new_data:
         item_id = str(item['id'])
         # Add or update
         if item_id in archive_map:
-            # Keep original archive_date and intern_id if it exists
-            existing = archive_map[item_id]
-            item['archive_date'] = existing.get('archive_date', now.strftime('%Y-%m-%d'))
-            item['intern_id'] = existing.get('intern_id')
+            # Keep original archive_date if it exists
+            item['archive_date'] = archive_map[item_id].get('archive_date', now.strftime('%Y-%m-%d'))
         else:
             item['archive_date'] = now.strftime('%Y-%m-%d')
-        
-        # Ensure intern_id exists
-        if not item.get('intern_id'):
-            max_intern_id += 1
-            item['intern_id'] = f"NEM-{max_intern_id:05d}"
-            
         archive_map[item_id] = item
 
     # 3. Filter by date limit
@@ -279,40 +262,6 @@ def process_bca():
                 if loc_match:
                     loc_raw = loc_match.group(1).split('(')[-1].split(';')[0].replace('Austria)', '').replace('GERMANY -', '').strip()
                     extracted_html_data[-1]["BCA_Standort"] = loc_raw
-                
-                # Timer extraction attempt (e.g. 3Tag(e) 2Std. 15Min.)
-                timer_str = ""
-                expiry_date = ""
-                t_match = re.search(r'(?:Endet in|Ends in|Auktion endet|Ends):?\s*<[^>]+>\s*([^<]+)', l, re.IGNORECASE)
-                if not t_match:
-                    t_match = re.search(r'(\d+)\s*Tag\(e\)\s*(\d+)\s*Std\.\s*(\d+)\s*Min\.', l)
-                
-                if t_match:
-                    timer_str = t_match.group(0 if "Tag" not in t_match.group(0) else 0).strip() # simplified
-                    raw_timer = t_match.group(1) if "Tag" not in t_match.group(0) else t_match.group(0)
-                    
-                    # Try to parse relative to now
-                    try:
-                        days = 0
-                        hours = 0
-                        minutes = 0
-                        
-                        d_m = re.search(r'(\d+)\s*Tag', raw_timer)
-                        h_m = re.search(r'(\d+)\s*Std', raw_timer)
-                        m_m = re.search(r'(\d+)\s*Min', raw_timer)
-                        
-                        if d_m: days = int(d_m.group(1))
-                        if h_m: hours = int(h_m.group(1))
-                        if m_m: minutes = int(m_m.group(1))
-                        
-                        if d_m or h_m or m_m:
-                            from datetime import datetime, timedelta
-                            expiry = datetime.now() + timedelta(days=days, hours=hours, minutes=minutes)
-                            expiry_date = expiry.isoformat()
-                    except: pass
-
-                extracted_html_data[-1]["BCA_Timer"] = timer_str or "00:00:00"
-                extracted_html_data[-1]["BCA_Expiry"] = expiry_date
 
         if len(extracted_html_data) > 0:
             df_html = pd.DataFrame(extracted_html_data).drop_duplicates(subset=['Katalognummer'])
@@ -355,12 +304,6 @@ def process_bca():
             fuel_type = row.get('Kraftstoff', '')
             warranty_options = calculate_warranty_prices(ps, age, km_raw, fuel_type)
 
-            # Auction specific fields
-            raw = row.to_dict()
-            sp_raw = raw.get('Startpreis')
-            start_price = sp_raw if pd.notna(sp_raw) else (raw.get('BCA Netto') if pd.notna(raw.get('BCA Netto')) else (p_netto or 0))
-            timer_val = str(clean_val(row.get('BCA_Timer'), "00:00:00"))
-            
             js_data.append({
                 "id": str(clean_val(row.get('Katalognummer_Num', ''), '')).split('.')[0],
                 "category": "Auktionsfahrzeuge",
@@ -378,11 +321,6 @@ def process_bca():
                 "location": clean_val(row.get('BCA_Standort', 'Unbekannt'), 'Unbekannt'),
                 "car_type": calc['car_type'],
                 "bca_price": p_netto,
-                "startpreis": start_price,
-                "verkaufspreis": 0,
-                "timer": timer_val,
-                "expiry_date": clean_val(row.get('BCA_Expiry'), ""),
-                "auction_status": "expired" if any(x in timer_val.lower() for x in ["endet", "ended", "abgelaufen", "expired", "00:00:00"]) else "active",
                 "transport": calc['transport'],
                 "details": calc,
                 "warranty_options": warranty_options,

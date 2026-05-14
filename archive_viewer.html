@@ -62,7 +62,7 @@
 
         async function loadArchive() {
             try {
-                const response = await fetch('/api/archive');
+                const response = await fetch('http://localhost:8085/api/archive');
                 const cars = await response.json();
                 currentCars = cars;
                 
@@ -87,57 +87,32 @@
             // Sort by date (newest first)
             cars.sort((a, b) => new Date(b.archive_date) - new Date(a.archive_date));
 
-            grid.innerHTML = cars.map(car => {
-                const isAuction = car.category === 'Auktionsfahrzeuge';
-                const categoryColor = isAuction ? 'bg-amber-100 text-amber-700 border-amber-200' : 'bg-emerald-100 text-emerald-700 border-emerald-200';
-                
-                // Countdown logic integration
-                let timerHtml = '';
-                if (isAuction && car.expiry_date) {
-                    timerHtml = `<div class="absolute bottom-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-[10px] font-bold shadow-sm flex items-center gap-1 countdown-timer" data-expiry="${car.expiry_date}" data-id="${car.id}">
-                        <i data-lucide="timer" class="w-3 h-3"></i> 
-                        <span class="timer-text">${car.timer || '00:00:00'}</span>
-                    </div>`;
-                } else if (isAuction && car.timer && car.timer !== '00:00:00') {
-                    timerHtml = `<div class="absolute bottom-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-[10px] font-bold shadow-sm flex items-center gap-1">
-                        <i data-lucide="timer" class="w-3 h-3"></i> ${car.timer}
-                    </div>`;
-                }
-
-                return `
+            grid.innerHTML = cars.map(car => `
                 <div class="glass-card rounded-3xl overflow-hidden flex flex-col shadow-sm hover:shadow-md transition-all">
                     <div class="relative h-48 bg-slate-100">
                         <img src="${car.img || 'https://via.placeholder.com/400'}" class="w-full h-full object-cover opacity-80" alt="${car.name}">
                         <div class="absolute top-3 left-3 date-badge px-3 py-1 rounded-full text-[10px] font-bold shadow-sm">Erfasst: ${car.archive_date}</div>
-                        <div class="absolute top-3 right-3 ${categoryColor} px-3 py-1 rounded-full text-[10px] font-bold shadow-sm uppercase tracking-wider border">${car.category || 'Archiv'}</div>
-                        ${timerHtml}
+                        ${car.expiry_date ? `<div class="absolute bottom-3 left-3 bg-slate-900/80 text-white px-3 py-1 rounded-md text-[11px] font-bold shadow-sm flex items-center gap-1 timer-badge" data-expiry="${car.expiry_date}"><i data-lucide="clock" class="w-3 h-3"></i> <span class="timer-text">Lade Timer...</span></div>` : ''}
+                        ${car.category === 'Auktionsfahrzeuge' ? `<div class="absolute top-3 right-3 bg-amber-100 text-amber-600 border border-amber-200 px-3 py-1 rounded-full text-[10px] font-bold shadow-sm uppercase tracking-wider flex items-center gap-1"><i data-lucide="gavel" class="w-3 h-3"></i> AUKTION</div>` : `<div class="absolute top-3 right-3 sold-badge px-3 py-1 rounded-full text-[10px] font-bold shadow-sm uppercase tracking-wider">Referenzwert</div>`}
                     </div>
                     <div class="p-5 flex flex-col flex-grow">
                         <div class="mb-3">
-                            <div class="flex justify-between items-start gap-2 mb-1">
-                                <h3 class="text-lg font-bold text-slate-800 leading-tight">${car.name}</h3>
-                                <span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter">${car.intern_id || ''}</span>
-                            </div>
+                            <h3 class="text-lg font-bold text-slate-800 leading-tight">${car.name}</h3>
                             <p class="text-xs text-slate-500">${car.ausfuehrung}</p>
                         </div>
-                        <div class="flex gap-4 text-[10px] font-bold text-slate-400 uppercase mb-3">
+                        <div class="flex gap-4 text-[10px] font-bold text-slate-400 uppercase mb-4">
                             <span>${car.ez}</span> &bull; <span>${car.km} KM</span>
-                        </div>
-                        <div class="flex flex-wrap gap-1 mb-4">
-                            ${(car.ausstattung || []).slice(0,3).map(a => `<span class="bg-slate-50 text-slate-500 border border-slate-200 px-1.5 py-0.5 rounded text-[9px] font-medium">${a}</span>`).join('')}
                         </div>
                         
                         <div class="mt-auto pt-4 border-t border-slate-100">
-                            <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="flex justify-between items-end mb-4">
                                 <div>
-                                    <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Archivierter Preis</span>
-                                    <div class="text-lg font-bold text-slate-700">${fmt.format(car.details ? car.details.total_brutto_at : (car.carPrice || 0))}</div>
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Archivierter Preis</span>
+                                    <div class="text-xl font-bold text-slate-700">${fmt.format(car.details.total_brutto_at)}</div>
                                 </div>
-                                ${isAuction ? `
                                 <div class="text-right">
-                                    <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Startpreis</span>
-                                    <div class="text-sm font-bold text-slate-500">${fmt.format(car.startpreis || 0)}</div>
-                                </div>` : ''}
+                                    <span class="text-[9px] font-medium text-slate-400 block italic">Inkl. NoVA & Provision</span>
+                                </div>
                             </div>
                             <button onclick="showDetails('${car.id}')" class="w-full py-2 bg-slate-50 hover:bg-blue-50 text-blue-600 font-bold text-sm rounded-xl border border-slate-200 transition-colors flex justify-center items-center gap-2">
                                 <i data-lucide="file-text" class="w-4 h-4"></i> Alle Details
@@ -145,7 +120,7 @@
                         </div>
                     </div>
                 </div>
-            `}).join('');
+            `).join('');
             lucide.createIcons();
         }
 
@@ -199,36 +174,37 @@
             if(syncBtn) syncBtn.style.display = 'none';
         }
 
-        loadArchive();
-        startCountdown();
+        setInterval(() => {
+            document.querySelectorAll('.timer-badge').forEach(badge => {
+                const expiry = new Date(badge.getAttribute('data-expiry')).getTime();
+                const now = new Date().getTime();
+                const distance = expiry - now;
 
-        function startCountdown() {
-            setInterval(() => {
-                document.querySelectorAll('.countdown-timer').forEach(el => {
-                    const expiry = new Date(el.dataset.expiry);
-                    const now = new Date();
-                    const diff = expiry - now;
-                    
-                    const textEl = el.querySelector('.timer-text');
-                    
-                    if (diff <= 0) {
-                        textEl.innerText = 'ABGELAUFEN';
-                        el.classList.remove('bg-red-500');
-                        el.classList.add('bg-slate-500');
-                    } else {
-                        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                        const secs = Math.floor((diff % (1000 * 60)) / 1000);
-                        
-                        let display = '';
-                        if (days > 0) display += `${days}T `;
-                        display += `${hours}Std ${mins}Min ${secs}Sek`;
-                        textEl.innerText = display;
-                    }
-                });
-            }, 1000);
-        }
+                const textEl = badge.querySelector('.timer-text');
+                if (!textEl) return;
+
+                if (distance < 0) {
+                    textEl.innerText = "Auktion beendet";
+                    badge.classList.remove('bg-slate-900/80');
+                    badge.classList.add('bg-red-600/90');
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                let timerStr = "Auktion endet in: ";
+                if(days > 0) timerStr += `${days}Tag(e) `;
+                if(hours > 0 || days > 0) timerStr += `${hours}Std. `;
+                timerStr += `${minutes}Min. ${seconds}s`;
+                
+                textEl.innerText = timerStr;
+            });
+        }, 1000);
+
+        loadArchive();
     </script>
 </body>
 </html>

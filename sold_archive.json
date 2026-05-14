@@ -43,11 +43,6 @@
         "location": "Germany - 85283 Wolnzach",
         "car_type": "SUV",
         "bca_price": 20840.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.327993",
-        "auction_status": "expired",
         "transport": 265,
         "details": {
             "netto_basis": 20840.0,
@@ -83,12 +78,9 @@
             "Katalognummer_y": 2,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994793-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 85283 Wolnzach",
-            "BCA_HTML_Price": 20840.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.327993"
+            "BCA_HTML_Price": 20840.0
         },
-        "archive_date": "2026-05-09",
-        "intern_id": "NEM-00001"
+        "archive_date": "2026-05-09"
     },
     {
         "id": "4",
@@ -130,11 +122,6 @@
         "location": "15366 Hoppegarten",
         "car_type": "PKW",
         "bca_price": 28908.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.328270",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 28908.0,
@@ -175,12 +162,9 @@
             "Katalognummer_y": 4,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959623-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
-            "BCA_HTML_Price": 28908.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.328270"
+            "BCA_HTML_Price": 28908.0
         },
-        "archive_date": "2026-05-09",
-        "intern_id": "NEM-00002"
+        "archive_date": "2026-05-09"
     },
     {
         "id": "5",
@@ -215,11 +199,6 @@
         "location": "Germany - 04509 Wiedemar",
         "car_type": "PKW",
         "bca_price": 4034.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.328403",
-        "auction_status": "expired",
         "transport": 402,
         "details": {
             "netto_basis": 4034.0,
@@ -258,12 +237,9 @@
             "Katalognummer_y": 5,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=1987346-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 04509 Wiedemar",
-            "BCA_HTML_Price": 4034.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.328403"
+            "BCA_HTML_Price": 4034.0
         },
-        "archive_date": "2026-05-09",
-        "intern_id": "NEM-00003"
+        "archive_date": "2026-05-09"
     },
     {
         "id": "6",
@@ -308,11 +284,6 @@
         "location": "15366 Hoppegarten",
         "car_type": "PKW",
         "bca_price": 26050.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.328537",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 26050.0,
@@ -353,12 +324,9 @@
             "Katalognummer_y": 6,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959694-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
-            "BCA_HTML_Price": 26050.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.328537"
+            "BCA_HTML_Price": 26050.0
         },
-        "archive_date": "2026-05-09",
-        "intern_id": "NEM-00004"
+        "archive_date": "2026-05-09"
     },
     {
         "id": "7",
@@ -398,11 +366,6 @@
         "location": "15366 Hoppegarten",
         "car_type": "PKW",
         "bca_price": 11800.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.328671",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 11800.0,
@@ -442,12 +405,9 @@
             "Katalognummer_y": 7,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117041355-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
-            "BCA_HTML_Price": 11800.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.328671"
+            "BCA_HTML_Price": 11800.0
         },
-        "archive_date": "2026-05-09",
-        "intern_id": "NEM-00005"
+        "archive_date": "2026-05-09"
     },
     {
         "id": "9",
@@ -494,11 +454,6 @@
         "location": "SPAIN - Bellvei",
         "car_type": "PKW",
         "bca_price": 28000.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.328934",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 28000.0,
@@ -537,12 +492,9 @@
             "Katalognummer_y": 9,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=6255LWK-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "SPAIN - Bellvei",
-            "BCA_HTML_Price": 28000.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.328934"
+            "BCA_HTML_Price": 28000.0
         },
-        "archive_date": "2026-05-09",
-        "intern_id": "NEM-00006"
+        "archive_date": "2026-05-09"
     },
     {
         "id": "13",
@@ -587,11 +539,6 @@
         "location": "15366 Hoppegarten",
         "car_type": "PKW",
         "bca_price": 29748.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.329458",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 29748.0,
@@ -628,12 +575,9 @@
             "Katalognummer_y": 13,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959692-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
-            "BCA_HTML_Price": 29748.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.329458"
+            "BCA_HTML_Price": 29748.0
         },
-        "archive_date": "2026-05-09",
-        "intern_id": "NEM-00007"
+        "archive_date": "2026-05-09"
     },
     {
         "id": "18",
@@ -677,11 +621,6 @@
         "location": "Germany - 89520 Heidenheim",
         "car_type": "PKW",
         "bca_price": 29748.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.330115",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 29748.0,
@@ -722,12 +661,9 @@
             "Katalognummer_y": 18,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019887-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
-            "BCA_HTML_Price": 29748.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.330115"
+            "BCA_HTML_Price": 29748.0
         },
-        "archive_date": "2026-05-09",
-        "intern_id": "NEM-00008"
+        "archive_date": "2026-05-09"
     },
     {
         "id": "1",
@@ -767,11 +703,6 @@
         "location": "The Netherlands - Barneveld",
         "car_type": "PKW",
         "bca_price": 3000.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.327840",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 3000.0,
@@ -810,12 +741,9 @@
             "Katalognummer_y": 1,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=R-831-FB-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "The Netherlands - Barneveld",
-            "BCA_HTML_Price": 3000.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.327840"
+            "BCA_HTML_Price": 3000.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00009"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "3",
@@ -851,11 +779,6 @@
         "location": "The Netherlands - Barneveld",
         "car_type": "PKW",
         "bca_price": 7769.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.328133",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 7769.0,
@@ -894,12 +817,9 @@
             "Katalognummer_y": 3,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=R-480-PG-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "The Netherlands - Barneveld",
-            "BCA_HTML_Price": 7769.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.328133"
+            "BCA_HTML_Price": 7769.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00010"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "8",
@@ -941,11 +861,6 @@
         "location": "Germany - 89520 Heidenheim",
         "car_type": "PKW",
         "bca_price": 29244.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.328804",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 29244.0,
@@ -986,12 +901,9 @@
             "Katalognummer_y": 8,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116989093-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
-            "BCA_HTML_Price": 29244.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.328804"
+            "BCA_HTML_Price": 29244.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00011"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "10",
@@ -1033,11 +945,6 @@
         "location": "Germany - 89520 Heidenheim",
         "car_type": "PKW",
         "bca_price": 26723.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.329066",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 26723.0,
@@ -1078,12 +985,9 @@
             "Katalognummer_y": 10,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116989137-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
-            "BCA_HTML_Price": 26723.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.329066"
+            "BCA_HTML_Price": 26723.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00012"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "11",
@@ -1120,11 +1024,6 @@
         "location": "The Netherlands - Barneveld",
         "car_type": "PKW",
         "bca_price": 10579.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.329198",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 10579.0,
@@ -1163,12 +1062,9 @@
             "Katalognummer_y": 11,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=K-207-HS-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "The Netherlands - Barneveld",
-            "BCA_HTML_Price": 10579.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.329198"
+            "BCA_HTML_Price": 10579.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00013"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "12",
@@ -1212,11 +1108,6 @@
         "location": "Germany - 85283 Wolnzach",
         "car_type": "SUV",
         "bca_price": 17647.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.329327",
-        "auction_status": "expired",
         "transport": 265,
         "details": {
             "netto_basis": 17647.0,
@@ -1255,12 +1146,9 @@
             "Katalognummer_y": 12,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994326-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 85283 Wolnzach",
-            "BCA_HTML_Price": 17647.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.329327"
+            "BCA_HTML_Price": 17647.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00014"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "14",
@@ -1300,11 +1188,6 @@
         "location": "The Netherlands - Barneveld",
         "car_type": "SUV",
         "bca_price": 14000.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.329589",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 14000.0,
@@ -1343,12 +1226,9 @@
             "Katalognummer_y": 14,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=X-702-TF-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "The Netherlands - Barneveld",
-            "BCA_HTML_Price": 14000.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.329589"
+            "BCA_HTML_Price": 14000.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00015"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "15",
@@ -1387,11 +1267,6 @@
         "location": "The Netherlands - Barneveld",
         "car_type": "PKW",
         "bca_price": 6500.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.329721",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 6500.0,
@@ -1430,12 +1305,9 @@
             "Katalognummer_y": 15,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=XD-053-L-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "The Netherlands - Barneveld",
-            "BCA_HTML_Price": 6500.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.329721"
+            "BCA_HTML_Price": 6500.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00016"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "16",
@@ -1478,11 +1350,6 @@
         "location": "Germany - 89520 Heidenheim",
         "car_type": "PKW",
         "bca_price": 29916.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.329853",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 29916.0,
@@ -1523,12 +1390,9 @@
             "Katalognummer_y": 16,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019888-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
-            "BCA_HTML_Price": 29916.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.329853"
+            "BCA_HTML_Price": 29916.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00017"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "17",
@@ -1575,11 +1439,6 @@
         "location": "Germany - 64560 RIEDSTADT-Goddelau",
         "car_type": "SUV",
         "bca_price": 21681.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.329984",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 21681.0,
@@ -1620,12 +1479,9 @@
             "Katalognummer_y": 17,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116922370-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 64560 RIEDSTADT-Goddelau",
-            "BCA_HTML_Price": 21681.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.329984"
+            "BCA_HTML_Price": 21681.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00018"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "19",
@@ -1665,11 +1521,6 @@
         "location": "The Netherlands - Barneveld",
         "car_type": "PKW",
         "bca_price": 37521.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.330247",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 37521.0,
@@ -1708,12 +1559,9 @@
             "Katalognummer_y": 19,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=S-896-BL-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "The Netherlands - Barneveld",
-            "BCA_HTML_Price": 37521.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.330247"
+            "BCA_HTML_Price": 37521.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00019"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "20",
@@ -1756,11 +1604,6 @@
         "location": "Germany - 89520 Heidenheim",
         "car_type": "PKW",
         "bca_price": 26387.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.330379",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 26387.0,
@@ -1801,12 +1644,9 @@
             "Katalognummer_y": 20,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019884-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
-            "BCA_HTML_Price": 26387.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.330379"
+            "BCA_HTML_Price": 26387.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00020"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "21",
@@ -1850,11 +1690,6 @@
         "location": "Germany - 85283 Wolnzach",
         "car_type": "SUV",
         "bca_price": 27059.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.330510",
-        "auction_status": "expired",
         "transport": 265,
         "details": {
             "netto_basis": 27059.0,
@@ -1891,12 +1726,9 @@
             "Katalognummer_y": 21,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994828-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 85283 Wolnzach",
-            "BCA_HTML_Price": 27059.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.330510"
+            "BCA_HTML_Price": 27059.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00021"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "22",
@@ -1936,11 +1768,6 @@
         "location": "SPAIN - Alicante",
         "car_type": "PKW",
         "bca_price": 5100.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.330639",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 5100.0,
@@ -1979,12 +1806,9 @@
             "Katalognummer_y": 22,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=4003JSY-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "SPAIN - Alicante",
-            "BCA_HTML_Price": 5100.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.330639"
+            "BCA_HTML_Price": 5100.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00022"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "23",
@@ -2022,11 +1846,6 @@
         "location": "The Netherlands - Barneveld",
         "car_type": "PKW",
         "bca_price": 4700.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.330774",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 4700.0,
@@ -2065,12 +1884,9 @@
             "Katalognummer_y": 23,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=PG-592-D-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "The Netherlands - Barneveld",
-            "BCA_HTML_Price": 4700.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.330774"
+            "BCA_HTML_Price": 4700.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00023"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "24",
@@ -2107,11 +1923,6 @@
         "location": "Germany - 41460 Neuss",
         "car_type": "LCV",
         "bca_price": 7227.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.330909",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 7227.0,
@@ -2151,12 +1962,9 @@
             "Katalognummer_y": 24,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117078402-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 41460 Neuss",
-            "BCA_HTML_Price": 7227.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.330909"
+            "BCA_HTML_Price": 7227.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00024"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "25",
@@ -2202,11 +2010,6 @@
         "location": "15366 Hoppegarten",
         "car_type": "PKW",
         "bca_price": 29076.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.331042",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 29076.0,
@@ -2247,12 +2050,9 @@
             "Katalognummer_y": 25,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959901-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
-            "BCA_HTML_Price": 29076.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.331042"
+            "BCA_HTML_Price": 29076.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00025"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "26",
@@ -2296,11 +2096,6 @@
         "location": "Germany - 85283 Wolnzach",
         "car_type": "SUV",
         "bca_price": 18319.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.331174",
-        "auction_status": "expired",
         "transport": 265,
         "details": {
             "netto_basis": 18319.0,
@@ -2341,12 +2136,9 @@
             "Katalognummer_y": 26,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116938938-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 85283 Wolnzach",
-            "BCA_HTML_Price": 18319.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.331174"
+            "BCA_HTML_Price": 18319.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00026"
+        "archive_date": "2026-05-14"
     },
     {
         "id": "27",
@@ -2389,11 +2181,6 @@
         "location": "Germany - 89520 Heidenheim",
         "car_type": "PKW",
         "bca_price": 29076.0,
-        "startpreis": null,
-        "verkaufspreis": 0,
-        "timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-        "expiry_date": "2026-05-15T11:01:48.331317",
-        "auction_status": "expired",
         "transport": 600,
         "details": {
             "netto_basis": 29076.0,
@@ -2434,11 +2221,8 @@
             "Katalognummer_y": 27,
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019925-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
-            "BCA_HTML_Price": 29076.0,
-            "BCA_Timer": "endet in: <div class=\"listing__bidtime-value\">1Tag(e) 2Std. 33Min.",
-            "BCA_Expiry": "2026-05-15T11:01:48.331317"
+            "BCA_HTML_Price": 29076.0
         },
-        "archive_date": "2026-05-14",
-        "intern_id": "NEM-00027"
+        "archive_date": "2026-05-14"
     }
 ]
