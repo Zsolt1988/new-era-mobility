@@ -14,6 +14,7 @@ def parse_args():
     parser.add_argument('--html', type=str, default='bca_komplett.html')
     parser.add_argument('--out', type=str, default='index.html')
     parser.add_argument('--archive-days', type=int, default=30, help='How many days to keep vehicles in the archive')
+    parser.add_argument('--price-col', type=str, default=None, help='Specific Excel column to use for Netto Price')
     return parser.parse_args()
 
 def parse_expiry_date(listing_html):
@@ -333,7 +334,11 @@ def process_bca():
                 next_new_id += 1
 
             html_price = row.get('BCA_HTML_Price', 0.0)
-            if not pd.isna(html_price) and html_price > 0:
+            args = parse_args()
+            if args.price_col and args.price_col in row:
+                p_raw = str(row.get(args.price_col, '0'))
+                p_netto = float(re.sub(r'[^\d.]', '', p_raw.replace('.', '').replace(',', '.')) or 0)
+            elif not pd.isna(html_price) and html_price > 0:
                 p_netto = float(html_price)
             else:
                 p_raw = str(row.get('Aktuelles Gebot') or row.get('Netto-Preis') or row.get('BCA Netto') or row.get('Ist-Preis') or row.get('Startpreis') or '0')
@@ -382,6 +387,7 @@ def process_bca():
                 "warranty_options": warranty_options,
                 "expiry_date": clean_val(row.get('expiry_date', None), None),
                 "uid": item_uid,
+                "verkaufspreis": archive_map[item_uid].get('verkaufspreis', 0) if item_uid in archive_map else 0,
                 "raw_data": {str(k): (v if type(v) in (int, float, str, bool) else str(v)) for k, v in row.items() if pd.notna(v)}
             })
 
@@ -432,6 +438,13 @@ def process_bca():
                 .card-title {{ font-size: 0.9rem !important; }}
                 .card-specs {{ font-size: 9px !important; }}
             }}
+            
+            .multi-select-container {{ position: relative; }}
+            .multi-select-dropdown {{ position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); z-index: 100; max-height: 250px; overflow-y: auto; display: none; padding: 0.5rem; }}
+            .multi-select-dropdown.active {{ display: block; }}
+            .multi-select-item {{ display: flex; items-center: center; gap: 0.5rem; padding: 0.5rem; border-radius: 8px; cursor: pointer; transition: background 0.2s; }}
+            .multi-select-item:hover {{ background: #f1f5f9; }}
+            .multi-select-item input {{ cursor: pointer; }}
         </style>
     </head>
     <body class="p-4 md:p-8 bg-slate-50 text-slate-800">
@@ -634,11 +647,15 @@ def process_bca():
                             </select>
                         </div>
                     </div>
-                    <div class="w-full md:w-48">
+                    <div class="w-full md:w-56 multi-select-container">
                         <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Ausstattung</label>
-                        <select id="featureFilter" class="filter-select w-full outline-none text-sm">
-                            <option value="">Alle Merkmale</option>
-                        </select>
+                        <div id="multiSelectBtn" onclick="toggleMultiSelect(event)" class="filter-select w-full outline-none text-sm cursor-pointer flex justify-between items-center">
+                            <span id="selectedCountText" class="truncate mr-2">Alle Merkmale</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+                        </div>
+                        <div id="multiSelectDropdown" class="multi-select-dropdown">
+                            <!-- JS populated -->
+                        </div>
                     </div>
                     <div class="w-full md:w-40">
                         <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Sortierung</label>
@@ -694,14 +711,40 @@ def process_bca():
                     const opt2 = document.createElement('option'); opt2.value = y; opt2.innerText = y; yMax.appendChild(opt2);
                 }});
 
-                const features = [...new Set(cars.flatMap(c => c.ausstattung_full))].sort();
-                const fFilter = document.getElementById('featureFilter');
-                features.forEach(f => {{ if(f) {{ const opt = document.createElement('option'); opt.value = f; opt.innerText = f; fFilter.appendChild(opt); }} }});
+                const features = [...new Set(cars.flatMap(c => c.ausstattung_full))].filter(Boolean).sort();
+                const dropdown = document.getElementById('multiSelectDropdown');
+                dropdown.innerHTML = features.map(f => `
+                    <label class="multi-select-item text-xs font-medium text-slate-600">
+                        <input type="checkbox" value="${{f}}" onchange="onFeatureChange()" class="feature-checkbox rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                        <span class="truncate">${{f}}</span>
+                    </label>
+                `).join('');
 
-                ['makeFilter', 'yearMin', 'yearMax', 'kmMin', 'kmMax', 'featureFilter', 'searchInput', 'sortOrder'].forEach(id => {{
+                ['makeFilter', 'yearMin', 'yearMax', 'kmMin', 'kmMax', 'searchInput', 'sortOrder'].forEach(id => {{
                     document.getElementById(id).addEventListener('change', () => {{ currentPage = 1; render(); }});
                     document.getElementById(id).addEventListener('input', () => {{ currentPage = 1; render(); }});
                 }});
+
+                window.addEventListener('click', (e) => {{
+                    if (!e.target.closest('.multi-select-container')) {{
+                        document.getElementById('multiSelectDropdown').classList.remove('active');
+                    }}
+                }});
+            }}
+
+            function toggleMultiSelect(e) {{
+                e.stopPropagation();
+                document.getElementById('multiSelectDropdown').classList.toggle('active');
+            }}
+
+            function onFeatureChange() {{
+                const checked = Array.from(document.querySelectorAll('.feature-checkbox:checked')).map(cb => cb.value);
+                const btnText = document.getElementById('selectedCountText');
+                if (checked.length === 0) btnText.innerText = "Alle Merkmale";
+                else if (checked.length === 1) btnText.innerText = checked[0];
+                else btnText.innerText = `${{checked.length}} Merkmale`;
+                currentPage = 1;
+                render();
             }}
 
             function showToast(msg, type) {{
@@ -714,7 +757,7 @@ def process_bca():
 
             function openModal(name, id, img) {{
                 currentCarId = id;
-                const car = cars.find(c => c.id === id);
+                const car = cars.find(c => String(c.id) === String(id));
                 document.getElementById('modalCarName').innerText = name;
                 document.getElementById('modalCarId').innerText = id;
                 document.getElementById('modalCarImg').src = img || 'https://via.placeholder.com/600x400';
@@ -731,6 +774,7 @@ def process_bca():
 
                 const backdrop = document.getElementById('modalBackdrop');
                 backdrop.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
                 setTimeout(() => {{ backdrop.classList.add('opacity-100'); document.getElementById('modalContainer').classList.add('scale-100', 'opacity-100'); }}, 10);
                 
                 document.getElementById('checkEmail').checked = false;
@@ -744,6 +788,7 @@ def process_bca():
                 const backdrop = document.getElementById('modalBackdrop');
                 backdrop.classList.remove('opacity-100');
                 document.getElementById('modalContainer').classList.remove('scale-100', 'opacity-100');
+                document.body.style.overflow = '';
                 setTimeout(() => {{ backdrop.classList.add('hidden'); }}, 300);
             }}
 
@@ -753,7 +798,8 @@ def process_bca():
             function openDataModal(id) {{
                 const car = cars.find(c => String(c.id) === String(id));
                 if(!car) return;
-                const content = docume                content.innerHTML = `
+                const content = document.getElementById('dataModalContent');
+                content.innerHTML = `
                     <div class="flex flex-col w-full">
                         <!-- Hero Section -->
                         <div class="relative h-64 md:h-80 w-full bg-slate-900 flex-shrink-0">
@@ -775,32 +821,32 @@ def process_bca():
                                 </h3>
                                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                     <div class="flex flex-col p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:shadow-md transition-all">
-                                        <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600">
-                                            <i data-lucide="calendar" class="w-4 h-4"></i>
+                                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600">
+                                            <i data-lucide="calendar" class="w-5 h-5"></i>
                                         </div>
-                                        <span class="text-[10px] font-bold text-slate-400 uppercase mb-1">Erstzulassung</span>
-                                        <span class="font-bold text-slate-800 text-sm md:text-base">${{car.ez}}</span>
+                                        <span class="text-[11px] font-bold text-slate-400 uppercase mb-1">Erstzulassung</span>
+                                        <span class="font-bold text-slate-800 text-lg md:text-2xl">${{car.ez}}</span>
                                     </div>
                                     <div class="flex flex-col p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:shadow-md transition-all">
-                                        <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600">
-                                            <i data-lucide="gauge" class="w-4 h-4"></i>
+                                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600">
+                                            <i data-lucide="gauge" class="w-5 h-5"></i>
                                         </div>
-                                        <span class="text-[10px] font-bold text-slate-400 uppercase mb-1">Laufleistung</span>
-                                        <span class="font-bold text-slate-800 text-sm md:text-base">${{car.km}} KM</span>
+                                        <span class="text-[11px] font-bold text-slate-400 uppercase mb-1">Laufleistung</span>
+                                        <span class="font-bold text-slate-800 text-lg md:text-2xl">${{car.km}} KM</span>
                                     </div>
                                     <div class="flex flex-col p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:shadow-md transition-all">
-                                        <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600">
-                                            <i data-lucide="zap" class="w-4 h-4"></i>
+                                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600">
+                                            <i data-lucide="zap" class="w-5 h-5"></i>
                                         </div>
-                                        <span class="text-[10px] font-bold text-slate-400 uppercase mb-1">Leistung</span>
-                                        <span class="font-bold text-slate-800 text-sm md:text-base">${{car.ps}} PS</span>
+                                        <span class="text-[11px] font-bold text-slate-400 uppercase mb-1">Leistung</span>
+                                        <span class="font-bold text-slate-800 text-lg md:text-2xl">${{car.ps}} PS</span>
                                     </div>
                                     <div class="flex flex-col p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:shadow-md transition-all">
-                                        <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600">
-                                            <i data-lucide="fuel" class="w-4 h-4"></i>
+                                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600">
+                                            <i data-lucide="fuel" class="w-5 h-5"></i>
                                         </div>
-                                        <span class="text-[10px] font-bold text-slate-400 uppercase mb-1">Kraftstoff</span>
-                                        <span class="font-bold text-slate-800 text-sm md:text-base whitespace-nowrap overflow-hidden text-ellipsis w-full block">${{car.kraftstoff}}</span>
+                                        <span class="text-[11px] font-bold text-slate-400 uppercase mb-1">Kraftstoff</span>
+                                        <span class="font-bold text-slate-800 text-lg md:text-2xl whitespace-nowrap overflow-hidden text-ellipsis w-full block">${{car.kraftstoff}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -828,6 +874,7 @@ def process_bca():
                 const bg = document.getElementById('dataModalBackdrop');
                 const c = document.getElementById('dataModalContainer');
                 bg.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
                 setTimeout(() => {{ bg.classList.add('opacity-100'); c.classList.add('scale-100', 'opacity-100'); }}, 10);
                 lucide.createIcons();
             }}
@@ -837,6 +884,7 @@ def process_bca():
                 const c = document.getElementById('dataModalContainer');
                 bg.classList.remove('opacity-100');
                 c.classList.remove('scale-100', 'opacity-100');
+                document.body.style.overflow = '';
                 setTimeout(() => bg.classList.add('hidden'), 300);
             }}
 
@@ -878,10 +926,22 @@ def process_bca():
                 setTimeout(() => {{ document.getElementById('successOverlay').classList.add('active'); lucide.createIcons(); }}, 800);
             }}
 
+            function formatNumberInput(el, id) {{
+                let val = el.value.replace(/\./g, '').replace(/[^\d]/g, '');
+                if (val === '') {{
+                    updateCalc(id, 0);
+                    return;
+                }}
+                const num = parseInt(val);
+                el.value = num.toLocaleString('de-DE');
+                updateCalc(id, num);
+            }}
+
             function updateCalc(id, val) {{
-                const car = cars.find(c => c.id === id);
+                const car = cars.find(c => String(c.id) === String(id));
                 if (!car) return;
                 const netto = parseFloat(val) || 0;
+                car.bca_price = netto; // Synchronize with internal data
                 const fees = (netto * 1.19) * 0.035 + 140;
                 const comm = Math.max(500, netto * 0.02);
                 const transport = car.transport * 1.5;
@@ -898,14 +958,14 @@ def process_bca():
                 const yMax = parseInt(document.getElementById('yearMax').value) || 9999;
                 const kMin = parseInt(document.getElementById('kmMin').value) || 0;
                 const kMax = parseInt(document.getElementById('kmMax').value) || 9999999;
-                const feature = document.getElementById('featureFilter').value.toLowerCase();
+                const selectedFeatures = Array.from(document.querySelectorAll('.feature-checkbox:checked')).map(cb => cb.value.toLowerCase());
                 
                 const filtered = cars.filter(c => {{
-                    const matchesTerm = (c.name.toLowerCase().includes(term) || c.id.includes(term));
+                    const matchesTerm = (c.name.toLowerCase().includes(term) || String(c.id).includes(term));
                     const matchesMake = (!make || c.name.startsWith(make));
                     const matchesYear = (c.year_raw >= yMin && c.year_raw <= yMax);
                     const matchesKm = (c.km_raw >= kMin && c.km_raw <= kMax);
-                    const matchesFeature = (!feature || c.ausstattung_full.some(a => a.toLowerCase().includes(feature)));
+                    const matchesFeature = selectedFeatures.length === 0 || selectedFeatures.every(sf => (c.ausstattung_full || []).some(af => af.toLowerCase().includes(sf)));
                     return matchesTerm && matchesMake && matchesYear && matchesKm && matchesFeature;
                 }});
 
@@ -936,8 +996,8 @@ def process_bca():
                                 <h3 class="text-sm md:text-lg font-bold text-slate-800 leading-tight card-title">${{car.name}}</h3>
                                 <p class="text-[9px] md:text-xs text-slate-500 line-clamp-1">${{car.ausfuehrung}}</p>
                             </div>
-                            <div class="flex gap-2 md:gap-4 text-[8px] md:text-[10px] font-bold text-slate-400 uppercase mb-3 card-specs">
-                                <span>${{car.ez.split('.')[2]}}</span> &bull; <span>${{car.km}} KM</span>
+                            <div class="flex gap-2 md:gap-4 text-[10px] md:text-xs font-bold text-slate-500 uppercase mb-3 card-specs">
+                                <span>${{car.ez.split('.')[2]}}</span> &bull; <span>${{car.km}} KM</span> &bull; <span>${{car.ps}} PS</span>
                             </div>
                             <div class="flex flex-wrap gap-1 mb-4">
                                 ${{car.ausstattung.slice(0,3).map(a => `<span class="ausstattung-badge px-1.5 py-0.5 rounded text-[8px] md:text-[9px]">${{a}}</span>`).join('')}}
@@ -946,7 +1006,10 @@ def process_bca():
                                 <div class="flex items-end justify-between gap-2 pt-2 border-t border-slate-100">
                                     <div class="flex-1">
                                         <span class="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase mb-1 block">Gebot Netto</span>
-                                        <input type="number" value="${{car.bca_price}}" oninput="updateCalc('${{car.id}}', this.value)" class="w-full px-2 py-1 rounded-lg text-xs md:text-sm font-bold bg-slate-50 border outline-none">
+                                        <div class="relative">
+                                            <input type="text" value="${{Math.round(car.bca_price).toLocaleString('de-DE')}}" oninput="formatNumberInput(this, '${{car.id}}')" class="w-full pl-2 pr-5 py-1 rounded-lg text-xs md:text-sm font-bold bg-slate-50 border border-slate-200 outline-none focus:border-blue-400 transition-colors">
+                                            <span class="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400">€</span>
+                                        </div>
                                     </div>
                                     <div class="flex-1 text-right">
                                         <span class="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase block mb-1">Brutto</span>
@@ -955,7 +1018,7 @@ def process_bca():
                                 </div>
                                 <div class="grid grid-cols-2 gap-2">
                                     <button onclick="openDataModal('${{car.id}}')" class="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-2 md:py-3 rounded-xl transition-all text-[10px] md:text-xs flex items-center justify-center gap-1 border border-slate-200">
-                                        <i data-lucide="info" class="w-3 h-3 md:w-4 h-4"></i>Details
+                                        <i data-lucide="info" class="w-3 h-3 md:w-4 h-4"></i>Fahrzeugdaten
                                     </button>
                                     <button onclick="openModal('${{car.name.replace(/'/g, "\\\\'")}}', '${{car.id}}', '${{car.img}}')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 md:py-3 rounded-xl transition-all text-[10px] md:text-xs flex items-center justify-center gap-1 shadow-sm">
                                         <i data-lucide="message-square" class="w-3 h-3 md:w-4 h-4"></i>Anfrage
@@ -1005,7 +1068,13 @@ def process_bca():
 
             setInterval(updateTimers, 1000);
 
-            function resetFilters() {{ document.querySelectorAll('.filter-select, #searchInput').forEach(e => e.value = ''); currentPage = 1; render(); }}
+            function resetFilters() {{ 
+                document.querySelectorAll('.filter-select, #searchInput').forEach(e => e.value = ''); 
+                document.querySelectorAll('.feature-checkbox').forEach(cb => cb.checked = false);
+                document.getElementById('selectedCountText').innerText = "Alle Merkmale";
+                currentPage = 1; 
+                render(); 
+            }}
             
             function sendHeightToWix() {{ const c = document.getElementById('mainContainer'); if (c) window.parent.postMessage({{ type: 'resize', height: Math.ceil(c.getBoundingClientRect().height) + 100 }}, '*'); }}
             
@@ -1025,7 +1094,13 @@ def process_bca():
                 if(syncBtn) syncBtn.style.display = 'none';
             }}
 
-            initFilters(); render();
+            try {{
+                initFilters(); 
+                render();
+            }} catch (e) {{
+                console.error("Render error:", e);
+                document.getElementById('carGrid').innerHTML = '<div class="col-span-full p-8 text-center text-red-500 font-bold bg-red-50 rounded-2xl">Fehler beim Laden der Fahrzeuge. Bitte Seite neu laden.</div>';
+            }}
             if (window.ResizeObserver) {{ new ResizeObserver(() => sendHeightToWix()).observe(document.getElementById('mainContainer')); }}
             setTimeout(sendHeightToWix, 1000);
         </script>

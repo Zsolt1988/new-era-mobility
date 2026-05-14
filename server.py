@@ -259,6 +259,47 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
 
+        elif self.path == '/api/archive/update':
+            try:
+                content_length = int(self.headers['Content-Length'])
+                post_data = self.rfile.read(content_length)
+                data = json.loads(post_data.decode('utf-8'))
+                car_id = data.get('id')
+                updates = data.get('updates', {})
+                
+                archive_path = os.path.join(BASE_DIR, 'sold_archive.json')
+                if os.path.exists(archive_path) and car_id:
+                    with open(archive_path, 'r', encoding='utf-8') as f:
+                        archive_data = json.load(f)
+                    
+                    found = False
+                    for car in archive_data:
+                        if car.get('id') == car_id:
+                            car.update(updates)
+                            found = True
+                            break
+                    
+                    if found:
+                        with open(archive_path, 'w', encoding='utf-8') as f:
+                            json.dump(archive_data, f, indent=4, ensure_ascii=False)
+                        
+                        self.send_response(200)
+                        self.send_header('Content-Type', 'application/json')
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"status": "success"}).encode('utf-8'))
+                    else:
+                        self.send_response(404)
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"status": "error", "message": "Car not found"}).encode('utf-8'))
+                else:
+                    self.send_response(404)
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"status": "error", "message": "File or ID missing"}).encode('utf-8'))
+            except Exception as e:
+                self.send_response(500)
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
+
         elif self.path == '/api/archive/delete':
             try:
                 content_length = int(self.headers['Content-Length'])
