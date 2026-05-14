@@ -825,28 +825,28 @@ def process_bca():
                                             <i data-lucide="calendar" class="w-5 h-5"></i>
                                         </div>
                                         <span class="text-[11px] font-bold text-slate-400 uppercase mb-1">Erstzulassung</span>
-                                        <span class="font-bold text-slate-800 text-lg md:text-2xl">${{car.ez}}</span>
+                                        <span class="font-bold text-slate-800 text-base md:text-lg">${{car.ez}}</span>
                                     </div>
                                     <div class="flex flex-col p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:shadow-md transition-all">
                                         <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600">
                                             <i data-lucide="gauge" class="w-5 h-5"></i>
                                         </div>
                                         <span class="text-[11px] font-bold text-slate-400 uppercase mb-1">Laufleistung</span>
-                                        <span class="font-bold text-slate-800 text-lg md:text-2xl">${{car.km}} KM</span>
+                                        <span class="font-bold text-slate-800 text-base md:text-lg">${{car.km}} KM</span>
                                     </div>
                                     <div class="flex flex-col p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:shadow-md transition-all">
                                         <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600">
                                             <i data-lucide="zap" class="w-5 h-5"></i>
                                         </div>
                                         <span class="text-[11px] font-bold text-slate-400 uppercase mb-1">Leistung</span>
-                                        <span class="font-bold text-slate-800 text-lg md:text-2xl">${{car.ps}} PS</span>
+                                        <span class="font-bold text-slate-800 text-base md:text-lg">${{car.ps}} PS</span>
                                     </div>
                                     <div class="flex flex-col p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:shadow-md transition-all">
                                         <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600">
                                             <i data-lucide="fuel" class="w-5 h-5"></i>
                                         </div>
                                         <span class="text-[11px] font-bold text-slate-400 uppercase mb-1">Kraftstoff</span>
-                                        <span class="font-bold text-slate-800 text-lg md:text-2xl whitespace-nowrap overflow-hidden text-ellipsis w-full block">${{car.kraftstoff}}</span>
+                                        <span class="font-bold text-slate-800 text-base md:text-lg whitespace-nowrap overflow-hidden text-ellipsis w-full block">${{car.kraftstoff}}</span>
                                     </div>
                                 </div>
                             </div>
