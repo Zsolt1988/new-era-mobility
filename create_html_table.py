@@ -364,7 +364,7 @@ def process_bca():
                 "id": car_id,
                 "category": "Auktionsfahrzeuge",
                 "name": f"{clean_val(row.get('Hersteller', ''))} {clean_val(row.get('Modell', ''))}".strip(),
-                "ausfuehrung": str(clean_val(row.get('Ausführung', ''))).replace('nan', ''),
+                "ausfuehrung": str(clean_val(row.get('Ausführung', row.get('Ausstattungsvariante', '')))).replace('nan', ''),
                 "img": clean_val(row.get('BCA_Bild_URL', ''), ''),
                 "ez": str(clean_val(row.get('Erstzulassung', '-'))).replace('nan', '-'),
                 "km": km_str,
@@ -545,6 +545,18 @@ def process_bca():
                         <span id="btnText">Anfrage senden</span>
                     </button>
                     <button onclick="closeModal()" class="flex-1 bg-white text-slate-500 font-bold py-4 rounded-2xl border border-slate-200 text-sm">Abbrechen</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Modal -->
+        <div id="dataModalBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[110] hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
+            <div id="dataModalContainer" class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col relative max-h-[90vh]">
+                <button onclick="closeDataModal()" class="absolute top-4 right-4 z-50 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors">
+                    <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
+                </button>
+                <div id="dataModalContent" class="overflow-y-auto w-full">
+                    <!-- Dynamic Content -->
                 </div>
             </div>
         </div>
@@ -738,6 +750,96 @@ def process_bca():
             function toggleCalculator(s) {{ document.getElementById('detailedCalc').classList.toggle('hidden', !s); if(s) runModalCalc(); }}
             function toggleMessageField(s) {{ document.getElementById('messageContainer').classList.toggle('message-hidden', !s); if(s) document.getElementById('messageContainer').classList.add('message-visible'); }}
 
+            function openDataModal(id) {{
+                const car = cars.find(c => String(c.id) === String(id));
+                if(!car) return;
+                const content = docume                content.innerHTML = `
+                    <div class="flex flex-col w-full">
+                        <!-- Hero Section -->
+                        <div class="relative h-64 md:h-80 w-full bg-slate-900 flex-shrink-0">
+                            <img src="${{car.img}}" class="w-full h-full object-cover opacity-90" alt="${{car.name}}">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-6 md:p-8 w-full">
+                                <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-3 tracking-tight drop-shadow-md">${{car.name}}</h2>
+                                ${{car.ausfuehrung && car.ausfuehrung.trim() !== '' && car.ausfuehrung !== '-' && car.ausfuehrung !== 'nan' ? `<div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-600/90 text-white text-xs md:text-sm font-semibold backdrop-blur-md border border-blue-400/30 shadow-sm"><i data-lucide="tag" class="w-3 h-3 md:w-4 md:h-4"></i> ${{car.ausfuehrung}}</div>` : ''}}
+                            </div>
+                        </div>
+                        
+                        <!-- Details Section -->
+                        <div class="p-6 md:p-8 flex flex-col gap-8 bg-white">
+                            
+                            <!-- Key Data Grid -->
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                    <i data-lucide="activity" class="w-5 h-5 text-blue-600"></i> Fahrzeugdaten
+                                </h3>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <div class="flex flex-col p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:shadow-md transition-all">
+                                        <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600">
+                                            <i data-lucide="calendar" class="w-4 h-4"></i>
+                                        </div>
+                                        <span class="text-[10px] font-bold text-slate-400 uppercase mb-1">Erstzulassung</span>
+                                        <span class="font-bold text-slate-800 text-sm md:text-base">${{car.ez}}</span>
+                                    </div>
+                                    <div class="flex flex-col p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:shadow-md transition-all">
+                                        <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600">
+                                            <i data-lucide="gauge" class="w-4 h-4"></i>
+                                        </div>
+                                        <span class="text-[10px] font-bold text-slate-400 uppercase mb-1">Laufleistung</span>
+                                        <span class="font-bold text-slate-800 text-sm md:text-base">${{car.km}} KM</span>
+                                    </div>
+                                    <div class="flex flex-col p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:shadow-md transition-all">
+                                        <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600">
+                                            <i data-lucide="zap" class="w-4 h-4"></i>
+                                        </div>
+                                        <span class="text-[10px] font-bold text-slate-400 uppercase mb-1">Leistung</span>
+                                        <span class="font-bold text-slate-800 text-sm md:text-base">${{car.ps}} PS</span>
+                                    </div>
+                                    <div class="flex flex-col p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:shadow-md transition-all">
+                                        <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600">
+                                            <i data-lucide="fuel" class="w-4 h-4"></i>
+                                        </div>
+                                        <span class="text-[10px] font-bold text-slate-400 uppercase mb-1">Kraftstoff</span>
+                                        <span class="font-bold text-slate-800 text-sm md:text-base whitespace-nowrap overflow-hidden text-ellipsis w-full block">${{car.kraftstoff}}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Highlights -->
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                    <i data-lucide="list-checks" class="w-5 h-5 text-blue-600"></i> Ausstattungshighlights
+                                </h3>
+                                <div class="flex flex-wrap gap-2">
+                                    ${{(car.ausstattung_full || []).map(a => `<span class="px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs md:text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors">${{a}}</span>`).join('')}}
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        <!-- Footer -->
+                        <div class="p-4 md:p-6 bg-slate-50 border-t border-slate-100 flex justify-end">
+                            <button onclick="closeDataModal()" class="px-8 py-3 bg-white text-slate-700 font-bold rounded-xl text-sm border border-slate-200 shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2">
+                                <i data-lucide="x" class="w-4 h-4"></i> Schließen
+                            </button>
+                        </div>
+                    </div>
+                `;
+                const bg = document.getElementById('dataModalBackdrop');
+                const c = document.getElementById('dataModalContainer');
+                bg.classList.remove('hidden');
+                setTimeout(() => {{ bg.classList.add('opacity-100'); c.classList.add('scale-100', 'opacity-100'); }}, 10);
+                lucide.createIcons();
+            }}
+
+            function closeDataModal() {{
+                const bg = document.getElementById('dataModalBackdrop');
+                const c = document.getElementById('dataModalContainer');
+                bg.classList.remove('opacity-100');
+                c.classList.remove('scale-100', 'opacity-100');
+                setTimeout(() => bg.classList.add('hidden'), 300);
+            }}
+
             function validateForm() {{
                 const any = ['checkEmail', 'checkLimit', 'checkImport'].some(id => document.getElementById(id).checked);
                 const name = document.getElementById('userName').value.trim().length > 1;
@@ -841,17 +943,24 @@ def process_bca():
                                 ${{car.ausstattung.slice(0,3).map(a => `<span class="ausstattung-badge px-1.5 py-0.5 rounded text-[8px] md:text-[9px]">${{a}}</span>`).join('')}}
                             </div>
                             <div class="mt-auto space-y-3">
-                                <div class="flex flex-col">
-                                    <span class="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase mb-1">Gebot Netto</span>
-                                    <input type="number" value="${{car.bca_price}}" oninput="updateCalc('${{car.id}}', this.value)" class="w-full px-2 py-1 rounded-lg text-xs md:text-sm font-bold bg-slate-50 border outline-none">
+                                <div class="flex items-end justify-between gap-2 pt-2 border-t border-slate-100">
+                                    <div class="flex-1">
+                                        <span class="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase mb-1 block">Gebot Netto</span>
+                                        <input type="number" value="${{car.bca_price}}" oninput="updateCalc('${{car.id}}', this.value)" class="w-full px-2 py-1 rounded-lg text-xs md:text-sm font-bold bg-slate-50 border outline-none">
+                                    </div>
+                                    <div class="flex-1 text-right">
+                                        <span class="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase block mb-1">Brutto</span>
+                                        <div id="mainPrice_${{car.id}}" class="text-xs md:text-lg font-bold text-blue-600 truncate">${{fmt.format(car.details.total_brutto_at)}}</div>
+                                    </div>
                                 </div>
-                                <div class="pt-2 border-t border-slate-100">
-                                    <span class="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase block mb-0.5">Endpreis Brutto</span>
-                                    <div id="mainPrice_${{car.id}}" class="text-sm md:text-xl font-bold text-blue-600">${{fmt.format(car.details.total_brutto_at)}}</div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button onclick="openDataModal('${{car.id}}')" class="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-2 md:py-3 rounded-xl transition-all text-[10px] md:text-xs flex items-center justify-center gap-1 border border-slate-200">
+                                        <i data-lucide="info" class="w-3 h-3 md:w-4 h-4"></i>Details
+                                    </button>
+                                    <button onclick="openModal('${{car.name.replace(/'/g, "\\\\'")}}', '${{car.id}}', '${{car.img}}')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 md:py-3 rounded-xl transition-all text-[10px] md:text-xs flex items-center justify-center gap-1 shadow-sm">
+                                        <i data-lucide="message-square" class="w-3 h-3 md:w-4 h-4"></i>Anfrage
+                                    </button>
                                 </div>
-                                <button onclick="openModal('${{car.name.replace(/'/g, "\\\\'")}}', '${{car.id}}', '${{car.img}}')" class="w-full bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-600 font-bold py-2 md:py-3 rounded-xl transition-all text-[10px] md:text-xs flex items-center justify-center gap-1">
-                                    <i data-lucide="message-square" class="w-3 h-3 md:w-4 h-4"></i>Anfrage
-                                </button>
                             </div>
                         </div>
                     </div>

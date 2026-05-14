@@ -55,7 +55,7 @@
             "car_type": "SUV"
         },
         "warranty_options": null,
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "0116994793",
         "raw_data": {
             "Katalognummer_x": 2,
@@ -81,12 +81,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994793-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 85283 Wolnzach",
             "BCA_HTML_Price": 20840.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "4",
+        "id": "3",
         "category": "Auktionsfahrzeuge",
         "name": "Ford Capri",
         "ausfuehrung": "79KWH AWD - DE",
@@ -141,7 +141,7 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "0116959623",
         "raw_data": {
             "Katalognummer_x": 4,
@@ -168,12 +168,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959623-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
             "BCA_HTML_Price": 28908.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "6",
+        "id": "4",
         "category": "Auktionsfahrzeuge",
         "name": "Ford Capri",
         "ausfuehrung": "77KWH RWD - DE",
@@ -231,7 +231,7 @@
             "Komfort": 643,
             "Premium": 1093
         },
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "0116959694",
         "raw_data": {
             "Katalognummer_x": 6,
@@ -258,12 +258,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959694-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
             "BCA_HTML_Price": 26050.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "7",
+        "id": "5",
         "category": "Auktionsfahrzeuge",
         "name": "Volkswagen Id.3",
         "ausfuehrung": "PERFORMANCE UPGRADE - DE",
@@ -316,7 +316,7 @@
             "Komfort": 418,
             "Premium": 643
         },
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "0117041355",
         "raw_data": {
             "Katalognummer_x": 7,
@@ -342,12 +342,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117041355-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
             "BCA_HTML_Price": 11800.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "8",
+        "id": "6",
         "category": "Auktionsfahrzeuge",
         "name": "Ford Capri",
         "ausfuehrung": "79KWH AWD - DE",
@@ -402,7 +402,7 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "0116989093",
         "raw_data": {
             "Katalognummer_x": 8,
@@ -429,12 +429,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116989093-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
             "BCA_HTML_Price": 29244.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "9",
+        "id": "7",
         "category": "Auktionsfahrzeuge",
         "name": "BMW I4 g26 eléctrico",
         "ausfuehrung": "EDRIVE40 M SPORT - ES",
@@ -494,7 +494,7 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "6255LWK",
         "raw_data": {
             "Katalognummer_x": 9,
@@ -519,12 +519,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=6255LWK-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "SPAIN - Bellvei",
             "BCA_HTML_Price": 28000.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "10",
+        "id": "8",
         "category": "Auktionsfahrzeuge",
         "name": "Ford Capri",
         "ausfuehrung": "77KWH RWD - DE",
@@ -579,7 +579,7 @@
             "Komfort": 643,
             "Premium": 1093
         },
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "0116989137",
         "raw_data": {
             "Katalognummer_x": 10,
@@ -606,12 +606,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116989137-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
             "BCA_HTML_Price": 26723.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "11",
+        "id": "9",
         "category": "Auktionsfahrzeuge",
         "name": "Volkswagen Id.3",
         "ausfuehrung": "BUSINESS 58 KWH - NL",
@@ -661,7 +661,7 @@
             "Komfort": 418,
             "Premium": 643
         },
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "K-207-HS",
         "raw_data": {
             "Katalognummer_x": 11,
@@ -686,12 +686,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=K-207-HS-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "The Netherlands - Barneveld",
             "BCA_HTML_Price": 10579.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "12",
+        "id": "10",
         "category": "Auktionsfahrzeuge",
         "name": "Ford Mustang",
         "ausfuehrung": "MACH-E - DE",
@@ -748,7 +748,7 @@
             "Komfort": 643,
             "Premium": 1093
         },
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "0116994326",
         "raw_data": {
             "Katalognummer_x": 12,
@@ -773,12 +773,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994326-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 85283 Wolnzach",
             "BCA_HTML_Price": 17647.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "13",
+        "id": "11",
         "category": "Auktionsfahrzeuge",
         "name": "Ford Capri",
         "ausfuehrung": "79KWH AWD - DE",
@@ -832,7 +832,7 @@
             "car_type": "PKW"
         },
         "warranty_options": null,
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "0116959692",
         "raw_data": {
             "Katalognummer_x": 13,
@@ -859,12 +859,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959692-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
             "BCA_HTML_Price": 29748.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "16",
+        "id": "12",
         "category": "Auktionsfahrzeuge",
         "name": "Ford Capri",
         "ausfuehrung": "79KWH AWD - DE",
@@ -920,7 +920,7 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "0117019888",
         "raw_data": {
             "Katalognummer_x": 16,
@@ -947,12 +947,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019888-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
             "BCA_HTML_Price": 29916.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "17",
+        "id": "13",
         "category": "Auktionsfahrzeuge",
         "name": "Ford Mustang",
         "ausfuehrung": "MACH-E AWD - DE",
@@ -1012,7 +1012,7 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "0116922370",
         "raw_data": {
             "Katalognummer_x": 17,
@@ -1039,12 +1039,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116922370-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 64560 RIEDSTADT-Goddelau",
             "BCA_HTML_Price": 21681.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "18",
+        "id": "14",
         "category": "Auktionsfahrzeuge",
         "name": "Ford Capri",
         "ausfuehrung": "79KWH AWD - DE",
@@ -1101,7 +1101,7 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "0117019887",
         "raw_data": {
             "Katalognummer_x": 18,
@@ -1128,12 +1128,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019887-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
             "BCA_HTML_Price": 29748.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "19",
+        "id": "15",
         "category": "Auktionsfahrzeuge",
         "name": "Porsche Taycan",
         "ausfuehrung": "PERFORMANCE 84 KWH - NL",
@@ -1186,7 +1186,7 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "S-896-BL",
         "raw_data": {
             "Katalognummer_x": 19,
@@ -1211,12 +1211,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=S-896-BL-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "The Netherlands - Barneveld",
             "BCA_HTML_Price": 37521.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "20",
+        "id": "16",
         "category": "Auktionsfahrzeuge",
         "name": "Ford Capri",
         "ausfuehrung": "77KWH RWD - DE",
@@ -1272,7 +1272,7 @@
             "Komfort": 643,
             "Premium": 1093
         },
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "0117019884",
         "raw_data": {
             "Katalognummer_x": 20,
@@ -1299,12 +1299,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019884-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
             "BCA_HTML_Price": 26387.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "21",
+        "id": "17",
         "category": "Auktionsfahrzeuge",
         "name": "Ford Mustang",
         "ausfuehrung": "MACH-E AWD - DE",
@@ -1357,7 +1357,7 @@
             "car_type": "SUV"
         },
         "warranty_options": null,
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "0116994828",
         "raw_data": {
             "Katalognummer_x": 21,
@@ -1384,95 +1384,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994828-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 85283 Wolnzach",
             "BCA_HTML_Price": 27059.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "22",
-        "category": "Auktionsfahrzeuge",
-        "name": "Volkswagen Golf vii eléctrico",
-        "ausfuehrung": "EPOWER - ES",
-        "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=4003JSY-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-        "ez": "01.09.2016",
-        "km": "88.789",
-        "km_raw": 88789,
-        "year_raw": 2016,
-        "ps": "116",
-        "kraftstoff": "BEV - battery electr",
-        "ausstattung": [
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "ABS",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Parksensoren vorne",
-            "Scheinwerferreinigungsanlage"
-        ],
-        "ausstattung_full": [
-            "Klimaanlage",
-            "Leichtmetallfelgen",
-            "ABS",
-            "Bluetooth-Telefon-Schnittstelle",
-            "Parksensoren vorne",
-            "Scheinwerferreinigungsanlage",
-            "Servolenkung",
-            "Fensterheber elektrisch - Vorne und Hinten",
-            "Radio",
-            "Parksensoren hinten",
-            "Zentralverriegelung mit Fernbedienung",
-            "Navigationssystem",
-            "Xenon-Scheinwerfer"
-        ],
-        "location": "SPAIN - Alicante",
-        "car_type": "PKW",
-        "bca_price": 5100.0,
-        "transport": 600,
-        "details": {
-            "netto_basis": 5100.0,
-            "auction_percent": 212.41500000000002,
-            "auction_fix": 140,
-            "transport": 600,
-            "import_fee": 800,
-            "total_netto": 7652.415,
-            "total_brutto_at": 9182.898,
-            "car_type": "PKW"
-        },
-        "warranty_options": {
-            "Standard": 298,
-            "Komfort": 493,
-            "Premium": 718
-        },
-        "expiry_date": "2026-05-15 12:39:36",
-        "uid": "4003JSY",
-        "raw_data": {
-            "Katalognummer_x": 22,
-            "Inventarnummer": "4003JSY        ",
-            "Hersteller": "Volkswagen",
-            "Modell": "Golf vii eléctrico",
-            "Motor": "0,0",
-            "Ausführung": "EPOWER - ES",
-            "Karosserietyp": "Limousine",
-            "Kraftstoff": "BEV - battery electric vehicle  100% electric",
-            "Farbe": "Weiss ",
-            "PS": 116,
-            "KM Stand": 88.789,
-            "Erstzulassung": "01.09.2016",
-            "Nutzung": "Normale Nutzung",
-            "Ausstattung": "Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Parksensoren vorne, Scheinwerferreinigungsanlage, Servolenkung, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Zentralverriegelung mit Fernbedienung, Navigationssystem, Xenon-Scheinwerfer",
-            "Fahrzeugquelle": "Privat",
-            "Optischer Zustand": "Optischer Zustand 2",
-            "Link": "de.bca-europe.com/Lot?id=23579652",
-            "Katalognummer_Num": 22,
-            "Katalognummer_y": 22,
-            "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=4003JSY-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
-            "BCA_Standort": "SPAIN - Alicante",
-            "BCA_HTML_Price": 5100.0,
-            "expiry_date": "2026-05-15 12:39:36"
-        },
-        "archive_date": "2026-05-14"
-    },
-    {
-        "id": "25",
+        "id": "20",
         "category": "Auktionsfahrzeuge",
         "name": "Ford Capri",
         "ausfuehrung": "79KWH AWD - DE",
@@ -1531,7 +1448,7 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "0116959901",
         "raw_data": {
             "Katalognummer_x": 25,
@@ -1558,12 +1475,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959901-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "15366 Hoppegarten",
             "BCA_HTML_Price": 29076.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "26",
+        "id": "21",
         "category": "Auktionsfahrzeuge",
         "name": "Ford Mustang",
         "ausfuehrung": "MACH-E AWD - DE",
@@ -1620,7 +1537,7 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "0116938938",
         "raw_data": {
             "Katalognummer_x": 26,
@@ -1647,12 +1564,12 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116938938-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 85283 Wolnzach",
             "BCA_HTML_Price": 18319.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     },
     {
-        "id": "27",
+        "id": "22",
         "category": "Auktionsfahrzeuge",
         "name": "Ford Capri",
         "ausfuehrung": "79KWH AWD - DE",
@@ -1708,7 +1625,7 @@
             "Komfort": 793,
             "Premium": 1393
         },
-        "expiry_date": "2026-05-15 12:39:36",
+        "expiry_date": "2026-05-15 12:48:08",
         "uid": "0117019925",
         "raw_data": {
             "Katalognummer_x": 27,
@@ -1735,7 +1652,7 @@
             "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019925-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5",
             "BCA_Standort": "Germany - 89520 Heidenheim",
             "BCA_HTML_Price": 29076.0,
-            "expiry_date": "2026-05-15 12:39:36"
+            "expiry_date": "2026-05-15 12:48:08"
         },
         "archive_date": "2026-05-14"
     }
