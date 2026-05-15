@@ -1,6 +1,12 @@
 class AutoResizingIframe extends HTMLElement {
     connectedCallback() {
-        // Erstellt das iFrame, das auf deine GitHub-Seite zeigt
+        // 1. Zwingt das Element, sichtbar zu sein und Platz einzunehmen
+        this.style.display = 'block';
+        this.style.width = '100%';
+        this.style.minHeight = '600px'; // WICHTIG: Start-Höhe, damit wir nicht auf 0px feststecken
+        this.style.transition = 'height 0.3s ease'; // Macht das Vergrößern/Verkleinern weich
+
+        // 2. Baut das iFrame ein
         this.innerHTML = `
             <iframe 
                 src="https://zsolt1988.github.io/new-era-mobility/" 
@@ -9,7 +15,7 @@ class AutoResizingIframe extends HTMLElement {
             </iframe>
         `;
         
-        // Hört auf die Nachrichten (Höhe & Datenbank-Anfragen) von deiner index.html
+        // 3. Wartet auf Nachrichten von der GitHub-Seite
         window.addEventListener('message', (event) => {
             if (!event.data) return;
 
@@ -18,19 +24,15 @@ class AutoResizingIframe extends HTMLElement {
                 try { payload = JSON.parse(payload); } catch (e) { return; }
             }
 
-            // 1. Wix-Layout zwingen, sich anzupassen
-            if (payload.type === 'resize') {
-                // Ändert die Höhe dieses Elements, wodurch Wix den Streifen verschiebt!
+            if (payload.type === 'resize' && payload.height) {
+                console.log("Wrapper setzt neue Höhe:", payload.height);
                 this.style.height = payload.height + 'px';
-                this.style.display = 'block';
             }
 
-            // 2. Datenbank-Anfragen an Wix Velo weiterleiten
             if (payload.type === 'vehicle_inquiry') {
                 this.dispatchEvent(new CustomEvent('inquiry', { detail: payload }));
             }
             
-            // 3. Nach oben scrollen
             if (payload.type === 'scroll_to_top') {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
