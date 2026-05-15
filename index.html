@@ -642,7 +642,8 @@
                 lucide.createIcons();
                 updateTimers();
                 renderPagination(Math.ceil(filtered.length / itemsPerPage));
-                setTimeout(sendSettingsToParent, 200);
+                // NEU: Gib dem Browser 300ms Zeit zum Aufbauen, bevor er die Höhe an Wix meldet
+                setTimeout(sendSettingsToParent, 300);
             }
 
             function updateTimers() {
@@ -690,11 +691,11 @@
             function sendSettingsToParent() {
                 const container = document.getElementById('mainContainer');
                 if (container && !document.body.classList.contains('modal-open')) {
-                    // Misst den Inhalt + Puffer
-                    const height = container.offsetHeight + 100; 
-                    const message = JSON.stringify({ type: 'resize', height: height });
+                    // scrollHeight ist auf Handys viel zuverlässiger bei untereinander gestapelten Grids!
+                    const h = Math.max(container.offsetHeight, container.scrollHeight) + 100; 
+                    const message = JSON.stringify({ type: 'resize', height: h });
                     window.parent.postMessage(message, '*');
-                    console.log("Sende Höhe an Wix (Custom Element):", height);
+                    console.log("Sende Höhe an Wix (Mobile Fix):", h);
                 }
             }
 
@@ -707,8 +708,8 @@
                 sendSettingsToParent();
             }
 
-            window.addEventListener('load', sendSettingsToParent);
-            window.addEventListener('resize', sendSettingsToParent);
+            window.addEventListener('load', () => setTimeout(sendSettingsToParent, 300));
+            window.addEventListener('resize', () => setTimeout(sendSettingsToParent, 300));
             
             function renderPagination(t) {
                 const pag = document.getElementById('pagination');
@@ -733,8 +734,14 @@
                 console.error("Render error:", e);
                 document.getElementById('carGrid').innerHTML = '<div class="col-span-full p-8 text-center text-red-500 font-bold bg-red-50 rounded-2xl">Fehler beim Laden der Fahrzeuge. Bitte Seite neu laden.</div>';
             }
-            if (window.ResizeObserver) { new ResizeObserver(() => sendSettingsToParent()).observe(document.body); }
-            setTimeout(sendSettingsToParent, 1000);
+            if (window.ResizeObserver) { 
+                let resizeTimer;
+                new ResizeObserver(() => {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(sendSettingsToParent, 300);
+                }).observe(document.body); 
+            }
+            setTimeout(sendSettingsToParent, 500);
         </script>
     </body>
     </html>
