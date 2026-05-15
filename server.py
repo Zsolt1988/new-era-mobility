@@ -369,6 +369,7 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
             try:
                 subprocess.run(['git', 'add', '.'], check=True, cwd=BASE_DIR)
                 subprocess.run(['git', 'commit', '-m', 'Automatisches Portfolio Update'], check=False, cwd=BASE_DIR)
+                subprocess.run(['git', 'pull', '--rebase'], check=True, cwd=BASE_DIR)
                 subprocess.run(['git', 'push'], check=True, cwd=BASE_DIR)
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json')
