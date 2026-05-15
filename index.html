@@ -580,11 +580,16 @@
         }
 
         function openModal(event, name, id, img) {
-            // Dynamische Positionierung anhand des Klicks
-            let clickY = event ? (event.pageY || event.clientY) : 500;
-            let topPosition = clickY - 150; // Etwas oberhalb des Klicks zentrieren
+            // Dynamische Positionierung: Wir setzen das Fenster exakt mittig zum Klick
+            const clickY = event ? (event.pageY || event.clientY) : 500;
+            const modalContainer = document.getElementById('modalContainer');
+            
+            // Wir schätzen die Höhe auf 700px (typisch für deine Details)
+            // und ziehen die Hälfte ab, damit die Mitte des Modals beim Klick liegt
+            let topPosition = clickY - 350; 
             if (topPosition < 20) topPosition = 20; 
-            document.getElementById('modalContainer').style.marginTop = topPosition + 'px';
+            
+            modalContainer.style.marginTop = topPosition + 'px';
 
             currentCarId = id;
             const car = cars.find(c => String(c.id) === String(id));
