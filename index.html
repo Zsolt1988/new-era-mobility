@@ -980,11 +980,12 @@
 
         function sendSettingsToParent() {
             const container = document.getElementById('mainContainer');
-            if (container && !document.body.classList.contains('modal-open')) {
-                // scrollHeight ist auf Handys viel zuverlässiger bei untereinander gestapelten Grids!
-                const h = Math.max(container.offsetHeight, container.scrollHeight) + 50;
+            if (container) {
+                // Wir nehmen die maximale Höhe aus Container und Body, 
+                // damit auch absolut positionierte Modals die Höhe vergrößern!
+                const h = Math.max(container.offsetHeight, document.body.scrollHeight) + 60;
                 window.parent.postMessage({ type: 'resize', height: h }, '*');
-                console.log("Sende Höhe an Wix (V6):", h);
+                console.log("Sende Höhe an Wix (V7):", h);
             }
         }
 
