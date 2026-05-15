@@ -1,20 +1,18 @@
 class AutoResizingIframe extends HTMLElement {
     connectedCallback() {
-        // 1. Zwingt das Element, sichtbar zu sein und Platz einzunehmen
-        this.style.display = 'block';
-        this.style.width = '100%';
-        this.style.minHeight = '600px'; // WICHTIG: Start-Höhe, damit wir nicht auf 0px feststecken
-        this.style.transition = 'height 0.3s ease'; // Macht das Vergrößern/Verkleinern weich
+        // Die !important Methode zwingt Wix auf der Live-Seite, die volle Breite zu nutzen
+        this.setAttribute('style', 'display: block !important; width: 100% !important; max-width: 100% !important; margin: 0 auto !important; padding: 0 !important; box-sizing: border-box !important;');
+        this.style.minHeight = '600px';
+        this.style.transition = 'height 0.3s ease';
 
-        // 2. Baut das iFrame ein
         this.innerHTML = `
             <iframe 
                 src="https://zsolt1988.github.io/new-era-mobility/" 
-                style="width: 100%; height: 100%; border: none; overflow: hidden;" 
+                style="width: 100%; height: 100%; border: none; overflow: hidden; display: block;" 
                 scrolling="no">
             </iframe>
         `;
-        
+
         // 3. Wartet auf Nachrichten von der GitHub-Seite
         window.addEventListener('message', (event) => {
             if (!event.data) return;
@@ -32,7 +30,7 @@ class AutoResizingIframe extends HTMLElement {
             if (payload.type === 'vehicle_inquiry') {
                 this.dispatchEvent(new CustomEvent('inquiry', { detail: payload }));
             }
-            
+
             if (payload.type === 'scroll_to_top') {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
