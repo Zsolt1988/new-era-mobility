@@ -758,10 +758,13 @@
                 userData: {
                     name: document.getElementById('userName').value,
                     email: document.getElementById('userEmail').value
-                },
-                // Wir senden hier explizit "Ja" oder "Nein"
-                zustandsbericht: document.getElementById('checkEmail').checked ? 'Ja' : 'Nein'
+                }
             };
+
+            // Nur wenn "Zustandsbericht" angewählt ist, senden wir ein "Ja"
+            if (document.getElementById('checkEmail').checked) {
+                data.zustandsbericht = 'Ja';
+            }
 
             // Nur wenn "Kalkulation" angewählt ist, senden wir die Preisdaten mit
             if (document.getElementById('checkLimit').checked) {
