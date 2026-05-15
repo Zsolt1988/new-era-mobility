@@ -58,8 +58,8 @@
         }
 
         #toast {
-            position: fixed;
-            bottom: 2rem;
+            position: absolute;
+            top: 2rem;
             right: 2rem;
             padding: 1rem 1.5rem;
             border-radius: 1rem;
@@ -68,12 +68,12 @@
             border: 1px solid #e2e8f0;
             display: none;
             z-index: 9999;
-            animation: slideUp 0.3s ease-out;
+            animation: slideDown 0.3s ease-out;
         }
 
-        @keyframes slideUp {
+        @keyframes slideDown {
             from {
-                transform: translateY(100%);
+                transform: translateY(-100%);
                 opacity: 0;
             }
 
@@ -235,9 +235,9 @@
 
     <!-- Anfrage Modal -->
     <div id="modalBackdrop"
-        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 min-h-full">
+        class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-start justify-center p-4 transition-opacity duration-300 opacity-0 min-h-full">
         <div id="modalContainer"
-            class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col max-h-[95vh] relative">
+            class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col max-h-[95vh] relative mt-10 md:mt-20">
 
             <!-- Success Overlay -->
             <div id="successOverlay" class="success-overlay">
@@ -378,9 +378,9 @@
 
     <!-- Data Modal -->
     <div id="dataModalBackdrop"
-        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[110] hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
+        class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-[110] hidden flex items-start justify-center p-4 transition-opacity duration-300 opacity-0 min-h-full">
         <div id="dataModalContainer"
-            class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col relative max-h-[90vh]">
+            class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col relative max-h-[90vh] mt-10 md:mt-20">
             <button onclick="closeDataModal()"
                 class="absolute top-4 right-4 z-50 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors">
                 <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
@@ -579,8 +579,22 @@
             toast.style.display = 'block'; setTimeout(() => { toast.style.display = 'none'; }, 3000);
         }
 
-        function openModal(name, id, img) {
+        function openModal(name, id, img, event) {
             currentCarId = id;
+            const clickY = event ? event.pageY : 0;
+            const container = document.getElementById('modalContainer');
+            
+            // Auf Handys (Wix iFrame) positionieren wir das Modal dort, wo geklickt wurde
+            if (clickY > 0) {
+                const viewportHeight = window.innerHeight;
+                // Wir schieben das Modal etwa in die Mitte des aktuellen Klicks, 
+                // aber lassen mindestens 20px Platz nach oben
+                const modalTop = Math.max(20, clickY - 200); 
+                container.style.marginTop = modalTop + 'px';
+            } else {
+                container.style.marginTop = '';
+            }
+
             const car = cars.find(c => String(c.id) === String(id));
             document.getElementById('modalCarName').innerText = name;
             document.getElementById('modalCarId').innerText = id;
@@ -615,13 +629,26 @@
             document.getElementById('modalContainer').classList.remove('scale-100', 'opacity-100');
             document.body.style.overflow = '';
             updateModalState(false);
-            setTimeout(() => { backdrop.classList.add('hidden'); }, 300);
+            setTimeout(() => { 
+                backdrop.classList.add('hidden'); 
+                document.getElementById('modalContainer').style.marginTop = '';
+            }, 300);
         }
 
         function toggleCalculator(s) { document.getElementById('detailedCalc').classList.toggle('hidden', !s); if (s) runModalCalc(); }
         function toggleMessageField(s) { document.getElementById('messageContainer').classList.toggle('message-hidden', !s); if (s) document.getElementById('messageContainer').classList.add('message-visible'); }
 
-        function openDataModal(id) {
+        function openDataModal(id, event) {
+            const clickY = event ? event.pageY : 0;
+            const container = document.getElementById('dataModalContainer');
+
+            if (clickY > 0) {
+                const modalTop = Math.max(20, clickY - 300);
+                container.style.marginTop = modalTop + 'px';
+            } else {
+                container.style.marginTop = '';
+            }
+
             const car = cars.find(c => String(c.id) === String(id));
             if (!car) return;
             const content = document.getElementById('dataModalContent');
@@ -713,7 +740,10 @@
             c.classList.remove('scale-100', 'opacity-100');
             document.body.style.overflow = '';
             updateModalState(false);
-            setTimeout(() => bg.classList.add('hidden'), 300);
+            setTimeout(() => {
+                bg.classList.add('hidden');
+                c.style.marginTop = '';
+            }, 300);
         }
 
         function validateForm() {
@@ -888,10 +918,10 @@
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-2">
-                                    <button onclick="openDataModal('${car.id}')" class="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-2 md:py-3 rounded-xl transition-all text-[10px] md:text-xs flex items-center justify-center gap-1 border border-slate-200">
+                                    <button onclick="openDataModal('${car.id}', event)" class="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-2 md:py-3 rounded-xl transition-all text-[10px] md:text-xs flex items-center justify-center gap-1 border border-slate-200">
                                         <i data-lucide="info" class="w-3 h-3 md:w-4 h-4"></i>Fahrzeugdaten
                                     </button>
-                                    <button onclick="openModal('${car.name.replace(/'/g, "\\'")}', '${car.id}', '${car.img}')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 md:py-3 rounded-xl transition-all text-[10px] md:text-xs flex items-center justify-center gap-1 shadow-sm">
+                                    <button onclick="openModal('${car.name.replace(/'/g, "\\'")}', '${car.id}', '${car.img}', event)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 md:py-3 rounded-xl transition-all text-[10px] md:text-xs flex items-center justify-center gap-1 shadow-sm">
                                         <i data-lucide="message-square" class="w-3 h-3 md:w-4 h-4"></i>Anfrage
                                     </button>
                                 </div>
