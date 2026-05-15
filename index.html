@@ -379,6 +379,7 @@
                 const backdrop = document.getElementById('modalBackdrop');
                 backdrop.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
+                updateModalState(true);
                 setTimeout(() => { backdrop.classList.add('opacity-100'); document.getElementById('modalContainer').classList.add('scale-100', 'opacity-100'); }, 10);
                 
                 document.getElementById('checkEmail').checked = false;
@@ -393,6 +394,7 @@
                 backdrop.classList.remove('opacity-100');
                 document.getElementById('modalContainer').classList.remove('scale-100', 'opacity-100');
                 document.body.style.overflow = '';
+                updateModalState(false);
                 setTimeout(() => { backdrop.classList.add('hidden'); }, 300);
             }
 
@@ -479,6 +481,7 @@
                 const c = document.getElementById('dataModalContainer');
                 bg.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
+                updateModalState(true);
                 setTimeout(() => { bg.classList.add('opacity-100'); c.classList.add('scale-100', 'opacity-100'); }, 10);
                 lucide.createIcons();
             }
@@ -489,6 +492,7 @@
                 bg.classList.remove('opacity-100');
                 c.classList.remove('scale-100', 'opacity-100');
                 document.body.style.overflow = '';
+                updateModalState(false);
                 setTimeout(() => bg.classList.add('hidden'), 300);
             }
 
@@ -635,7 +639,7 @@
                 lucide.createIcons();
                 updateTimers();
                 renderPagination(Math.ceil(filtered.length / itemsPerPage));
-                sendHeightToWix();
+                sendSettingsToParent();
             }
 
             function updateTimers() {
@@ -680,7 +684,23 @@
                 render(); 
             }
             
-            function sendHeightToWix() { const c = document.getElementById('mainContainer'); if (c) window.parent.postMessage({ type: 'resize', height: Math.ceil(c.getBoundingClientRect().height) + 100 }, '*'); }
+            function sendSettingsToParent() {
+                const height = document.body.scrollHeight;
+                const isModalOpen = document.body.classList.contains('modal-open');
+                window.parent.postMessage({ type: 'resize', height: height, modalActive: isModalOpen }, '*');
+            }
+
+            function updateModalState(isOpen) {
+                if (isOpen) {
+                    document.body.classList.add('modal-open');
+                } else {
+                    document.body.classList.remove('modal-open');
+                }
+                sendSettingsToParent();
+            }
+
+            window.addEventListener('load', sendSettingsToParent);
+            window.addEventListener('resize', sendSettingsToParent);
             
             function renderPagination(t) {
                 const pag = document.getElementById('pagination');
@@ -705,8 +725,8 @@
                 console.error("Render error:", e);
                 document.getElementById('carGrid').innerHTML = '<div class="col-span-full p-8 text-center text-red-500 font-bold bg-red-50 rounded-2xl">Fehler beim Laden der Fahrzeuge. Bitte Seite neu laden.</div>';
             }
-            if (window.ResizeObserver) { new ResizeObserver(() => sendHeightToWix()).observe(document.getElementById('mainContainer')); }
-            setTimeout(sendHeightToWix, 1000);
+            if (window.ResizeObserver) { new ResizeObserver(() => sendSettingsToParent()).observe(document.body); }
+            setTimeout(sendSettingsToParent, 1000);
         </script>
     </body>
     </html>
