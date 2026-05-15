@@ -729,7 +729,8 @@
         function runModalCalc() {
             if (!currentCarId) return;
             const car = cars.find(c => c.id === currentCarId);
-            const netto = parseFloat(document.getElementById('modalLimitInput').value) || 0;
+            const rawNetto = document.getElementById('modalLimitInput').value.replace(/\./g, '');
+            const netto = parseFloat(rawNetto) || 0;
             const fees = (netto * 1.19 * 0.035) + 140;
             const transport = car.transport * 1.5;
             const commission = Math.max(500, netto * 0.02);
@@ -748,15 +749,38 @@
 
         function sendInquiry() {
             const car = cars.find(c => c.id === currentCarId);
+            
+            // Werte für die Kalkulation säubern und berechnen
+            const rawNetto = document.getElementById('modalLimitInput').value.replace(/\./g, '');
+            const netto = parseFloat(rawNetto) || 0;
+            const fees = (netto * 1.19 * 0.035) + 140;
+            const transport = car.transport * 1.5;
+            const commission = Math.max(500, netto * 0.02);
+            const warranty = parseFloat(document.getElementById('optWarranty').value);
+            const totalNetto = netto + fees + transport + 800 + commission + warranty;
+
             const data = {
                 type: 'vehicle_inquiry',
                 carId: currentCarId,
                 carName: car.name,
+                vin: car.uid,
+                ez: car.ez,
+                km: car.km,
+                kraftstoff: car.kraftstoff,
+                ps: car.ps,
                 userData: {
                     name: document.getElementById('userName').value,
                     email: document.getElementById('userEmail').value
                 },
-                zustandsbericht: document.getElementById('checkEmail').checked ? 'Ja' : 'Nein'
+                zustandsbericht: document.getElementById('checkEmail').checked ? 'Ja' : 'Nein',
+                calculation: {
+                    gebotNetto: netto,
+                    transport: transport,
+                    anmeldung: 800,
+                    provision: fees + commission,
+                    garantie: warranty,
+                    gesamtBrutto: totalNetto * 1.20
+                }
             };
             
             window.parent.postMessage(JSON.stringify(data), "*");
