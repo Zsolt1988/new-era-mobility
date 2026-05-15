@@ -1,9 +1,17 @@
 class AutoResizingIframe extends HTMLElement {
     connectedCallback() {
-        // Wir setzen die Eigenschaften einzeln, damit die Wix-Layout-Koordinaten (top, left) erhalten bleiben!
         this.style.setProperty('display', 'block', 'important');
-        this.style.setProperty('width', '100%', 'important');
-        this.style.setProperty('min-height', '600px', 'important');
+        
+        // --- DER AUSBRUCHS-HACK ---
+        // 1. Zwingt das Element auf die exakte Breite des Handy-Displays
+        this.style.setProperty('width', '100vw', 'important');
+        this.style.setProperty('max-width', '100vw', 'important');
+        // 2. Befreit das Element aus der unsichtbaren Wix-Box und zentriert es perfekt
+        this.style.setProperty('position', 'relative', 'important');
+        this.style.setProperty('left', '50%', 'important');
+        this.style.setProperty('transform', 'translateX(-50%)', 'important');
+        // --------------------------
+
         this.style.setProperty('transition', 'height 0.3s ease', 'important');
 
         this.innerHTML = `
