@@ -962,12 +962,18 @@
             console.error("Render error:", e);
             document.getElementById('carGrid').innerHTML = '<div class="col-span-full p-8 text-center text-red-500 font-bold bg-red-50 rounded-2xl">Fehler beim Laden der Fahrzeuge. Bitte Seite neu laden.</div>';
         }
-        if (window.ResizeObserver) {
+        if (window.ResizeObserver && document.body) {
             let resizeTimer;
             new ResizeObserver(() => {
                 clearTimeout(resizeTimer);
                 resizeTimer = setTimeout(sendSettingsToParent, 300);
             }).observe(document.body);
+        } else {
+            window.addEventListener('load', () => {
+                if (window.ResizeObserver) {
+                    new ResizeObserver(() => setTimeout(sendSettingsToParent, 300)).observe(document.body);
+                }
+            });
         }
         setTimeout(sendSettingsToParent, 500);
     </script>
