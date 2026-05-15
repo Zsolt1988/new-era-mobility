@@ -689,34 +689,13 @@
             
             function sendSettingsToParent() {
                 const container = document.getElementById('mainContainer');
-                const body = document.body;
-                const html = document.documentElement;
-                
-                // Wir nehmen die größte gefundene Höhe
-                let height = Math.max(
-                    body.scrollHeight, 
-                    body.offsetHeight, 
-                    html.clientHeight, 
-                    html.scrollHeight, 
-                    html.offsetHeight
-                );
-                
-                if (container) {
-                    const rect = container.getBoundingClientRect();
-                    // Wir addieren die Position des Containers zur seiner Höhe
-                    const fullHeight = rect.height + 150;
-                    height = Math.max(height, fullHeight);
+                if (container && !document.body.classList.contains('modal-open')) {
+                    // Misst den Inhalt + Puffer
+                    const height = container.offsetHeight + 100; 
+                    const message = JSON.stringify({ type: 'resize', height: height });
+                    window.parent.postMessage(message, '*');
+                    console.log("Sende Höhe an Wix (Custom Element):", height);
                 }
-
-                const isModalOpen = document.body.classList.contains('modal-open');
-                const message = JSON.stringify({ 
-                    type: 'resize', 
-                    height: Math.ceil(height), 
-                    modalActive: isModalOpen 
-                });
-                
-                console.log("Sende Höhe an Wix:", Math.ceil(height));
-                window.parent.postMessage(message, '*');
             }
 
             function updateModalState(isOpen) {
