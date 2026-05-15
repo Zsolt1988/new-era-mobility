@@ -581,19 +581,13 @@
 
         function openModal(name, id, img, event) {
             currentCarId = id;
-            const clickY = event ? event.pageY : 0;
             const container = document.getElementById('modalContainer');
             
-            // Auf Handys (Wix iFrame) positionieren wir das Modal dort, wo geklickt wurde
-            if (clickY > 0) {
-                const viewportHeight = window.innerHeight;
-                // Wir schieben das Modal etwa in die Mitte des aktuellen Klicks, 
-                // aber lassen mindestens 20px Platz nach oben
-                const modalTop = Math.max(20, clickY - 200); 
-                container.style.marginTop = modalTop + 'px';
-            } else {
-                container.style.marginTop = '';
-            }
+            // Pop-up ganz oben platzieren
+            container.style.marginTop = '50px';
+            
+            // Wix anweisen, nach oben zu scrollen
+            window.parent.postMessage({ type: 'scroll_to_top' }, '*');
 
             const car = cars.find(c => String(c.id) === String(id));
             document.getElementById('modalCarName').innerText = name;
@@ -639,15 +633,13 @@
         function toggleMessageField(s) { document.getElementById('messageContainer').classList.toggle('message-hidden', !s); if (s) document.getElementById('messageContainer').classList.add('message-visible'); }
 
         function openDataModal(id, event) {
-            const clickY = event ? event.pageY : 0;
             const container = document.getElementById('dataModalContainer');
 
-            if (clickY > 0) {
-                const modalTop = Math.max(20, clickY - 300);
-                container.style.marginTop = modalTop + 'px';
-            } else {
-                container.style.marginTop = '';
-            }
+            // Pop-up ganz oben platzieren
+            container.style.marginTop = '50px';
+            
+            // Wix anweisen, nach oben zu scrollen
+            window.parent.postMessage({ type: 'scroll_to_top' }, '*');
 
             const car = cars.find(c => String(c.id) === String(id));
             if (!car) return;
