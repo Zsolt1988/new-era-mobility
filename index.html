@@ -237,7 +237,7 @@
     <div id="modalBackdrop"
         class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-start justify-center p-4 transition-opacity duration-300 opacity-0 min-h-full">
         <div id="modalContainer"
-            class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col mt-[1000px] max-h-[95vh] relative">
+            class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col mt-8 md:mt-16 max-h-[95vh] relative">
 
             <!-- Success Overlay -->
             <div id="successOverlay" class="success-overlay">
@@ -580,8 +580,8 @@
         }
 
         function openModal(name, id, img) {
-            // Befehl an Wix senden: Scroll die Seite nach oben
-            window.parent.postMessage({ type: 'scroll_to_top' }, '*');
+            // Befehl an Wix senden: Scroll die Seite auf exakt 1000px Höhe
+            window.parent.postMessage({ type: 'scroll_to', y: 1000 }, '*');
 
             currentCarId = id;
             const car = cars.find(c => String(c.id) === String(id));
