@@ -580,9 +580,6 @@
         }
 
         function openModal(name, id, img) {
-            // Befehl an Wix senden: Scroll die Seite nach oben, damit das Modal im Sichtfeld ist
-            window.parent.postMessage({ type: 'scroll_to_top' }, '*');
-
             currentCarId = id;
             const car = cars.find(c => String(c.id) === String(id));
             document.getElementById('modalCarName').innerText = name;
