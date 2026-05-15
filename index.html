@@ -766,6 +766,11 @@
                 data.zustandsbericht = 'Ja';
             }
 
+            // NEU: Nur wenn "Allgemeine Anfrage" angewählt ist, senden wir die Nachricht mit
+            if (document.getElementById('checkImport').checked) {
+                data.nachricht = document.getElementById('userMessage').value;
+            }
+
             // Nur wenn "Kalkulation" angewählt ist, senden wir die Preisdaten mit
             if (document.getElementById('checkLimit').checked) {
                 const rawNetto = document.getElementById('modalLimitInput').value.replace(/\./g, '');
