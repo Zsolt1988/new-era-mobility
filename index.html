@@ -693,9 +693,8 @@
                 if (container && !document.body.classList.contains('modal-open')) {
                     // scrollHeight ist auf Handys viel zuverlässiger bei untereinander gestapelten Grids!
                     const h = Math.max(container.offsetHeight, container.scrollHeight) + 100; 
-                    const message = JSON.stringify({ type: 'resize', height: h });
-                    window.parent.postMessage(message, '*');
-                    console.log("Sende Höhe an Wix (Mobile Fix):", h);
+                    window.parent.postMessage({ type: 'resize', height: h }, '*');
+                    console.log("Sende Höhe an Wix (V6):", h);
                 }
             }
 
