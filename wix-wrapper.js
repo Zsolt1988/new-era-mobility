@@ -42,7 +42,7 @@ class AutoResizingIframe extends HTMLElement {
             if (payload.type === 'scroll_to_top') {
                 const rect = this.getBoundingClientRect();
                 const scrollTop = window.scrollY || window.pageYOffset;
-                window.scrollTo({ top: Math.max(0, rect.top + scrollTop - 1000), behavior: 'smooth' });
+                window.scrollTo({ top: Math.max(0, rect.top + scrollTop - 2000), behavior: 'smooth' });
             }
         });
     }
