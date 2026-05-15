@@ -8,7 +8,10 @@
         <script src="https://unpkg.com/lucide@latest"></script>
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
         <style>
-            body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; position: relative; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+            html, body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; position: relative; min-height: 100vh; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+            /* Verhindert den inneren Scrollbalken im iFrame komplett */
+            body::-webkit-scrollbar { display: none; }
+            body { -ms-overflow-style: none; scrollbar-width: none; }
             .glass-card { background: white; border: 1px solid #e2e8f0; }
             .calc-box { background: #f1f5f9; border: 1px dashed #cbd5e1; }
             .ausstattung-badge { background-color: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
