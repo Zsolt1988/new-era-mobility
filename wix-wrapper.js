@@ -5,16 +5,14 @@ class AutoResizingIframe extends HTMLElement {
         this.style.setProperty('transition', 'height 0.3s ease', 'important');
         this.style.setProperty('min-height', '600px', 'important');
 
-        // --- V7 BREITEN-FIX (ZENTRIERUNG) ---
-        // Anstatt das Element nach links zu schieben, lassen wir es von der Mitte aus expandieren.
-        // Das ist immun gegen kleine Positionierungsfehler von Wix.
-        this.style.setProperty('width', '100vw', 'important');
-        this.style.setProperty('position', 'relative', 'important');
-        this.style.setProperty('left', '50%', 'important');
-        this.style.setProperty('right', '50%', 'important');
-        this.style.setProperty('margin-left', '-50vw', 'important');
-        this.style.setProperty('margin-right', '-50vw', 'important');
-        // ------------------------------------
+        // --- V8 BREITEN-FIX ---
+        // Wir setzen die Breite auf 100% der Wix-Box. 
+        // Die Zentrierung korrigieren wir im Wix-Editor (Schritt 3).
+        this.style.setProperty('width', '100%', 'important');
+        this.style.setProperty('max-width', '100vw', 'important');
+        this.style.setProperty('margin', '0', 'important');
+        this.style.setProperty('left', '0', 'important');
+        // -----------------------
 
         this.innerHTML = `
             <iframe 
@@ -31,9 +29,8 @@ class AutoResizingIframe extends HTMLElement {
                 try { payload = JSON.parse(payload); } catch (e) { return; }
             }
 
-            // Deine funktionierende V6 Höhen-Logik
+            // Die bewährte V6 Höhen-Logik
             if (payload.type === 'resize' && payload.height) {
-                console.log("Wrapper V7 setzt Höhe:", payload.height);
                 this.style.setProperty('height', payload.height + 'px', 'important');
             }
 
