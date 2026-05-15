@@ -685,9 +685,15 @@
             }
             
             function sendSettingsToParent() {
-                const height = document.body.scrollHeight;
+                const container = document.getElementById('mainContainer');
+                let height = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+                if (container && !document.body.classList.contains('modal-open')) {
+                    height = Math.max(height, container.getBoundingClientRect().height + 150);
+                } else {
+                    height += 50; // Buffer
+                }
                 const isModalOpen = document.body.classList.contains('modal-open');
-                window.parent.postMessage({ type: 'resize', height: height, modalActive: isModalOpen }, '*');
+                window.parent.postMessage({ type: 'resize', height: Math.ceil(height), modalActive: isModalOpen }, '*');
             }
 
             function updateModalState(isOpen) {
