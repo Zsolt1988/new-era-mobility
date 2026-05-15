@@ -4,20 +4,20 @@ class AutoResizingIframe extends HTMLElement {
         this.style.setProperty('display', 'block', 'important');
         this.style.setProperty('transition', 'height 0.3s ease', 'important');
         this.style.setProperty('min-height', '600px', 'important');
+        this.style.setProperty('background-color', '#f8fafc', 'important'); // Gleicht den Hintergrund an
 
-        // --- V8 BREITEN-FIX ---
-        // Wir setzen die Breite auf 100% der Wix-Box. 
-        // Die Zentrierung korrigieren wir im Wix-Editor (Schritt 3).
-        this.style.setProperty('width', '100%', 'important');
-        this.style.setProperty('max-width', '100vw', 'important');
-        this.style.setProperty('margin', '0', 'important');
-        this.style.setProperty('left', '0', 'important');
-        // -----------------------
+        // --- V9 BREITEN-HACK (FULL VIEWPORT) ---
+        // Diese Formel bricht aus jedem Wix-Container aus und nutzt 100% der Displaybreite
+        this.style.setProperty('width', '100vw', 'important');
+        this.style.setProperty('position', 'relative', 'important');
+        this.style.setProperty('margin-left', '50%', 'important');
+        this.style.setProperty('transform', 'translateX(-50%)', 'important');
+        // ---------------------------------------
 
         this.innerHTML = `
             <iframe 
                 src="https://zsolt1988.github.io/new-era-mobility/" 
-                style="width: 100%; height: 100%; border: none; overflow: hidden; display: block; margin: 0; padding: 0;" 
+                style="width: 100vw; height: 100%; border: none; overflow: hidden; display: block; margin: 0; padding: 0;" 
                 scrolling="no">
             </iframe>
         `;
@@ -29,8 +29,9 @@ class AutoResizingIframe extends HTMLElement {
                 try { payload = JSON.parse(payload); } catch (e) { return; }
             }
 
-            // Die bewährte V6 Höhen-Logik
+            // Deine funktionierende Höhen-Logik
             if (payload.type === 'resize' && payload.height) {
+                // Bei V9 setzen wir die Höhe explizit für das Element
                 this.style.setProperty('height', payload.height + 'px', 'important');
             }
 
