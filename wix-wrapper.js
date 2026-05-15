@@ -1,18 +1,16 @@
 class AutoResizingIframe extends HTMLElement {
     connectedCallback() {
         this.style.setProperty('display', 'block', 'important');
-        
-        // --- DER AUSBRUCHS-HACK ---
-        // 1. Zwingt das Element auf die exakte Breite des Handy-Displays
+        this.style.setProperty('transition', 'height 0.3s ease', 'important');
+        this.style.setProperty('min-height', '600px', 'important'); // Wichtig als Startwert
+
+        // --- DER NEUE, SAUBERE AUSBRUCHS-HACK ---
+        // Macht das Element so breit wie das Display, bleibt aber im Wix-Raster verankert!
         this.style.setProperty('width', '100vw', 'important');
         this.style.setProperty('max-width', '100vw', 'important');
-        // 2. Befreit das Element aus der unsichtbaren Wix-Box und zentriert es perfekt
-        this.style.setProperty('position', 'relative', 'important');
-        this.style.setProperty('left', '50%', 'important');
-        this.style.setProperty('transform', 'translateX(-50%)', 'important');
-        // --------------------------
-
-        this.style.setProperty('transition', 'height 0.3s ease', 'important');
+        // Zieht das Element mathematisch exakt an den linken Rand des Displays:
+        this.style.setProperty('margin-left', 'calc(-50vw + 50%)', 'important');
+        // ----------------------------------------
 
         this.innerHTML = `
             <iframe 
