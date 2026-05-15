@@ -1,414 +1,630 @@
+<!DOCTYPE html>
+<html lang="de">
 
-    <!DOCTYPE html>
-    <html lang="de">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script src="https://unpkg.com/lucide@latest"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
-        <style>
-            html, body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; position: relative; min-height: 100vh; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-            /* Verhindert den inneren Scrollbalken im iFrame komplett */
-            body::-webkit-scrollbar { display: none; }
-            body { -ms-overflow-style: none; scrollbar-width: none; }
-            .glass-card { background: white; border: 1px solid #e2e8f0; }
-            .calc-box { background: #f1f5f9; border: 1px dashed #cbd5e1; }
-            .ausstattung-badge { background-color: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
-            .filter-select { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 8px 12px; }
-            .glass-modal { background: white; backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); }
-            
-            #toast { position: fixed; bottom: 2rem; right: 2rem; padding: 1rem 1.5rem; border-radius: 1rem; background: white; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; display: none; z-index: 9999; animation: slideUp 0.3s ease-out; }
-            @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-            
-            .sync-btn { background: #059669; color: white; transition: all 0.3s; cursor: pointer; }
-            .sync-btn:hover { background: #047857; transform: translateY(-1px); }
-            
-            #modalScrollArea::-webkit-scrollbar { width: 6px; }
-            #modalScrollArea::-webkit-scrollbar-track { background: transparent; }
-            #modalScrollArea::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        html,
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f8fafc;
+            position: relative;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
 
-            .message-hidden { display: none; opacity: 0; max-height: 0; overflow: hidden; }
-            .message-visible { display: block; opacity: 1; max-height: 200px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-            
-            .success-overlay { position: absolute; inset: 0; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
-            .success-overlay.active { opacity: 1; pointer-events: auto; }
-            
-            .checkmark-circle { width: 80px; height: 80px; border-radius: 50%; background: #f0fdf4; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; transform: scale(0.5); transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-            .success-overlay.active .checkmark-circle { transform: scale(1); }
+        /* Verhindert den inneren Scrollbalken im iFrame komplett */
+        body::-webkit-scrollbar {
+            display: none;
+        }
 
-            input[type=number] { -moz-appearance: textfield; appearance: textfield; }
-            .timer-badge { transition: background-color 0.5s ease; }
+        body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
 
-            @media (max-width: 480px) {
-                .card-padding { padding: 0.75rem !important; }
-                .card-title { font-size: 0.9rem !important; }
-                .card-specs { font-size: 9px !important; }
+        .glass-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+        }
+
+        .calc-box {
+            background: #f1f5f9;
+            border: 1px dashed #cbd5e1;
+        }
+
+        .ausstattung-badge {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .filter-select {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 8px 12px;
+        }
+
+        .glass-modal {
+            background: white;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            background: white;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            display: none;
+            z-index: 9999;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
             }
-            
-            .multi-select-container { position: relative; }
-            .multi-select-dropdown { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); z-index: 100; max-height: 250px; overflow-y: auto; display: none; padding: 0.5rem; }
-            .multi-select-dropdown.active { display: block; }
-            .multi-select-item { display: flex; items-center: center; gap: 0.5rem; padding: 0.5rem; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
-            .multi-select-item:hover { background: #f1f5f9; }
-            .multi-select-item input { cursor: pointer; }
-        </style>
-    </head>
-    <body class="p-4 md:p-8 bg-slate-50 text-slate-800">
-        <div id="toast" onclick="this.style.display='none'">
-            <div class="flex items-center gap-3">
-                <div id="toastIcon"></div>
-                <div id="toastMessage" class="text-sm font-bold"></div>
-            </div>
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .sync-btn {
+            background: #059669;
+            color: white;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .sync-btn:hover {
+            background: #047857;
+            transform: translateY(-1px);
+        }
+
+        #modalScrollArea::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #modalScrollArea::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #modalScrollArea::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .message-hidden {
+            display: none;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .message-visible {
+            display: block;
+            opacity: 1;
+            max-height: 200px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .success-overlay {
+            position: absolute;
+            inset: 0;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .success-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .checkmark-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #f0fdf4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            transform: scale(0.5);
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .success-overlay.active .checkmark-circle {
+            transform: scale(1);
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .timer-badge {
+            transition: background-color 0.5s ease;
+        }
+
+        @media (max-width: 480px) {
+            .card-padding {
+                padding: 0.75rem !important;
+            }
+
+            .card-title {
+                font-size: 0.9rem !important;
+            }
+
+            .card-specs {
+                font-size: 9px !important;
+            }
+        }
+
+        .multi-select-container {
+            position: relative;
+        }
+
+        .multi-select-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            max-height: 250px;
+            overflow-y: auto;
+            display: none;
+            padding: 0.5rem;
+        }
+
+        .multi-select-dropdown.active {
+            display: block;
+        }
+
+        .multi-select-item {
+            display: flex;
+            items-center: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .multi-select-item:hover {
+            background: #f1f5f9;
+        }
+
+        .multi-select-item input {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8 bg-slate-50 text-slate-800">
+    <div id="toast" onclick="this.style.display='none'">
+        <div class="flex items-center gap-3">
+            <div id="toastIcon"></div>
+            <div id="toastMessage" class="text-sm font-bold"></div>
         </div>
+    </div>
 
-        <!-- Anfrage Modal -->
-        <div id="modalBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-start justify-center p-4 transition-opacity duration-300 opacity-0 min-h-full">
-            <div id="modalContainer" class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col my-4 md:my-8 max-h-[95vh] relative">
-                
-                <!-- Success Overlay -->
-                <div id="successOverlay" class="success-overlay">
-                    <div class="checkmark-circle">
-                        <i data-lucide="check" class="w-10 h-10 text-emerald-600"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Anfrage gesendet!</h3>
-                    <p class="text-slate-500 text-center px-8">Wir melden uns in Kürze bei Ihnen.</p>
-                    <button onclick="closeModal()" class="mt-8 px-8 py-3 bg-blue-600 text-white font-bold rounded-2xl shadow-lg">Schließen</button>
+    <!-- Anfrage Modal -->
+    <div id="modalBackdrop"
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-start justify-center p-4 transition-opacity duration-300 opacity-0 min-h-full">
+        <div id="modalContainer"
+            class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col my-4 md:my-8 max-h-[95vh] relative">
+
+            <!-- Success Overlay -->
+            <div id="successOverlay" class="success-overlay">
+                <div class="checkmark-circle">
+                    <i data-lucide="check" class="w-10 h-10 text-emerald-600"></i>
                 </div>
-
-                <!-- Modal Header -->
-                <div class="relative h-32 md:h-48 bg-slate-100 flex-shrink-0">
-                    <img id="modalCarImg" src="" class="w-full h-full object-cover" alt="Auto">
-                    <div class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
-                    <button onclick="closeModal()" class="absolute top-4 right-4 p-2 bg-white/80 hover:bg-white rounded-full text-slate-600 shadow-sm">
-                        <i data-lucide="x" class="w-6 h-6"></i>
-                    </button>
-                    <div class="absolute bottom-4 left-6 md:left-8">
-                         <h3 id="modalCarName" class="text-xl md:text-2xl font-bold text-slate-800 leading-tight">...</h3>
-                         <p class="text-xs md:text-sm text-slate-500 font-medium">ID: <span id="modalCarId">...</span></p>
-                    </div>
-                </div>
-
-                <!-- Modal Content -->
-                <div id="modalScrollArea" class="p-4 md:p-8 pt-4 overflow-y-auto flex-grow">
-                    <div class="space-y-4 md:space-y-6">
-                        <div class="grid grid-cols-1 gap-3">
-                            <label class="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group">
-                                <input type="checkbox" id="checkEmail" onchange="validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded">
-                                <div class="flex flex-col">
-                                    <span class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Zustandsbericht</span>
-                                    <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Per E-Mail erhalten</span>
-                                </div>
-                            </label>
-
-                            <label class="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group">
-                                <input type="checkbox" id="checkImport" onchange="toggleMessageField(this.checked); validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded">
-                                <div class="flex flex-col">
-                                    <span class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Allgemeine Frage</span>
-                                    <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Zum Import-Ablauf</span>
-                                </div>
-                            </label>
-
-                            <div class="rounded-2xl border border-slate-100 overflow-hidden" id="calcContainer">
-                                <label class="flex items-center gap-4 p-4 bg-white hover:bg-slate-50 transition-all cursor-pointer group">
-                                    <input type="checkbox" id="checkLimit" onchange="toggleCalculator(this.checked); validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded">
-                                    <div class="flex flex-col">
-                                        <span class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Kalkulieren</span>
-                                        <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Kostenaufstellung</span>
-                                    </div>
-                                </label>
-                                <div id="detailedCalc" class="hidden bg-slate-50 border-t border-slate-100 p-4 md:p-6 space-y-4">
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-[10px] font-bold text-slate-500 uppercase">Gebot Netto</span>
-                                        <div class="relative w-28 md:w-32">
-                                            <input type="number" id="modalLimitInput" oninput="runModalCalc()" value="0" class="w-full pl-3 pr-8 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold outline-none">
-                                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold">€</span>
-                                        </div>
-                                    </div>
-                                    <select id="optWarranty" onchange="runModalCalc()" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm outline-none">
-                                        <option value="0">Keine Zusatzgarantie</option>
-                                    </select>
-                                    <div class="space-y-2 text-[11px] md:text-sm pt-4 border-t border-slate-200">
-                                        <div class="flex justify-between"><span>Netto Gebot:</span><span id="resNetto" class="font-bold">0 €</span></div>
-                                        <div class="flex justify-between"><span>Transport:</span><span id="resTransport">0 €</span></div>
-                                        <div class="flex justify-between"><span>Anmeldung AT:</span><span>800 €</span></div>
-                                        <div class="flex justify-between text-slate-400 italic"><span>Gebühren:</span><span id="resProvision">0 €</span></div>
-                                        <div id="resOptionsRow" class="flex justify-between text-blue-600 hidden"><span>Optionen:</span><span id="resOptions">0 €</span></div>
-                                        <div class="pt-4 border-t border-slate-300">
-                                            <div class="flex justify-between items-baseline">
-                                                <span class="text-[10px] font-black text-slate-400 uppercase">Gesamt Brutto</span>
-                                                <span id="resTotalBrutto" class="text-xl md:text-3xl font-black text-blue-600">0 €</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-4 md:p-6 bg-blue-50/50 rounded-3xl border border-blue-100 space-y-4">
-                            <label class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block">Kontaktdaten</label>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <input type="text" id="userName" placeholder="Name" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm">
-                                <input type="email" id="userEmail" placeholder="E-Mail" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm">
-                            </div>
-                            <div id="messageContainer" class="message-hidden">
-                                <textarea id="userMessage" rows="2" placeholder="Nachricht (optional)" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm resize-none"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Modal Footer -->
-                <div class="p-4 md:p-6 bg-white border-t border-slate-100 flex flex-col md:flex-row gap-3 flex-shrink-0">
-                    <button id="btnSubmitInquiry" disabled onclick="sendInquiry()" class="flex-[2] bg-blue-600 disabled:bg-slate-200 text-white font-bold py-4 rounded-2xl shadow-xl flex items-center justify-center gap-2">
-                        <i data-lucide="send" class="w-5 h-5"></i>
-                        <span id="btnText">Anfrage senden</span>
-                    </button>
-                    <button onclick="closeModal()" class="flex-1 bg-white text-slate-500 font-bold py-4 rounded-2xl border border-slate-200 text-sm">Abbrechen</button>
-                </div>
+                <h3 class="text-2xl font-bold text-slate-800 mb-2">Anfrage gesendet!</h3>
+                <p class="text-slate-500 text-center px-8">Wir melden uns in Kürze bei Ihnen.</p>
+                <button onclick="closeModal()"
+                    class="mt-8 px-8 py-3 bg-blue-600 text-white font-bold rounded-2xl shadow-lg">Schließen</button>
             </div>
-        </div>
 
-        <!-- Data Modal -->
-        <div id="dataModalBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[110] hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
-            <div id="dataModalContainer" class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col relative max-h-[90vh]">
-                <button onclick="closeDataModal()" class="absolute top-4 right-4 z-50 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors">
-                    <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
+            <!-- Modal Header -->
+            <div class="relative h-32 md:h-48 bg-slate-100 flex-shrink-0">
+                <img id="modalCarImg" src="" class="w-full h-full object-cover" alt="Auto">
+                <div class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
+                <button onclick="closeModal()"
+                    class="absolute top-4 right-4 p-2 bg-white/80 hover:bg-white rounded-full text-slate-600 shadow-sm">
+                    <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
-                <div id="dataModalContent" class="overflow-y-auto w-full">
-                    <!-- Dynamic Content -->
+                <div class="absolute bottom-4 left-6 md:left-8">
+                    <h3 id="modalCarName" class="text-xl md:text-2xl font-bold text-slate-800 leading-tight">...</h3>
+                    <p class="text-xs md:text-sm text-slate-500 font-medium">ID: <span id="modalCarId">...</span></p>
                 </div>
             </div>
-        </div>
 
-        <!-- Main Container -->
-        <div id="mainContainer" class="max-w-7xl mx-auto">
-            <header class="mb-8">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-                    <h1 class="text-3xl md:text-4xl font-bold text-slate-800">Auktionsfahrzeuge</h1>
-                    <div class="flex flex-col sm:flex-row items-center gap-3">
-                        <button id="syncGitHub" onclick="syncToGitHub()" class="sync-btn w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2">
-                            <i data-lucide="refresh-cw" class="w-4 h-4"></i> Live-Update
-                        </button>
-                        <div class="relative w-full sm:w-64">
-                            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
-                            <input type="text" id="searchInput" placeholder="Suchen..." class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl outline-none bg-white shadow-sm">
+            <!-- Modal Content -->
+            <div id="modalScrollArea" class="p-4 md:p-8 pt-4 overflow-y-auto flex-grow">
+                <div class="space-y-4 md:space-y-6">
+                    <div class="grid grid-cols-1 gap-3">
+                        <label
+                            class="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group">
+                            <input type="checkbox" id="checkEmail" onchange="validateForm()"
+                                class="w-5 h-5 text-blue-600 border-slate-300 rounded">
+                            <div class="flex flex-col">
+                                <span
+                                    class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Zustandsbericht</span>
+                                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Per E-Mail
+                                    erhalten</span>
+                            </div>
+                        </label>
+
+                        <label
+                            class="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group">
+                            <input type="checkbox" id="checkImport"
+                                onchange="toggleMessageField(this.checked); validateForm()"
+                                class="w-5 h-5 text-blue-600 border-slate-300 rounded">
+                            <div class="flex flex-col">
+                                <span
+                                    class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Allgemeine
+                                    Frage</span>
+                                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Zum
+                                    Import-Ablauf</span>
+                            </div>
+                        </label>
+
+                        <div class="rounded-2xl border border-slate-100 overflow-hidden" id="calcContainer">
+                            <label
+                                class="flex items-center gap-4 p-4 bg-white hover:bg-slate-50 transition-all cursor-pointer group">
+                                <input type="checkbox" id="checkLimit"
+                                    onchange="toggleCalculator(this.checked); validateForm()"
+                                    class="w-5 h-5 text-blue-600 border-slate-300 rounded">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Kalkulieren</span>
+                                    <span
+                                        class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Kostenaufstellung</span>
+                                </div>
+                            </label>
+                            <div id="detailedCalc"
+                                class="hidden bg-slate-50 border-t border-slate-100 p-4 md:p-6 space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] font-bold text-slate-500 uppercase">Gebot Netto</span>
+                                    <div class="relative w-28 md:w-32">
+                                        <input type="number" id="modalLimitInput" oninput="runModalCalc()" value="0"
+                                            class="w-full pl-3 pr-8 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold outline-none">
+                                        <span
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold">€</span>
+                                    </div>
+                                </div>
+                                <select id="optWarranty" onchange="runModalCalc()"
+                                    class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm outline-none">
+                                    <option value="0">Keine Zusatzgarantie</option>
+                                </select>
+                                <div class="space-y-2 text-[11px] md:text-sm pt-4 border-t border-slate-200">
+                                    <div class="flex justify-between"><span>Netto Gebot:</span><span id="resNetto"
+                                            class="font-bold">0 €</span></div>
+                                    <div class="flex justify-between"><span>Transport:</span><span id="resTransport">0
+                                            €</span></div>
+                                    <div class="flex justify-between"><span>Anmeldung AT:</span><span>800 €</span></div>
+                                    <div class="flex justify-between text-slate-400 italic"><span>Gebühren:</span><span
+                                            id="resProvision">0 €</span></div>
+                                    <div id="resOptionsRow" class="flex justify-between text-blue-600 hidden">
+                                        <span>Optionen:</span><span id="resOptions">0 €</span></div>
+                                    <div class="pt-4 border-t border-slate-300">
+                                        <div class="flex justify-between items-baseline">
+                                            <span class="text-[10px] font-black text-slate-400 uppercase">Gesamt
+                                                Brutto</span>
+                                            <span id="resTotalBrutto"
+                                                class="text-xl md:text-3xl font-black text-blue-600">0 €</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 md:p-6 bg-blue-50/50 rounded-3xl border border-blue-100 space-y-4">
+                        <label
+                            class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block">Kontaktdaten</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <input type="text" id="userName" placeholder="Name"
+                                class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm">
+                            <input type="email" id="userEmail" placeholder="E-Mail"
+                                class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm">
+                        </div>
+                        <div id="messageContainer" class="message-hidden">
+                            <textarea id="userMessage" rows="2" placeholder="Nachricht (optional)"
+                                class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm resize-none"></textarea>
                         </div>
                     </div>
                 </div>
-                
-                <div class="flex flex-col md:flex-row items-end gap-4 p-4 md:p-5 bg-white rounded-2xl border border-slate-200 shadow-sm">
-                    <div class="w-full md:w-32">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Marke</label>
-                        <select id="makeFilter" class="filter-select w-full outline-none text-sm">
-                            <option value="">Alle Marken</option>
-                        </select>
-                    </div>
-                    <div class="w-full md:w-auto">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Baujahr</label>
-                        <div class="flex items-center gap-2">
-                            <select id="yearMin" class="filter-select w-full md:w-24 outline-none text-sm">
-                                <option value="0">Jahr von</option>
-                            </select>
-                            <select id="yearMax" class="filter-select w-full md:w-24 outline-none text-sm">
-                                <option value="9999">Jahr bis</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="w-full md:w-auto">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Kilometer</label>
-                        <div class="flex items-center gap-2">
-                            <select id="kmMin" class="filter-select w-full md:w-28 outline-none text-sm">
-                                <option value="0">KM von</option>
-                                <option value="0">0 KM</option>
-                                <option value="10000">10.000 KM</option>
-                                <option value="20000">20.000 KM</option>
-                                <option value="30000">30.000 KM</option>
-                                <option value="40000">40.000 KM</option>
-                                <option value="50000">50.000 KM</option>
-                                <option value="60000">60.000 KM</option>
-                                <option value="70000">70.000 KM</option>
-                                <option value="80000">80.000 KM</option>
-                                <option value="90000">90.000 KM</option>
-                                <option value="100000">100.000 KM</option>
-                                <option value="125000">125.000 KM</option>
-                                <option value="150000">150.000 KM</option>
-                                <option value="200000">200.000 KM</option>
-                            </select>
-                            <select id="kmMax" class="filter-select w-full md:w-28 outline-none text-sm">
-                                <option value="9999999">KM bis</option>
-                                <option value="10000">10.000 KM</option>
-                                <option value="20000">20.000 KM</option>
-                                <option value="30000">30.000 KM</option>
-                                <option value="40000">40.000 KM</option>
-                                <option value="50000">50.000 KM</option>
-                                <option value="60000">60.000 KM</option>
-                                <option value="70000">70.000 KM</option>
-                                <option value="80000">80.000 KM</option>
-                                <option value="90000">90.000 KM</option>
-                                <option value="100000">100.000 KM</option>
-                                <option value="125000">125.000 KM</option>
-                                <option value="150000">150.000 KM</option>
-                                <option value="200000">200.000 KM</option>
-                                <option value="9999999">Beliebig</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="w-full md:w-56 multi-select-container">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Ausstattung</label>
-                        <div id="multiSelectBtn" onclick="toggleMultiSelect(event)" class="filter-select w-full outline-none text-sm cursor-pointer flex justify-between items-center">
-                            <span id="selectedCountText" class="truncate mr-2">Alle Merkmale</span>
-                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
-                        </div>
-                        <div id="multiSelectDropdown" class="multi-select-dropdown">
-                            <!-- JS populated -->
-                        </div>
-                    </div>
-                    <div class="w-full md:w-40">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Sortierung</label>
-                        <select id="sortOrder" class="filter-select w-full outline-none text-sm">
-                            <option value="newest">Neueste zuerst</option>
-                            <option value="oldest">Älteste zuerst</option>
-                            <option value="price-asc">Preis aufst.</option>
-                            <option value="price-desc">Preis abst.</option>
-                            <option value="km-asc">KM aufst.</option>
-                            <option value="id-asc">ID aufst.</option>
-                            <option value="id-desc">ID abst.</option>
-                        </select>
-                    </div>
-                    <button onclick="resetFilters()" class="w-full md:w-auto px-4 py-2.5 text-xs text-blue-500 font-bold hover:bg-blue-50 rounded-lg transition-colors">Filter Reset</button>
-                </div>
-            </header>
-            
-            <!-- Grid: Mobil 1 Spalte, Desktop 4 Spalten -->
-            <div id="carGrid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-12"></div>
-            <div id="pagination" class="flex justify-center items-center gap-2 pb-12"></div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 md:p-6 bg-white border-t border-slate-100 flex flex-col md:flex-row gap-3 flex-shrink-0">
+                <button id="btnSubmitInquiry" disabled onclick="sendInquiry()"
+                    class="flex-[2] bg-blue-600 disabled:bg-slate-200 text-white font-bold py-4 rounded-2xl shadow-xl flex items-center justify-center gap-2">
+                    <i data-lucide="send" class="w-5 h-5"></i>
+                    <span id="btnText">Anfrage senden</span>
+                </button>
+                <button onclick="closeModal()"
+                    class="flex-1 bg-white text-slate-500 font-bold py-4 rounded-2xl border border-slate-200 text-sm">Abbrechen</button>
+            </div>
         </div>
+    </div>
 
-        <script>
-            const cars = [{"id": "2", "category": "Auktionsfahrzeuge", "name": "Ford Mustang", "ausfuehrung": "MACH-E AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994793-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "30.03.2023", "km": "67.738", "km_raw": 67738, "year_raw": 2023, "ps": "600", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Soundsystem", "Zus\u00e4tzlicher Reifensatz - Yes", "Parksensoren vorne", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle", "Sonnendach"], "location": "Germany - 85283 Wolnzach", "car_type": "SUV", "bca_price": 20840.0, "transport": 265, "details": {"netto_basis": 20840.0, "auction_percent": 867.986, "auction_fix": 140, "transport": 265, "import_fee": 800, "total_netto": 23545.486, "total_brutto_at": 28254.5832, "car_type": "SUV"}, "warranty_options": null, "expiry_date": "2026-05-15 14:31:28", "uid": "0116994793", "verkaufspreis": 0, "raw_data": {"Katalognummer_x": 2, "Inventarnummer": "0116994793     ", "Hersteller": "Ford", "Modell": "Mustang", "Motor": "0,0", "Ausf\u00fchrung": "MACH-E AWD - DE", "Ausstattungsvariante": "GT", "Karosserietyp": "SUV", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Weiss Metallic", "PS": 600, "KM Stand": 67.738, "Erstzulassung": "30.03.2023", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Soundsystem, Zus\u00e4tzlicher Reifensatz - Yes, Parksensoren vorne, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle, Sonnendach", "Fahrzeugquelle": "Unbekannt", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579659", "Katalognummer_Num": 2, "Katalognummer_y": 2, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994793-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 85283 Wolnzach", "BCA_HTML_Price": 20840.0, "expiry_date": "2026-05-15 14:31:28"}, "archive_date": "2026-05-14"}, {"id": "8", "category": "Auktionsfahrzeuge", "name": "Ford Capri", "ausfuehrung": "77KWH RWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116989137-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "19.12.2024", "km": "2.930", "km_raw": 2930, "year_raw": 2024, "ps": "286", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle"], "location": "Germany - 89520 Heidenheim", "car_type": "PKW", "bca_price": 26723.0, "transport": 600, "details": {"netto_basis": 26723.0, "auction_percent": 1113.01295, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 30210.47295, "total_brutto_at": 36252.56754, "car_type": "PKW"}, "warranty_options": {"Standard": 403, "Komfort": 643, "Premium": 1093}, "expiry_date": "2026-05-15 14:31:28", "uid": "0116989137", "verkaufspreis": 0, "raw_data": {"Katalognummer_x": 10, "Inventarnummer": "0116989137     ", "Hersteller": "Ford", "Modell": "Capri", "Motor": "0,0", "Ausf\u00fchrung": "77KWH RWD - DE", "Ausstattungsvariante": "Premium", "Karosserietyp": "Limousine", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Schwarz Metallic", "Herstellerfarbe": "AGATE BLACK", "PS": 286, "KM Stand": 2.93, "Erstzulassung": "19.12.2024", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle", "Fahrzeugquelle": "Hersteller", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579664", "Katalognummer_Num": 10, "Katalognummer_y": 10, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116989137-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 89520 Heidenheim", "BCA_HTML_Price": 26723.0, "expiry_date": "2026-05-15 14:31:28"}, "archive_date": "2026-05-14"}, {"id": "10", "category": "Auktionsfahrzeuge", "name": "Ford Mustang", "ausfuehrung": "MACH-E - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994326-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "22.12.2022", "km": "43.183", "km_raw": 43183, "year_raw": 2022, "ps": "300", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle", "Sonnendach"], "location": "Germany - 85283 Wolnzach", "car_type": "SUV", "bca_price": 17647.0, "transport": 265, "details": {"netto_basis": 17647.0, "auction_percent": 734.99755, "auction_fix": 140, "transport": 265, "import_fee": 800, "total_netto": 20219.49755, "total_brutto_at": 24263.39706, "car_type": "SUV"}, "warranty_options": {"Standard": 403, "Komfort": 643, "Premium": 1093}, "expiry_date": "2026-05-15 14:31:28", "uid": "0116994326", "verkaufspreis": 0, "raw_data": {"Katalognummer_x": 12, "Inventarnummer": "0116994326     ", "Hersteller": "Ford", "Modell": "Mustang", "Motor": "0,0", "Ausf\u00fchrung": "MACH-E - DE", "Karosserietyp": "SUV", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Schwarz ", "PS": 300, "KM Stand": 43.183, "Erstzulassung": "22.12.2022", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle, Sonnendach", "Fahrzeugquelle": "Unbekannt", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579657", "Katalognummer_Num": 12, "Katalognummer_y": 12, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994326-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 85283 Wolnzach", "BCA_HTML_Price": 17647.0, "expiry_date": "2026-05-15 14:31:28"}, "archive_date": "2026-05-14"}, {"id": "11", "category": "Auktionsfahrzeuge", "name": "Ford Capri", "ausfuehrung": "79KWH AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959692-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "12.02.2025", "km": "327.000", "km_raw": 327000, "year_raw": 2025, "ps": "340", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Soundsystem", "Parksensoren vorne", "Aussenspiegel beheizbar", "Fensterheber elektrisch - Vorne und Hinten", "Regensensor", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle"], "location": "15366 Hoppegarten", "car_type": "PKW", "bca_price": 29748.0, "transport": 600, "details": {"netto_basis": 29748.0, "auction_percent": 1239.0041999999999, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 33421.964199999995, "total_brutto_at": 40106.357039999995, "car_type": "PKW"}, "warranty_options": null, "expiry_date": "2026-05-15 14:31:28", "uid": "0116959692", "verkaufspreis": 0, "raw_data": {"Katalognummer_x": 13, "Inventarnummer": "0116959692     ", "Hersteller": "Ford", "Modell": "Capri", "Motor": "0,0", "Ausf\u00fchrung": "79KWH AWD - DE", "Ausstattungsvariante": "Premium", "Karosserietyp": "Limousine", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Grau ", "Herstellerfarbe": "MAGNETIC", "PS": 340, "KM Stand": 327.0, "Erstzulassung": "12.02.2025", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Soundsystem, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Regensensor, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle", "Fahrzeugquelle": "Hersteller", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579670", "Katalognummer_Num": 13, "Katalognummer_y": 13, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959692-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "15366 Hoppegarten", "BCA_HTML_Price": 29748.0, "expiry_date": "2026-05-15 14:31:28"}, "archive_date": "2026-05-14"}, {"id": "12", "category": "Auktionsfahrzeuge", "name": "Ford Capri", "ausfuehrung": "79KWH AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019888-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "21.02.2025", "km": "1.482", "km_raw": 1482, "year_raw": 2025, "ps": "340", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Aussenspiegel beheizbar", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle"], "location": "Germany - 89520 Heidenheim", "car_type": "PKW", "bca_price": 29916.0, "transport": 600, "details": {"netto_basis": 29916.0, "auction_percent": 1246.0014, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 33600.3214, "total_brutto_at": 40320.38568, "car_type": "PKW"}, "warranty_options": {"Standard": 583, "Komfort": 793, "Premium": 1393}, "expiry_date": "2026-05-15 14:31:28", "uid": "0117019888", "verkaufspreis": 0, "raw_data": {"Katalognummer_x": 16, "Inventarnummer": "0117019888     ", "Hersteller": "Ford", "Modell": "Capri", "Motor": "0,0", "Ausf\u00fchrung": "79KWH AWD - DE", "Ausstattungsvariante": "Premium", "Karosserietyp": "Limousine", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Schwarz Metallic", "Herstellerfarbe": "AGATE BLACK", "PS": 340, "KM Stand": 1.482, "Erstzulassung": "21.02.2025", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle", "Fahrzeugquelle": "Hersteller", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579672", "Katalognummer_Num": 16, "Katalognummer_y": 16, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019888-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 89520 Heidenheim", "BCA_HTML_Price": 29916.0, "expiry_date": "2026-05-15 14:31:28"}, "archive_date": "2026-05-14"}, {"id": "13", "category": "Auktionsfahrzeuge", "name": "Ford Mustang", "ausfuehrung": "MACH-E AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116922370-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "19.01.2023", "km": "32.151", "km_raw": 32151, "year_raw": 2023, "ps": "371", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Soundsystem", "Parksensoren vorne", "Aussenspiegel beheizbar", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Regensensor", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle", "Sonnendach"], "location": "Germany - 64560 RIEDSTADT-Goddelau", "car_type": "SUV", "bca_price": 21681.0, "transport": 600, "details": {"netto_basis": 21681.0, "auction_percent": 903.0136500000001, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 24924.01365, "total_brutto_at": 29908.81638, "car_type": "SUV"}, "warranty_options": {"Standard": 583, "Komfort": 793, "Premium": 1393}, "expiry_date": "2026-05-15 14:31:28", "uid": "0116922370", "verkaufspreis": 0, "raw_data": {"Katalognummer_x": 17, "Inventarnummer": "0116922370     ", "Hersteller": "Ford", "Modell": "Mustang", "Motor": "0,0", "Ausf\u00fchrung": "MACH-E AWD - DE", "Ausstattungsvariante": "PREMIUM", "Karosserietyp": "SUV", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Schwarz ", "Herstellerfarbe": "IRIDIUM SCHWARZ", "PS": 371, "KM Stand": 32.151, "Erstzulassung": "19.01.2023", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Soundsystem, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Radio, Regensensor, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle, Sonnendach", "Fahrzeugquelle": "Unbekannt", "Optischer Zustand": "Optischer Zustand 3", "Link": "de.bca-europe.com/Lot?id=23579661", "Katalognummer_Num": 17, "Katalognummer_y": 17, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116922370-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 64560 RIEDSTADT-Goddelau", "BCA_HTML_Price": 21681.0, "expiry_date": "2026-05-15 14:31:28"}, "archive_date": "2026-05-14"}, {"id": "14", "category": "Auktionsfahrzeuge", "name": "Ford Capri", "ausfuehrung": "79KWH AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019887-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "12.02.2025", "km": "2.210", "km_raw": 2210, "year_raw": 2025, "ps": "340", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Aussenspiegel beheizbar", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle"], "location": "Germany - 89520 Heidenheim", "car_type": "PKW", "bca_price": 29748.0, "transport": 600, "details": {"netto_basis": 29748.0, "auction_percent": 1239.0041999999999, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 33421.964199999995, "total_brutto_at": 40106.357039999995, "car_type": "PKW"}, "warranty_options": {"Standard": 583, "Komfort": 793, "Premium": 1393}, "expiry_date": "2026-05-15 14:31:28", "uid": "0117019887", "verkaufspreis": 0, "raw_data": {"Katalognummer_x": 18, "Inventarnummer": "0117019887     ", "Hersteller": "Ford", "Modell": "Capri", "Motor": "0,0", "Ausf\u00fchrung": "79KWH AWD - DE", "Ausstattungsvariante": "Premium", "Karosserietyp": "Limousine", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Grau ", "Herstellerfarbe": "MAGNETIC", "PS": 340, "KM Stand": 2.21, "Erstzulassung": "12.02.2025", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle", "Fahrzeugquelle": "Hersteller", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579671", "Katalognummer_Num": 18, "Katalognummer_y": 18, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019887-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 89520 Heidenheim", "BCA_HTML_Price": 29748.0, "expiry_date": "2026-05-15 14:31:28"}, "archive_date": "2026-05-14"}, {"id": "15", "category": "Auktionsfahrzeuge", "name": "Porsche Taycan", "ausfuehrung": "PERFORMANCE 84 KWH - NL", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=S-896-BL-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "29.12.2022", "km": "90.950", "km_raw": 90950, "year_raw": 2022, "ps": "381", "kraftstoff": "BEV - battery electr", "ausstattung": ["Klimaanlage", "Leichtmetallfelgen", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Parksensoren vorne", "Servolenkung"], "ausstattung_full": ["Klimaanlage", "Leichtmetallfelgen", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Parksensoren vorne", "Servolenkung", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Regensensor", "Parksensoren hinten", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne"], "location": "The Netherlands - Barneveld", "car_type": "PKW", "bca_price": 37521.0, "transport": 600, "details": {"netto_basis": 37521.0, "auction_percent": 1562.74965, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 41674.169649999996, "total_brutto_at": 50009.00358, "car_type": "PKW"}, "warranty_options": {"Standard": 583, "Komfort": 793, "Premium": 1393}, "expiry_date": "2026-05-15 14:31:28", "uid": "S-896-BL", "verkaufspreis": 0, "raw_data": {"Katalognummer_x": 19, "Inventarnummer": "S-896-BL       ", "Hersteller": "Porsche", "Modell": "Taycan", "Motor": "0,0", "Ausf\u00fchrung": "PERFORMANCE 84 KWH - NL", "Karosserietyp": "Limousine", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Schwarz Metallic", "PS": 381, "KM Stand": 90.95, "Erstzulassung": "29.12.2022", "Nutzung": "Fuhrparkfahrzeug", "Ausstattung": "Klimaanlage, Leichtmetallfelgen, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Parksensoren vorne, Servolenkung, Fensterheber elektrisch - Vorne und Hinten, Radio, Regensensor, Parksensoren hinten, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne", "Fahrzeugquelle": "Leasing", "Optischer Zustand": "Optischer Zustand 5", "Link": "de.bca-europe.com/Lot?id=23579673", "Katalognummer_Num": 19, "Katalognummer_y": 19, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=S-896-BL-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "The Netherlands - Barneveld", "BCA_HTML_Price": 37521.0, "expiry_date": "2026-05-15 14:31:28"}, "archive_date": "2026-05-14"}, {"id": "16", "category": "Auktionsfahrzeuge", "name": "Ford Capri", "ausfuehrung": "77KWH RWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019884-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "19.12.2024", "km": "3.264", "km_raw": 3264, "year_raw": 2024, "ps": "286", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Aussenspiegel beheizbar", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle"], "location": "Germany - 89520 Heidenheim", "car_type": "PKW", "bca_price": 26387.0, "transport": 600, "details": {"netto_basis": 26387.0, "auction_percent": 1099.01855, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 29853.758550000002, "total_brutto_at": 35824.51026, "car_type": "PKW"}, "warranty_options": {"Standard": 403, "Komfort": 643, "Premium": 1093}, "expiry_date": "2026-05-15 14:31:28", "uid": "0117019884", "verkaufspreis": 0, "raw_data": {"Katalognummer_x": 20, "Inventarnummer": "0117019884     ", "Hersteller": "Ford", "Modell": "Capri", "Motor": "0,0", "Ausf\u00fchrung": "77KWH RWD - DE", "Ausstattungsvariante": "Premium", "Karosserietyp": "Limousine", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Gelb ", "Herstellerfarbe": "OMG YELLOW", "PS": 286, "KM Stand": 3.264, "Erstzulassung": "19.12.2024", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle", "Fahrzeugquelle": "Hersteller", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579663", "Katalognummer_Num": 20, "Katalognummer_y": 20, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019884-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 89520 Heidenheim", "BCA_HTML_Price": 26387.0, "expiry_date": "2026-05-15 14:31:28"}, "archive_date": "2026-05-14"}, {"id": "17", "category": "Auktionsfahrzeuge", "name": "Ford Mustang", "ausfuehrung": "MACH-E AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994828-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "29.03.2023", "km": "30.046", "km_raw": 30046, "year_raw": 2023, "ps": "487", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle", "Sonnendach"], "location": "Germany - 85283 Wolnzach", "car_type": "SUV", "bca_price": 27059.0, "transport": 265, "details": {"netto_basis": 27059.0, "auction_percent": 1127.00735, "auction_fix": 140, "transport": 265, "import_fee": 800, "total_netto": 30064.68735, "total_brutto_at": 36077.62482, "car_type": "SUV"}, "warranty_options": null, "expiry_date": "2026-05-15 14:31:28", "uid": "0116994828", "verkaufspreis": 0, "raw_data": {"Katalognummer_x": 21, "Inventarnummer": "0116994828     ", "Hersteller": "Ford", "Modell": "Mustang", "Motor": "0,0", "Ausf\u00fchrung": "MACH-E AWD - DE", "Ausstattungsvariante": "GT", "Karosserietyp": "SUV", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Schwarz ", "Herstellerfarbe": "IRIDIUM SCHWARZ", "PS": 487, "KM Stand": 30.046, "Erstzulassung": "29.03.2023", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle, Sonnendach", "Fahrzeugquelle": "Unbekannt", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579665", "Katalognummer_Num": 21, "Katalognummer_y": 21, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994828-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 85283 Wolnzach", "BCA_HTML_Price": 27059.0, "expiry_date": "2026-05-15 14:31:28"}, "archive_date": "2026-05-14"}, {"id": "20", "category": "Auktionsfahrzeuge", "name": "Ford Capri", "ausfuehrung": "79KWH AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959901-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "19.12.2024", "km": "1.835", "km_raw": 1835, "year_raw": 2024, "ps": "340", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Aussenspiegel beheizbar", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Regensensor", "Parksensoren hinten", "Heckrollo", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle"], "location": "15366 Hoppegarten", "car_type": "PKW", "bca_price": 29076.0, "transport": 600, "details": {"netto_basis": 29076.0, "auction_percent": 1211.0154, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 32708.5354, "total_brutto_at": 39250.24248, "car_type": "PKW"}, "warranty_options": {"Standard": 583, "Komfort": 793, "Premium": 1393}, "expiry_date": "2026-05-15 14:31:28", "uid": "0116959901", "verkaufspreis": 0, "raw_data": {"Katalognummer_x": 25, "Inventarnummer": "0116959901     ", "Hersteller": "Ford", "Modell": "Capri", "Motor": "0,0", "Ausf\u00fchrung": "79KWH AWD - DE", "Ausstattungsvariante": "Premium", "Karosserietyp": "Limousine", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Weiss ", "Herstellerfarbe": "FROZEN WHITE", "PS": 340, "KM Stand": 1.835, "Erstzulassung": "19.12.2024", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Radio, Regensensor, Parksensoren hinten, Heckrollo, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle", "Fahrzeugquelle": "Hersteller", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579667", "Katalognummer_Num": 25, "Katalognummer_y": 25, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959901-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "15366 Hoppegarten", "BCA_HTML_Price": 29076.0, "expiry_date": "2026-05-15 14:31:28"}, "archive_date": "2026-05-14"}, {"id": "21", "category": "Auktionsfahrzeuge", "name": "Ford Mustang", "ausfuehrung": "MACH-E AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116938938-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "17.03.2023", "km": "52.962", "km_raw": 52962, "year_raw": 2023, "ps": "371", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Soundsystem", "Parksensoren vorne", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle"], "location": "Germany - 85283 Wolnzach", "car_type": "SUV", "bca_price": 18319.0, "transport": 265, "details": {"netto_basis": 18319.0, "auction_percent": 762.9863500000001, "auction_fix": 140, "transport": 265, "import_fee": 800, "total_netto": 20919.48635, "total_brutto_at": 25103.383619999997, "car_type": "SUV"}, "warranty_options": {"Standard": 583, "Komfort": 793, "Premium": 1393}, "expiry_date": "2026-05-15 14:31:28", "uid": "0116938938", "verkaufspreis": 0, "raw_data": {"Katalognummer_x": 26, "Inventarnummer": "0116938938     ", "Hersteller": "Ford", "Modell": "Mustang", "Motor": "0,0", "Ausf\u00fchrung": "MACH-E AWD - DE", "Ausstattungsvariante": "PREMIUM", "Karosserietyp": "SUV", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Schwarz ", "Herstellerfarbe": "IRIDIUM SCHWARZ", "PS": 371, "KM Stand": 52.962, "Erstzulassung": "17.03.2023", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Soundsystem, Parksensoren vorne, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle", "Fahrzeugquelle": "Unbekannt", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579658", "Katalognummer_Num": 26, "Katalognummer_y": 26, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116938938-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 85283 Wolnzach", "BCA_HTML_Price": 18319.0, "expiry_date": "2026-05-15 14:31:28"}, "archive_date": "2026-05-14"}, {"id": "22", "category": "Auktionsfahrzeuge", "name": "Ford Capri", "ausfuehrung": "79KWH AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019925-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "21.02.2025", "km": "7.251", "km_raw": 7251, "year_raw": 2025, "ps": "340", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Aussenspiegel beheizbar", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle"], "location": "Germany - 89520 Heidenheim", "car_type": "PKW", "bca_price": 29076.0, "transport": 600, "details": {"netto_basis": 29076.0, "auction_percent": 1211.0154, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 32708.5354, "total_brutto_at": 39250.24248, "car_type": "PKW"}, "warranty_options": {"Standard": 583, "Komfort": 793, "Premium": 1393}, "expiry_date": "2026-05-15 14:31:28", "uid": "0117019925", "verkaufspreis": 0, "raw_data": {"Katalognummer_x": 27, "Inventarnummer": "0117019925     ", "Hersteller": "Ford", "Modell": "Capri", "Motor": "0,0", "Ausf\u00fchrung": "79KWH AWD - DE", "Ausstattungsvariante": "Premium", "Karosserietyp": "Limousine", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Schwarz Metallic", "Herstellerfarbe": "AGATE BLACK", "PS": 340, "KM Stand": 7.251, "Erstzulassung": "21.02.2025", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle", "Fahrzeugquelle": "Hersteller", "Optischer Zustand": "Optischer Zustand 2", "Link": "de.bca-europe.com/Lot?id=23579668", "Katalognummer_Num": 27, "Katalognummer_y": 27, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019925-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 89520 Heidenheim", "BCA_HTML_Price": 29076.0, "expiry_date": "2026-05-15 14:31:28"}, "archive_date": "2026-05-14"}];
-            
-            const fmt = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
-            let currentPage = 1;
-            const itemsPerPage = 50;
-            let currentCarId = null;
+    <!-- Data Modal -->
+    <div id="dataModalBackdrop"
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[110] hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
+        <div id="dataModalContainer"
+            class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col relative max-h-[90vh]">
+            <button onclick="closeDataModal()"
+                class="absolute top-4 right-4 z-50 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors">
+                <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
+            </button>
+            <div id="dataModalContent" class="overflow-y-auto w-full">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </div>
 
-            async function syncToGitHub() {
-                const btn = document.getElementById('syncGitHub');
-                const old = btn.innerHTML;
-                btn.disabled = true; btn.innerText = 'Syncing...';
-                try {
-                    const res = await fetch('/api/push-github');
-                    const data = await res.json();
-                    showToast(data.status === 'success' ? 'Update Live!' : 'Fehler', data.status);
-                } catch (e) { showToast('Server Fehler', 'error'); }
-                finally { btn.disabled = false; btn.innerHTML = old; lucide.createIcons(); }
-            }
+    <!-- Main Container -->
+    <div id="mainContainer" class="max-w-7xl mx-auto">
+        <header class="mb-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-800">Auktionsfahrzeuge</h1>
+                <div class="flex flex-col sm:flex-row items-center gap-3">
+                    <button id="syncGitHub" onclick="syncToGitHub()"
+                        class="sync-btn w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i> Live-Update
+                    </button>
+                    <div class="relative w-full sm:w-64">
+                        <i data-lucide="search"
+                            class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                        <input type="text" id="searchInput" placeholder="Suchen..."
+                            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl outline-none bg-white shadow-sm">
+                    </div>
+                </div>
+            </div>
 
-            function initFilters() {
-                const makes = [...new Set(cars.map(c => c.name.split(' ')[0]))].sort();
-                const mFilter = document.getElementById('makeFilter');
-                makes.forEach(m => { const opt = document.createElement('option'); opt.value = m; opt.innerText = m; mFilter.appendChild(opt); });
+            <div
+                class="flex flex-col md:flex-row items-end gap-4 p-4 md:p-5 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                <div class="w-full md:w-32">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Marke</label>
+                    <select id="makeFilter" class="filter-select w-full outline-none text-sm">
+                        <option value="">Alle Marken</option>
+                    </select>
+                </div>
+                <div class="w-full md:w-auto">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Baujahr</label>
+                    <div class="flex items-center gap-2">
+                        <select id="yearMin" class="filter-select w-full md:w-24 outline-none text-sm">
+                            <option value="0">Jahr von</option>
+                        </select>
+                        <select id="yearMax" class="filter-select w-full md:w-24 outline-none text-sm">
+                            <option value="9999">Jahr bis</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="w-full md:w-auto">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Kilometer</label>
+                    <div class="flex items-center gap-2">
+                        <select id="kmMin" class="filter-select w-full md:w-28 outline-none text-sm">
+                            <option value="0">KM von</option>
+                            <option value="0">0 KM</option>
+                            <option value="10000">10.000 KM</option>
+                            <option value="20000">20.000 KM</option>
+                            <option value="30000">30.000 KM</option>
+                            <option value="40000">40.000 KM</option>
+                            <option value="50000">50.000 KM</option>
+                            <option value="60000">60.000 KM</option>
+                            <option value="70000">70.000 KM</option>
+                            <option value="80000">80.000 KM</option>
+                            <option value="90000">90.000 KM</option>
+                            <option value="100000">100.000 KM</option>
+                            <option value="125000">125.000 KM</option>
+                            <option value="150000">150.000 KM</option>
+                            <option value="200000">200.000 KM</option>
+                        </select>
+                        <select id="kmMax" class="filter-select w-full md:w-28 outline-none text-sm">
+                            <option value="9999999">KM bis</option>
+                            <option value="10000">10.000 KM</option>
+                            <option value="20000">20.000 KM</option>
+                            <option value="30000">30.000 KM</option>
+                            <option value="40000">40.000 KM</option>
+                            <option value="50000">50.000 KM</option>
+                            <option value="60000">60.000 KM</option>
+                            <option value="70000">70.000 KM</option>
+                            <option value="80000">80.000 KM</option>
+                            <option value="90000">90.000 KM</option>
+                            <option value="100000">100.000 KM</option>
+                            <option value="125000">125.000 KM</option>
+                            <option value="150000">150.000 KM</option>
+                            <option value="200000">200.000 KM</option>
+                            <option value="9999999">Beliebig</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="w-full md:w-56 multi-select-container">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Ausstattung</label>
+                    <div id="multiSelectBtn" onclick="toggleMultiSelect(event)"
+                        class="filter-select w-full outline-none text-sm cursor-pointer flex justify-between items-center">
+                        <span id="selectedCountText" class="truncate mr-2">Alle Merkmale</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+                    </div>
+                    <div id="multiSelectDropdown" class="multi-select-dropdown">
+                        <!-- JS populated -->
+                    </div>
+                </div>
+                <div class="w-full md:w-40">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Sortierung</label>
+                    <select id="sortOrder" class="filter-select w-full outline-none text-sm">
+                        <option value="newest">Neueste zuerst</option>
+                        <option value="oldest">Älteste zuerst</option>
+                        <option value="price-asc">Preis aufst.</option>
+                        <option value="price-desc">Preis abst.</option>
+                        <option value="km-asc">KM aufst.</option>
+                        <option value="id-asc">ID aufst.</option>
+                        <option value="id-desc">ID abst.</option>
+                    </select>
+                </div>
+                <button onclick="resetFilters()"
+                    class="w-full md:w-auto px-4 py-2.5 text-xs text-blue-500 font-bold hover:bg-blue-50 rounded-lg transition-colors">Filter
+                    Reset</button>
+            </div>
+        </header>
 
-                const years = [...new Set(cars.map(c => c.year_raw))].sort((a,b) => b-a);
-                const yMin = document.getElementById('yearMin');
-                const yMax = document.getElementById('yearMax');
-                years.forEach(y => {
-                    const opt1 = document.createElement('option'); opt1.value = y; opt1.innerText = y; yMin.appendChild(opt1);
-                    const opt2 = document.createElement('option'); opt2.value = y; opt2.innerText = y; yMax.appendChild(opt2);
-                });
+        <!-- Grid: Mobil 1 Spalte, Desktop 4 Spalten -->
+        <div id="carGrid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-12"></div>
+        <div id="pagination" class="flex justify-center items-center gap-2 pb-12"></div>
+    </div>
 
-                const features = [...new Set(cars.flatMap(c => c.ausstattung_full))].filter(Boolean).sort();
-                const dropdown = document.getElementById('multiSelectDropdown');
-                dropdown.innerHTML = features.map(f => `
+    <script>
+        const cars = [{ "id": "2", "category": "Auktionsfahrzeuge", "name": "Ford Mustang", "ausfuehrung": "MACH-E AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994793-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "30.03.2023", "km": "67.738", "km_raw": 67738, "year_raw": 2023, "ps": "600", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Soundsystem", "Zus\u00e4tzlicher Reifensatz - Yes", "Parksensoren vorne", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle", "Sonnendach"], "location": "Germany - 85283 Wolnzach", "car_type": "SUV", "bca_price": 20840.0, "transport": 265, "details": { "netto_basis": 20840.0, "auction_percent": 867.986, "auction_fix": 140, "transport": 265, "import_fee": 800, "total_netto": 23545.486, "total_brutto_at": 28254.5832, "car_type": "SUV" }, "warranty_options": null, "expiry_date": "2026-05-15 14:31:28", "uid": "0116994793", "verkaufspreis": 0, "raw_data": { "Katalognummer_x": 2, "Inventarnummer": "0116994793     ", "Hersteller": "Ford", "Modell": "Mustang", "Motor": "0,0", "Ausf\u00fchrung": "MACH-E AWD - DE", "Ausstattungsvariante": "GT", "Karosserietyp": "SUV", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Weiss Metallic", "PS": 600, "KM Stand": 67.738, "Erstzulassung": "30.03.2023", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Soundsystem, Zus\u00e4tzlicher Reifensatz - Yes, Parksensoren vorne, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle, Sonnendach", "Fahrzeugquelle": "Unbekannt", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579659", "Katalognummer_Num": 2, "Katalognummer_y": 2, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994793-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 85283 Wolnzach", "BCA_HTML_Price": 20840.0, "expiry_date": "2026-05-15 14:31:28" }, "archive_date": "2026-05-14" }, { "id": "8", "category": "Auktionsfahrzeuge", "name": "Ford Capri", "ausfuehrung": "77KWH RWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116989137-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "19.12.2024", "km": "2.930", "km_raw": 2930, "year_raw": 2024, "ps": "286", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle"], "location": "Germany - 89520 Heidenheim", "car_type": "PKW", "bca_price": 26723.0, "transport": 600, "details": { "netto_basis": 26723.0, "auction_percent": 1113.01295, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 30210.47295, "total_brutto_at": 36252.56754, "car_type": "PKW" }, "warranty_options": { "Standard": 403, "Komfort": 643, "Premium": 1093 }, "expiry_date": "2026-05-15 14:31:28", "uid": "0116989137", "verkaufspreis": 0, "raw_data": { "Katalognummer_x": 10, "Inventarnummer": "0116989137     ", "Hersteller": "Ford", "Modell": "Capri", "Motor": "0,0", "Ausf\u00fchrung": "77KWH RWD - DE", "Ausstattungsvariante": "Premium", "Karosserietyp": "Limousine", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Schwarz Metallic", "Herstellerfarbe": "AGATE BLACK", "PS": 286, "KM Stand": 2.93, "Erstzulassung": "19.12.2024", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle", "Fahrzeugquelle": "Hersteller", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579664", "Katalognummer_Num": 10, "Katalognummer_y": 10, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116989137-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 89520 Heidenheim", "BCA_HTML_Price": 26723.0, "expiry_date": "2026-05-15 14:31:28" }, "archive_date": "2026-05-14" }, { "id": "10", "category": "Auktionsfahrzeuge", "name": "Ford Mustang", "ausfuehrung": "MACH-E - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994326-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "22.12.2022", "km": "43.183", "km_raw": 43183, "year_raw": 2022, "ps": "300", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle", "Sonnendach"], "location": "Germany - 85283 Wolnzach", "car_type": "SUV", "bca_price": 17647.0, "transport": 265, "details": { "netto_basis": 17647.0, "auction_percent": 734.99755, "auction_fix": 140, "transport": 265, "import_fee": 800, "total_netto": 20219.49755, "total_brutto_at": 24263.39706, "car_type": "SUV" }, "warranty_options": { "Standard": 403, "Komfort": 643, "Premium": 1093 }, "expiry_date": "2026-05-15 14:31:28", "uid": "0116994326", "verkaufspreis": 0, "raw_data": { "Katalognummer_x": 12, "Inventarnummer": "0116994326     ", "Hersteller": "Ford", "Modell": "Mustang", "Motor": "0,0", "Ausf\u00fchrung": "MACH-E - DE", "Karosserietyp": "SUV", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Schwarz ", "PS": 300, "KM Stand": 43.183, "Erstzulassung": "22.12.2022", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle, Sonnendach", "Fahrzeugquelle": "Unbekannt", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579657", "Katalognummer_Num": 12, "Katalognummer_y": 12, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994326-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 85283 Wolnzach", "BCA_HTML_Price": 17647.0, "expiry_date": "2026-05-15 14:31:28" }, "archive_date": "2026-05-14" }, { "id": "11", "category": "Auktionsfahrzeuge", "name": "Ford Capri", "ausfuehrung": "79KWH AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959692-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "12.02.2025", "km": "327.000", "km_raw": 327000, "year_raw": 2025, "ps": "340", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Soundsystem", "Parksensoren vorne", "Aussenspiegel beheizbar", "Fensterheber elektrisch - Vorne und Hinten", "Regensensor", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle"], "location": "15366 Hoppegarten", "car_type": "PKW", "bca_price": 29748.0, "transport": 600, "details": { "netto_basis": 29748.0, "auction_percent": 1239.0041999999999, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 33421.964199999995, "total_brutto_at": 40106.357039999995, "car_type": "PKW" }, "warranty_options": null, "expiry_date": "2026-05-15 14:31:28", "uid": "0116959692", "verkaufspreis": 0, "raw_data": { "Katalognummer_x": 13, "Inventarnummer": "0116959692     ", "Hersteller": "Ford", "Modell": "Capri", "Motor": "0,0", "Ausf\u00fchrung": "79KWH AWD - DE", "Ausstattungsvariante": "Premium", "Karosserietyp": "Limousine", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Grau ", "Herstellerfarbe": "MAGNETIC", "PS": 340, "KM Stand": 327.0, "Erstzulassung": "12.02.2025", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Soundsystem, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Regensensor, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle", "Fahrzeugquelle": "Hersteller", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579670", "Katalognummer_Num": 13, "Katalognummer_y": 13, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959692-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "15366 Hoppegarten", "BCA_HTML_Price": 29748.0, "expiry_date": "2026-05-15 14:31:28" }, "archive_date": "2026-05-14" }, { "id": "12", "category": "Auktionsfahrzeuge", "name": "Ford Capri", "ausfuehrung": "79KWH AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019888-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "21.02.2025", "km": "1.482", "km_raw": 1482, "year_raw": 2025, "ps": "340", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Aussenspiegel beheizbar", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle"], "location": "Germany - 89520 Heidenheim", "car_type": "PKW", "bca_price": 29916.0, "transport": 600, "details": { "netto_basis": 29916.0, "auction_percent": 1246.0014, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 33600.3214, "total_brutto_at": 40320.38568, "car_type": "PKW" }, "warranty_options": { "Standard": 583, "Komfort": 793, "Premium": 1393 }, "expiry_date": "2026-05-15 14:31:28", "uid": "0117019888", "verkaufspreis": 0, "raw_data": { "Katalognummer_x": 16, "Inventarnummer": "0117019888     ", "Hersteller": "Ford", "Modell": "Capri", "Motor": "0,0", "Ausf\u00fchrung": "79KWH AWD - DE", "Ausstattungsvariante": "Premium", "Karosserietyp": "Limousine", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Schwarz Metallic", "Herstellerfarbe": "AGATE BLACK", "PS": 340, "KM Stand": 1.482, "Erstzulassung": "21.02.2025", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle", "Fahrzeugquelle": "Hersteller", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579672", "Katalognummer_Num": 16, "Katalognummer_y": 16, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019888-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 89520 Heidenheim", "BCA_HTML_Price": 29916.0, "expiry_date": "2026-05-15 14:31:28" }, "archive_date": "2026-05-14" }, { "id": "13", "category": "Auktionsfahrzeuge", "name": "Ford Mustang", "ausfuehrung": "MACH-E AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116922370-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "19.01.2023", "km": "32.151", "km_raw": 32151, "year_raw": 2023, "ps": "371", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Soundsystem", "Parksensoren vorne", "Aussenspiegel beheizbar", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Regensensor", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle", "Sonnendach"], "location": "Germany - 64560 RIEDSTADT-Goddelau", "car_type": "SUV", "bca_price": 21681.0, "transport": 600, "details": { "netto_basis": 21681.0, "auction_percent": 903.0136500000001, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 24924.01365, "total_brutto_at": 29908.81638, "car_type": "SUV" }, "warranty_options": { "Standard": 583, "Komfort": 793, "Premium": 1393 }, "expiry_date": "2026-05-15 14:31:28", "uid": "0116922370", "verkaufspreis": 0, "raw_data": { "Katalognummer_x": 17, "Inventarnummer": "0116922370     ", "Hersteller": "Ford", "Modell": "Mustang", "Motor": "0,0", "Ausf\u00fchrung": "MACH-E AWD - DE", "Ausstattungsvariante": "PREMIUM", "Karosserietyp": "SUV", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Schwarz ", "Herstellerfarbe": "IRIDIUM SCHWARZ", "PS": 371, "KM Stand": 32.151, "Erstzulassung": "19.01.2023", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Soundsystem, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Radio, Regensensor, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle, Sonnendach", "Fahrzeugquelle": "Unbekannt", "Optischer Zustand": "Optischer Zustand 3", "Link": "de.bca-europe.com/Lot?id=23579661", "Katalognummer_Num": 17, "Katalognummer_y": 17, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116922370-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 64560 RIEDSTADT-Goddelau", "BCA_HTML_Price": 21681.0, "expiry_date": "2026-05-15 14:31:28" }, "archive_date": "2026-05-14" }, { "id": "14", "category": "Auktionsfahrzeuge", "name": "Ford Capri", "ausfuehrung": "79KWH AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019887-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "12.02.2025", "km": "2.210", "km_raw": 2210, "year_raw": 2025, "ps": "340", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Aussenspiegel beheizbar", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle"], "location": "Germany - 89520 Heidenheim", "car_type": "PKW", "bca_price": 29748.0, "transport": 600, "details": { "netto_basis": 29748.0, "auction_percent": 1239.0041999999999, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 33421.964199999995, "total_brutto_at": 40106.357039999995, "car_type": "PKW" }, "warranty_options": { "Standard": 583, "Komfort": 793, "Premium": 1393 }, "expiry_date": "2026-05-15 14:31:28", "uid": "0117019887", "verkaufspreis": 0, "raw_data": { "Katalognummer_x": 18, "Inventarnummer": "0117019887     ", "Hersteller": "Ford", "Modell": "Capri", "Motor": "0,0", "Ausf\u00fchrung": "79KWH AWD - DE", "Ausstattungsvariante": "Premium", "Karosserietyp": "Limousine", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Grau ", "Herstellerfarbe": "MAGNETIC", "PS": 340, "KM Stand": 2.21, "Erstzulassung": "12.02.2025", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle", "Fahrzeugquelle": "Hersteller", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579671", "Katalognummer_Num": 18, "Katalognummer_y": 18, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019887-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 89520 Heidenheim", "BCA_HTML_Price": 29748.0, "expiry_date": "2026-05-15 14:31:28" }, "archive_date": "2026-05-14" }, { "id": "15", "category": "Auktionsfahrzeuge", "name": "Porsche Taycan", "ausfuehrung": "PERFORMANCE 84 KWH - NL", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=S-896-BL-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "29.12.2022", "km": "90.950", "km_raw": 90950, "year_raw": 2022, "ps": "381", "kraftstoff": "BEV - battery electr", "ausstattung": ["Klimaanlage", "Leichtmetallfelgen", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Parksensoren vorne", "Servolenkung"], "ausstattung_full": ["Klimaanlage", "Leichtmetallfelgen", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Parksensoren vorne", "Servolenkung", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Regensensor", "Parksensoren hinten", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne"], "location": "The Netherlands - Barneveld", "car_type": "PKW", "bca_price": 37521.0, "transport": 600, "details": { "netto_basis": 37521.0, "auction_percent": 1562.74965, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 41674.169649999996, "total_brutto_at": 50009.00358, "car_type": "PKW" }, "warranty_options": { "Standard": 583, "Komfort": 793, "Premium": 1393 }, "expiry_date": "2026-05-15 14:31:28", "uid": "S-896-BL", "verkaufspreis": 0, "raw_data": { "Katalognummer_x": 19, "Inventarnummer": "S-896-BL       ", "Hersteller": "Porsche", "Modell": "Taycan", "Motor": "0,0", "Ausf\u00fchrung": "PERFORMANCE 84 KWH - NL", "Karosserietyp": "Limousine", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Schwarz Metallic", "PS": 381, "KM Stand": 90.95, "Erstzulassung": "29.12.2022", "Nutzung": "Fuhrparkfahrzeug", "Ausstattung": "Klimaanlage, Leichtmetallfelgen, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Parksensoren vorne, Servolenkung, Fensterheber elektrisch - Vorne und Hinten, Radio, Regensensor, Parksensoren hinten, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne", "Fahrzeugquelle": "Leasing", "Optischer Zustand": "Optischer Zustand 5", "Link": "de.bca-europe.com/Lot?id=23579673", "Katalognummer_Num": 19, "Katalognummer_y": 19, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=S-896-BL-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "The Netherlands - Barneveld", "BCA_HTML_Price": 37521.0, "expiry_date": "2026-05-15 14:31:28" }, "archive_date": "2026-05-14" }, { "id": "16", "category": "Auktionsfahrzeuge", "name": "Ford Capri", "ausfuehrung": "77KWH RWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019884-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "19.12.2024", "km": "3.264", "km_raw": 3264, "year_raw": 2024, "ps": "286", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Aussenspiegel beheizbar", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle"], "location": "Germany - 89520 Heidenheim", "car_type": "PKW", "bca_price": 26387.0, "transport": 600, "details": { "netto_basis": 26387.0, "auction_percent": 1099.01855, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 29853.758550000002, "total_brutto_at": 35824.51026, "car_type": "PKW" }, "warranty_options": { "Standard": 403, "Komfort": 643, "Premium": 1093 }, "expiry_date": "2026-05-15 14:31:28", "uid": "0117019884", "verkaufspreis": 0, "raw_data": { "Katalognummer_x": 20, "Inventarnummer": "0117019884     ", "Hersteller": "Ford", "Modell": "Capri", "Motor": "0,0", "Ausf\u00fchrung": "77KWH RWD - DE", "Ausstattungsvariante": "Premium", "Karosserietyp": "Limousine", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Gelb ", "Herstellerfarbe": "OMG YELLOW", "PS": 286, "KM Stand": 3.264, "Erstzulassung": "19.12.2024", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle", "Fahrzeugquelle": "Hersteller", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579663", "Katalognummer_Num": 20, "Katalognummer_y": 20, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019884-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 89520 Heidenheim", "BCA_HTML_Price": 26387.0, "expiry_date": "2026-05-15 14:31:28" }, "archive_date": "2026-05-14" }, { "id": "17", "category": "Auktionsfahrzeuge", "name": "Ford Mustang", "ausfuehrung": "MACH-E AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994828-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "29.03.2023", "km": "30.046", "km_raw": 30046, "year_raw": 2023, "ps": "487", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle", "Sonnendach"], "location": "Germany - 85283 Wolnzach", "car_type": "SUV", "bca_price": 27059.0, "transport": 265, "details": { "netto_basis": 27059.0, "auction_percent": 1127.00735, "auction_fix": 140, "transport": 265, "import_fee": 800, "total_netto": 30064.68735, "total_brutto_at": 36077.62482, "car_type": "SUV" }, "warranty_options": null, "expiry_date": "2026-05-15 14:31:28", "uid": "0116994828", "verkaufspreis": 0, "raw_data": { "Katalognummer_x": 21, "Inventarnummer": "0116994828     ", "Hersteller": "Ford", "Modell": "Mustang", "Motor": "0,0", "Ausf\u00fchrung": "MACH-E AWD - DE", "Ausstattungsvariante": "GT", "Karosserietyp": "SUV", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Schwarz ", "Herstellerfarbe": "IRIDIUM SCHWARZ", "PS": 487, "KM Stand": 30.046, "Erstzulassung": "29.03.2023", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle, Sonnendach", "Fahrzeugquelle": "Unbekannt", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579665", "Katalognummer_Num": 21, "Katalognummer_y": 21, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116994828-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 85283 Wolnzach", "BCA_HTML_Price": 27059.0, "expiry_date": "2026-05-15 14:31:28" }, "archive_date": "2026-05-14" }, { "id": "20", "category": "Auktionsfahrzeuge", "name": "Ford Capri", "ausfuehrung": "79KWH AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959901-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "19.12.2024", "km": "1.835", "km_raw": 1835, "year_raw": 2024, "ps": "340", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Aussenspiegel beheizbar", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Regensensor", "Parksensoren hinten", "Heckrollo", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle"], "location": "15366 Hoppegarten", "car_type": "PKW", "bca_price": 29076.0, "transport": 600, "details": { "netto_basis": 29076.0, "auction_percent": 1211.0154, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 32708.5354, "total_brutto_at": 39250.24248, "car_type": "PKW" }, "warranty_options": { "Standard": 583, "Komfort": 793, "Premium": 1393 }, "expiry_date": "2026-05-15 14:31:28", "uid": "0116959901", "verkaufspreis": 0, "raw_data": { "Katalognummer_x": 25, "Inventarnummer": "0116959901     ", "Hersteller": "Ford", "Modell": "Capri", "Motor": "0,0", "Ausf\u00fchrung": "79KWH AWD - DE", "Ausstattungsvariante": "Premium", "Karosserietyp": "Limousine", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Weiss ", "Herstellerfarbe": "FROZEN WHITE", "PS": 340, "KM Stand": 1.835, "Erstzulassung": "19.12.2024", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Radio, Regensensor, Parksensoren hinten, Heckrollo, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle", "Fahrzeugquelle": "Hersteller", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579667", "Katalognummer_Num": 25, "Katalognummer_y": 25, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116959901-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "15366 Hoppegarten", "BCA_HTML_Price": 29076.0, "expiry_date": "2026-05-15 14:31:28" }, "archive_date": "2026-05-14" }, { "id": "21", "category": "Auktionsfahrzeuge", "name": "Ford Mustang", "ausfuehrung": "MACH-E AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116938938-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "17.03.2023", "km": "52.962", "km_raw": 52962, "year_raw": 2023, "ps": "371", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Sitze elektrisch verstellbar", "Aussenspiegel elektrisch anklappbar", "Soundsystem", "Parksensoren vorne", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle"], "location": "Germany - 85283 Wolnzach", "car_type": "SUV", "bca_price": 18319.0, "transport": 265, "details": { "netto_basis": 18319.0, "auction_percent": 762.9863500000001, "auction_fix": 140, "transport": 265, "import_fee": 800, "total_netto": 20919.48635, "total_brutto_at": 25103.383619999997, "car_type": "SUV" }, "warranty_options": { "Standard": 583, "Komfort": 793, "Premium": 1393 }, "expiry_date": "2026-05-15 14:31:28", "uid": "0116938938", "verkaufspreis": 0, "raw_data": { "Katalognummer_x": 26, "Inventarnummer": "0116938938     ", "Hersteller": "Ford", "Modell": "Mustang", "Motor": "0,0", "Ausf\u00fchrung": "MACH-E AWD - DE", "Ausstattungsvariante": "PREMIUM", "Karosserietyp": "SUV", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Schwarz ", "Herstellerfarbe": "IRIDIUM SCHWARZ", "PS": 371, "KM Stand": 52.962, "Erstzulassung": "17.03.2023", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Sitze elektrisch verstellbar, Aussenspiegel elektrisch anklappbar, Soundsystem, Parksensoren vorne, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle", "Fahrzeugquelle": "Unbekannt", "Optischer Zustand": "Optischer Zustand 1", "Link": "de.bca-europe.com/Lot?id=23579658", "Katalognummer_Num": 26, "Katalognummer_y": 26, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0116938938-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 85283 Wolnzach", "BCA_HTML_Price": 18319.0, "expiry_date": "2026-05-15 14:31:28" }, "archive_date": "2026-05-14" }, { "id": "22", "category": "Auktionsfahrzeuge", "name": "Ford Capri", "ausfuehrung": "79KWH AWD - DE", "img": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019925-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "ez": "21.02.2025", "km": "7.251", "km_raw": 7251, "year_raw": 2025, "ps": "340", "kraftstoff": "BEV - battery electr", "ausstattung": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar"], "ausstattung_full": ["Airbags", "Klimaanlage", "Leichtmetallfelgen", "ABS", "Bluetooth-Telefon-Schnittstelle", "Aussenspiegel elektrisch anklappbar", "Parksensoren vorne", "Aussenspiegel beheizbar", "Fensterheber elektrisch - Vorne und Hinten", "Radio", "Parksensoren hinten", "Aussenspiegel elektrisch verstellbar", "Zentralverriegelung mit Fernbedienung", "Navigationssystem", "Sitzheizung - Vorne", "Stabilit\u00e4tskontrolle"], "location": "Germany - 89520 Heidenheim", "car_type": "PKW", "bca_price": 29076.0, "transport": 600, "details": { "netto_basis": 29076.0, "auction_percent": 1211.0154, "auction_fix": 140, "transport": 600, "import_fee": 800, "total_netto": 32708.5354, "total_brutto_at": 39250.24248, "car_type": "PKW" }, "warranty_options": { "Standard": 583, "Komfort": 793, "Premium": 1393 }, "expiry_date": "2026-05-15 14:31:28", "uid": "0117019925", "verkaufspreis": 0, "raw_data": { "Katalognummer_x": 27, "Inventarnummer": "0117019925     ", "Hersteller": "Ford", "Modell": "Capri", "Motor": "0,0", "Ausf\u00fchrung": "79KWH AWD - DE", "Ausstattungsvariante": "Premium", "Karosserietyp": "Limousine", "Kraftstoff": "BEV - battery electric vehicle  100% electric", "Farbe": "Schwarz Metallic", "Herstellerfarbe": "AGATE BLACK", "PS": 340, "KM Stand": 7.251, "Erstzulassung": "21.02.2025", "Nutzung": "unbekannt", "Ausstattung": "Airbags, Klimaanlage, Leichtmetallfelgen, ABS, Bluetooth-Telefon-Schnittstelle, Aussenspiegel elektrisch anklappbar, Parksensoren vorne, Aussenspiegel beheizbar, Fensterheber elektrisch - Vorne und Hinten, Radio, Parksensoren hinten, Aussenspiegel elektrisch verstellbar, Zentralverriegelung mit Fernbedienung, Navigationssystem, Sitzheizung - Vorne, Stabilit\u00e4tskontrolle", "Fahrzeugquelle": "Hersteller", "Optischer Zustand": "Optischer Zustand 2", "Link": "de.bca-europe.com/Lot?id=23579668", "Katalognummer_Num": 27, "Katalognummer_y": 27, "BCA_Bild_URL": "https://www1.bcaimage.com/Document?DocType=VehicleImage&amp;Reg=0117019925-BR&amp;grp=public&amp;obl=hht3,Manheim,bluescreen&amp;minwidth=800&amp;width=800&amp;default=5", "BCA_Standort": "Germany - 89520 Heidenheim", "BCA_HTML_Price": 29076.0, "expiry_date": "2026-05-15 14:31:28" }, "archive_date": "2026-05-14" }];
+
+        const fmt = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+        let currentPage = 1;
+        const itemsPerPage = 50;
+        let currentCarId = null;
+
+        async function syncToGitHub() {
+            const btn = document.getElementById('syncGitHub');
+            const old = btn.innerHTML;
+            btn.disabled = true; btn.innerText = 'Syncing...';
+            try {
+                const res = await fetch('/api/push-github');
+                const data = await res.json();
+                showToast(data.status === 'success' ? 'Update Live!' : 'Fehler', data.status);
+            } catch (e) { showToast('Server Fehler', 'error'); }
+            finally { btn.disabled = false; btn.innerHTML = old; lucide.createIcons(); }
+        }
+
+        function initFilters() {
+            const makes = [...new Set(cars.map(c => c.name.split(' ')[0]))].sort();
+            const mFilter = document.getElementById('makeFilter');
+            makes.forEach(m => { const opt = document.createElement('option'); opt.value = m; opt.innerText = m; mFilter.appendChild(opt); });
+
+            const years = [...new Set(cars.map(c => c.year_raw))].sort((a, b) => b - a);
+            const yMin = document.getElementById('yearMin');
+            const yMax = document.getElementById('yearMax');
+            years.forEach(y => {
+                const opt1 = document.createElement('option'); opt1.value = y; opt1.innerText = y; yMin.appendChild(opt1);
+                const opt2 = document.createElement('option'); opt2.value = y; opt2.innerText = y; yMax.appendChild(opt2);
+            });
+
+            const features = [...new Set(cars.flatMap(c => c.ausstattung_full))].filter(Boolean).sort();
+            const dropdown = document.getElementById('multiSelectDropdown');
+            dropdown.innerHTML = features.map(f => `
                     <label class="multi-select-item text-xs font-medium text-slate-600">
                         <input type="checkbox" value="${f}" onchange="onFeatureChange()" class="feature-checkbox rounded border-slate-300 text-blue-600 focus:ring-blue-500">
                         <span class="truncate">${f}</span>
                     </label>
                 `).join('');
 
-                ['makeFilter', 'yearMin', 'yearMax', 'kmMin', 'kmMax', 'searchInput', 'sortOrder'].forEach(id => {
-                    document.getElementById(id).addEventListener('change', () => { currentPage = 1; render(); });
-                    document.getElementById(id).addEventListener('input', () => { currentPage = 1; render(); });
-                });
+            ['makeFilter', 'yearMin', 'yearMax', 'kmMin', 'kmMax', 'searchInput', 'sortOrder'].forEach(id => {
+                document.getElementById(id).addEventListener('change', () => { currentPage = 1; render(); });
+                document.getElementById(id).addEventListener('input', () => { currentPage = 1; render(); });
+            });
 
-                window.addEventListener('click', (e) => {
-                    if (!e.target.closest('.multi-select-container')) {
-                        document.getElementById('multiSelectDropdown').classList.remove('active');
-                    }
-                });
-            }
-
-            function toggleMultiSelect(e) {
-                e.stopPropagation();
-                document.getElementById('multiSelectDropdown').classList.toggle('active');
-            }
-
-            function onFeatureChange() {
-                const checked = Array.from(document.querySelectorAll('.feature-checkbox:checked')).map(cb => cb.value);
-                const btnText = document.getElementById('selectedCountText');
-                if (checked.length === 0) btnText.innerText = "Alle Merkmale";
-                else if (checked.length === 1) btnText.innerText = checked[0];
-                else btnText.innerText = `${checked.length} Merkmale`;
-                currentPage = 1;
-                render();
-            }
-
-            function showToast(msg, type) {
-                const toast = document.getElementById('toast');
-                document.getElementById('toastMessage').innerText = msg;
-                document.getElementById('toastIcon').innerHTML = type === 'success' ? '<i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>' : '<i data-lucide="alert-circle" class="w-5 h-5 text-red-500"></i>';
-                lucide.createIcons();
-                toast.style.display = 'block'; setTimeout(() => { toast.style.display = 'none'; }, 3000);
-            }
-
-            function openModal(name, id, img) {
-                currentCarId = id;
-                const car = cars.find(c => String(c.id) === String(id));
-                document.getElementById('modalCarName').innerText = name;
-                document.getElementById('modalCarId').innerText = id;
-                document.getElementById('modalCarImg').src = img || 'https://via.placeholder.com/600x400';
-                document.getElementById('modalLimitInput').value = car.bca_price;
-                
-                const wSelect = document.getElementById('optWarranty');
-                wSelect.innerHTML = '<option value="0">Keine Zusatzgarantie</option>';
-                if (car.warranty_options) {
-                    Object.entries(car.warranty_options).forEach(([level, price]) => {
-                        const opt = document.createElement('option'); opt.value = price; opt.innerText = `12M ${level} - ${price}€`;
-                        wSelect.appendChild(opt);
-                    });
+            window.addEventListener('click', (e) => {
+                if (!e.target.closest('.multi-select-container')) {
+                    document.getElementById('multiSelectDropdown').classList.remove('active');
                 }
+            });
+        }
 
-                const backdrop = document.getElementById('modalBackdrop');
-                backdrop.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-                updateModalState(true);
-                setTimeout(() => { backdrop.classList.add('opacity-100'); document.getElementById('modalContainer').classList.add('scale-100', 'opacity-100'); }, 10);
-                
-                document.getElementById('checkEmail').checked = false;
-                document.getElementById('checkLimit').checked = false;
-                document.getElementById('checkImport').checked = false;
-                document.getElementById('successOverlay').classList.remove('active');
-                toggleCalculator(false); toggleMessageField(false); validateForm();
+        function toggleMultiSelect(e) {
+            e.stopPropagation();
+            document.getElementById('multiSelectDropdown').classList.toggle('active');
+        }
+
+        function onFeatureChange() {
+            const checked = Array.from(document.querySelectorAll('.feature-checkbox:checked')).map(cb => cb.value);
+            const btnText = document.getElementById('selectedCountText');
+            if (checked.length === 0) btnText.innerText = "Alle Merkmale";
+            else if (checked.length === 1) btnText.innerText = checked[0];
+            else btnText.innerText = `${checked.length} Merkmale`;
+            currentPage = 1;
+            render();
+        }
+
+        function showToast(msg, type) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = msg;
+            document.getElementById('toastIcon').innerHTML = type === 'success' ? '<i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>' : '<i data-lucide="alert-circle" class="w-5 h-5 text-red-500"></i>';
+            lucide.createIcons();
+            toast.style.display = 'block'; setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        function openModal(name, id, img) {
+            currentCarId = id;
+            const car = cars.find(c => String(c.id) === String(id));
+            document.getElementById('modalCarName').innerText = name;
+            document.getElementById('modalCarId').innerText = id;
+            document.getElementById('modalCarImg').src = img || 'https://via.placeholder.com/600x400';
+            document.getElementById('modalLimitInput').value = car.bca_price;
+
+            const wSelect = document.getElementById('optWarranty');
+            wSelect.innerHTML = '<option value="0">Keine Zusatzgarantie</option>';
+            if (car.warranty_options) {
+                Object.entries(car.warranty_options).forEach(([level, price]) => {
+                    const opt = document.createElement('option'); opt.value = price; opt.innerText = `12M ${level} - ${price}€`;
+                    wSelect.appendChild(opt);
+                });
             }
 
-            function closeModal() {
-                const backdrop = document.getElementById('modalBackdrop');
-                backdrop.classList.remove('opacity-100');
-                document.getElementById('modalContainer').classList.remove('scale-100', 'opacity-100');
-                document.body.style.overflow = '';
-                updateModalState(false);
-                setTimeout(() => { backdrop.classList.add('hidden'); }, 300);
-            }
+            const backdrop = document.getElementById('modalBackdrop');
+            backdrop.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            updateModalState(true);
+            setTimeout(() => { backdrop.classList.add('opacity-100'); document.getElementById('modalContainer').classList.add('scale-100', 'opacity-100'); }, 10);
 
-            function toggleCalculator(s) { document.getElementById('detailedCalc').classList.toggle('hidden', !s); if(s) runModalCalc(); }
-            function toggleMessageField(s) { document.getElementById('messageContainer').classList.toggle('message-hidden', !s); if(s) document.getElementById('messageContainer').classList.add('message-visible'); }
+            document.getElementById('checkEmail').checked = false;
+            document.getElementById('checkLimit').checked = false;
+            document.getElementById('checkImport').checked = false;
+            document.getElementById('successOverlay').classList.remove('active');
+            toggleCalculator(false); toggleMessageField(false); validateForm();
+        }
 
-            function openDataModal(id) {
-                const car = cars.find(c => String(c.id) === String(id));
-                if(!car) return;
-                const content = document.getElementById('dataModalContent');
-                content.innerHTML = `
+        function closeModal() {
+            const backdrop = document.getElementById('modalBackdrop');
+            backdrop.classList.remove('opacity-100');
+            document.getElementById('modalContainer').classList.remove('scale-100', 'opacity-100');
+            document.body.style.overflow = '';
+            updateModalState(false);
+            setTimeout(() => { backdrop.classList.add('hidden'); }, 300);
+        }
+
+        function toggleCalculator(s) { document.getElementById('detailedCalc').classList.toggle('hidden', !s); if (s) runModalCalc(); }
+        function toggleMessageField(s) { document.getElementById('messageContainer').classList.toggle('message-hidden', !s); if (s) document.getElementById('messageContainer').classList.add('message-visible'); }
+
+        function openDataModal(id) {
+            const car = cars.find(c => String(c.id) === String(id));
+            if (!car) return;
+            const content = document.getElementById('dataModalContent');
+            content.innerHTML = `
                     <div class="flex flex-col w-full">
                         <!-- Hero Section -->
                         <div class="relative h-64 md:h-80 w-full bg-slate-900 flex-shrink-0">
@@ -480,153 +696,130 @@
                         </div>
                     </div>
                 `;
-                const bg = document.getElementById('dataModalBackdrop');
-                const c = document.getElementById('dataModalContainer');
-                bg.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-                updateModalState(true);
-                setTimeout(() => { bg.classList.add('opacity-100'); c.classList.add('scale-100', 'opacity-100'); }, 10);
-                lucide.createIcons();
+            const bg = document.getElementById('dataModalBackdrop');
+            const c = document.getElementById('dataModalContainer');
+            bg.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            updateModalState(true);
+            setTimeout(() => { bg.classList.add('opacity-100'); c.classList.add('scale-100', 'opacity-100'); }, 10);
+            lucide.createIcons();
+        }
+
+        function closeDataModal() {
+            const bg = document.getElementById('dataModalBackdrop');
+            const c = document.getElementById('dataModalContainer');
+            bg.classList.remove('opacity-100');
+            c.classList.remove('scale-100', 'opacity-100');
+            document.body.style.overflow = '';
+            updateModalState(false);
+            setTimeout(() => bg.classList.add('hidden'), 300);
+        }
+
+        function validateForm() {
+            const any = ['checkEmail', 'checkLimit', 'checkImport'].some(id => document.getElementById(id).checked);
+            const name = document.getElementById('userName').value.trim().length > 1;
+            const mail = document.getElementById('userEmail').value.trim().includes('@');
+            document.getElementById('btnSubmitInquiry').disabled = !any || !name || !mail;
+        }
+
+        document.getElementById('userName').addEventListener('input', validateForm);
+        document.getElementById('userEmail').addEventListener('input', validateForm);
+
+        function runModalCalc() {
+            if (!currentCarId) return;
+            const car = cars.find(c => c.id === currentCarId);
+            const netto = parseFloat(document.getElementById('modalLimitInput').value) || 0;
+            const fees = (netto * 1.19 * 0.035) + 140;
+            const transport = car.transport * 1.5;
+            const commission = Math.max(500, netto * 0.02);
+            const warranty = parseFloat(document.getElementById('optWarranty').value);
+            const totalNetto = netto + fees + transport + 800 + commission + warranty;
+
+            document.getElementById('resNetto').innerText = fmt.format(netto);
+            document.getElementById('resTransport').innerText = fmt.format(transport);
+            document.getElementById('resProvision').innerText = fmt.format(fees + commission);
+            document.getElementById('resTotalBrutto').innerText = fmt.format(totalNetto * 1.20);
+
+            const optRow = document.getElementById('resOptionsRow');
+            if (warranty > 0) { optRow.classList.remove('hidden'); document.getElementById('resOptions').innerText = fmt.format(warranty); }
+            else { optRow.classList.add('hidden'); }
+        }
+
+        function sendInquiry() {
+            const car = cars.find(c => c.id === currentCarId);
+            const data = { 
+                type: 'vehicle_inquiry', 
+                carId: currentCarId, 
+                carName: car.name, 
+                userData: { 
+                    name: document.getElementById('userName').value, 
+                    email: document.getElementById('userEmail').value 
+                },
+                zustandsbericht: document.getElementById('checkEmail').checked ? 'Ja' : 'Nein'
+            };
+            window.parent.postMessage(JSON.stringify(data), "*");
+            document.getElementById('btnSubmitInquiry').disabled = true;
+            setTimeout(() => { document.getElementById('successOverlay').classList.add('active'); lucide.createIcons(); }, 800);
+        }
+
+        function formatNumberInput(el, id) {
+            let val = el.value.replace(/\./g, '').replace(/[^\d]/g, '');
+            if (val === '') {
+                updateCalc(id, 0);
+                return;
             }
+            const num = parseInt(val);
+            el.value = num.toLocaleString('de-DE');
+            updateCalc(id, num);
+        }
 
-            function closeDataModal() {
-                const bg = document.getElementById('dataModalBackdrop');
-                const c = document.getElementById('dataModalContainer');
-                bg.classList.remove('opacity-100');
-                c.classList.remove('scale-100', 'opacity-100');
-                document.body.style.overflow = '';
-                updateModalState(false);
-                setTimeout(() => bg.classList.add('hidden'), 300);
-            }
+        function updateCalc(id, val) {
+            const car = cars.find(c => String(c.id) === String(id));
+            if (!car) return;
+            const netto = parseFloat(val) || 0;
+            car.bca_price = netto; // Synchronize with internal data
+            const fees = (netto * 1.19) * 0.035 + 140;
+            const comm = Math.max(500, netto * 0.02);
+            const transport = car.transport * 1.5;
+            const totalBrutto = (netto + fees + transport + 800 + comm) * 1.20;
+            const el = document.getElementById(`mainPrice_${id}`);
+            if (el) el.innerText = fmt.format(totalBrutto);
+        }
 
-            function validateForm() {
-                const any = ['checkEmail', 'checkLimit', 'checkImport'].some(id => document.getElementById(id).checked);
-                const name = document.getElementById('userName').value.trim().length > 1;
-                const mail = document.getElementById('userEmail').value.trim().includes('@');
-                document.getElementById('btnSubmitInquiry').disabled = !any || !name || !mail;
-            }
+        function render() {
+            const grid = document.getElementById('carGrid');
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const make = document.getElementById('makeFilter').value;
+            const yMin = parseInt(document.getElementById('yearMin').value) || 0;
+            const yMax = parseInt(document.getElementById('yearMax').value) || 9999;
+            const kMin = parseInt(document.getElementById('kmMin').value) || 0;
+            const kMax = parseInt(document.getElementById('kmMax').value) || 9999999;
+            const selectedFeatures = Array.from(document.querySelectorAll('.feature-checkbox:checked')).map(cb => cb.value.toLowerCase());
 
-            document.getElementById('userName').addEventListener('input', validateForm);
-            document.getElementById('userEmail').addEventListener('input', validateForm);
+            const filtered = cars.filter(c => {
+                const matchesTerm = (c.name.toLowerCase().includes(term) || String(c.id).includes(term));
+                const matchesMake = (!make || c.name.startsWith(make));
+                const matchesYear = (c.year_raw >= yMin && c.year_raw <= yMax);
+                const matchesKm = (c.km_raw >= kMin && c.km_raw <= kMax);
+                const matchesFeature = selectedFeatures.length === 0 || selectedFeatures.every(sf => (c.ausstattung_full || []).some(af => af.toLowerCase().includes(sf)));
+                return matchesTerm && matchesMake && matchesYear && matchesKm && matchesFeature;
+            });
 
-            function runModalCalc() {
-                if (!currentCarId) return;
-                const car = cars.find(c => c.id === currentCarId);
-                const netto = parseFloat(document.getElementById('modalLimitInput').value) || 0;
-                const fees = (netto * 1.19 * 0.035) + 140;
-                const transport = car.transport * 1.5;
-                const commission = Math.max(500, netto * 0.02);
-                const warranty = parseFloat(document.getElementById('optWarranty').value);
-                const totalNetto = netto + fees + transport + 800 + commission + warranty;
-                
-                document.getElementById('resNetto').innerText = fmt.format(netto);
-                document.getElementById('resTransport').innerText = fmt.format(transport);
-                document.getElementById('resProvision').innerText = fmt.format(fees + commission);
-                document.getElementById('resTotalBrutto').innerText = fmt.format(totalNetto * 1.20);
-                
-                const optRow = document.getElementById('resOptionsRow');
-                if(warranty > 0) { optRow.classList.remove('hidden'); document.getElementById('resOptions').innerText = fmt.format(warranty); }
-                else { optRow.classList.add('hidden'); }
-            }
+            const sort = document.getElementById('sortOrder').value;
+            filtered.sort((a, b) => {
+                if (sort === 'newest') return new Date(b.archive_date) - new Date(a.archive_date);
+                if (sort === 'oldest') return new Date(a.archive_date) - new Date(b.archive_date);
+                if (sort === 'price-asc') return a.bca_price - b.bca_price;
+                if (sort === 'price-desc') return b.bca_price - a.bca_price;
+                if (sort === 'km-asc') return a.km_raw - b.km_raw;
+                if (sort === 'id-asc') return parseInt(a.id) - parseInt(b.id);
+                if (sort === 'id-desc') return parseInt(b.id) - parseInt(a.id);
+                return 0;
+            });
 
-            function sendInquiry() {
-                const car = cars.find(c => c.id === currentCarId);
-                const netto = parseFloat(document.getElementById('modalLimitInput').value) || 0;
-                const fees = (netto * 1.19 * 0.035) + 140;
-                const transport = car.transport * 1.5;
-                const commission = Math.max(500, netto * 0.02);
-                const warranty = parseFloat(document.getElementById('optWarranty').value);
-                const totalNetto = netto + fees + transport + 800 + commission + warranty;
-                const totalBrutto = totalNetto * 1.20;
+            const items = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-                const data = { 
-                    type: 'vehicle_inquiry', 
-                    carId: currentCarId, 
-                    carName: car.name, 
-                    userData: { 
-                        name: document.getElementById('userName').value, 
-                        email: document.getElementById('userEmail').value 
-                    },
-                    calculation: {
-                        gebotNetto: netto,
-                        transport: transport,
-                        anmeldung: 800,
-                        provision: fees + commission,
-                        garantie: warranty,
-                        gesamtBrutto: totalBrutto
-                    },
-                    carDetails: {
-                        vin: car.vin || '',
-                        ez: car.ez || '',
-                        km: car.km || '',
-                        fuel: car.kraftstoff || '',
-                        ps: car.ps || ''
-                    }
-                };
-
-                window.parent.postMessage(JSON.stringify(data), "*");
-                document.getElementById('btnSubmitInquiry').disabled = true;
-                setTimeout(() => { document.getElementById('successOverlay').classList.add('active'); lucide.createIcons(); }, 800);
-            }
-
-            function formatNumberInput(el, id) {
-                let val = el.value.replace(/\./g, '').replace(/[^\d]/g, '');
-                if (val === '') {
-                    updateCalc(id, 0);
-                    return;
-                }
-                const num = parseInt(val);
-                el.value = num.toLocaleString('de-DE');
-                updateCalc(id, num);
-            }
-
-            function updateCalc(id, val) {
-                const car = cars.find(c => String(c.id) === String(id));
-                if (!car) return;
-                const netto = parseFloat(val) || 0;
-                car.bca_price = netto; // Synchronize with internal data
-                const fees = (netto * 1.19) * 0.035 + 140;
-                const comm = Math.max(500, netto * 0.02);
-                const transport = car.transport * 1.5;
-                const totalBrutto = (netto + fees + transport + 800 + comm) * 1.20;
-                const el = document.getElementById(`mainPrice_${id}`);
-                if(el) el.innerText = fmt.format(totalBrutto);
-            }
-
-            function render() {
-                const grid = document.getElementById('carGrid');
-                const term = document.getElementById('searchInput').value.toLowerCase();
-                const make = document.getElementById('makeFilter').value;
-                const yMin = parseInt(document.getElementById('yearMin').value) || 0;
-                const yMax = parseInt(document.getElementById('yearMax').value) || 9999;
-                const kMin = parseInt(document.getElementById('kmMin').value) || 0;
-                const kMax = parseInt(document.getElementById('kmMax').value) || 9999999;
-                const selectedFeatures = Array.from(document.querySelectorAll('.feature-checkbox:checked')).map(cb => cb.value.toLowerCase());
-                
-                const filtered = cars.filter(c => {
-                    const matchesTerm = (c.name.toLowerCase().includes(term) || String(c.id).includes(term));
-                    const matchesMake = (!make || c.name.startsWith(make));
-                    const matchesYear = (c.year_raw >= yMin && c.year_raw <= yMax);
-                    const matchesKm = (c.km_raw >= kMin && c.km_raw <= kMax);
-                    const matchesFeature = selectedFeatures.length === 0 || selectedFeatures.every(sf => (c.ausstattung_full || []).some(af => af.toLowerCase().includes(sf)));
-                    return matchesTerm && matchesMake && matchesYear && matchesKm && matchesFeature;
-                });
-
-                const sort = document.getElementById('sortOrder').value;
-                filtered.sort((a, b) => {
-                    if (sort === 'newest') return new Date(b.archive_date) - new Date(a.archive_date);
-                    if (sort === 'oldest') return new Date(a.archive_date) - new Date(b.archive_date);
-                    if (sort === 'price-asc') return a.bca_price - b.bca_price;
-                    if (sort === 'price-desc') return b.bca_price - a.bca_price;
-                    if (sort === 'km-asc') return a.km_raw - b.km_raw;
-                    if (sort === 'id-asc') return parseInt(a.id) - parseInt(b.id);
-                    if (sort === 'id-desc') return parseInt(b.id) - parseInt(a.id);
-                    return 0;
-                });
-
-                const items = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-                
-                grid.innerHTML = items.map(car => `
+            grid.innerHTML = items.map(car => `
                     <div class="glass-card rounded-2xl md:rounded-3xl overflow-hidden flex flex-col shadow-sm hover:shadow-lg transition-all duration-300">
                         <div class="relative h-32 md:h-44 bg-slate-100">
                             <img src="${car.img}" class="w-full h-full object-cover" alt="${car.name}">
@@ -643,7 +836,7 @@
                                 <span>${car.ez.split('.')[2]}</span> &bull; <span>${car.km} KM</span> &bull; <span>${car.ps} PS</span>
                             </div>
                             <div class="flex flex-wrap gap-1 mb-4">
-                                ${car.ausstattung.slice(0,3).map(a => `<span class="ausstattung-badge px-1.5 py-0.5 rounded text-[8px] md:text-[9px]">${a}</span>`).join('')}
+                                ${car.ausstattung.slice(0, 3).map(a => `<span class="ausstattung-badge px-1.5 py-0.5 rounded text-[8px] md:text-[9px]">${a}</span>`).join('')}
                             </div>
                             <div class="mt-auto space-y-3">
                                 <div class="flex items-end justify-between gap-2 pt-2 border-t border-slate-100">
@@ -671,109 +864,109 @@
                         </div>
                     </div>
                 `).join('');
-                lucide.createIcons();
-                updateTimers();
-                renderPagination(Math.ceil(filtered.length / itemsPerPage));
-                // NEU: Gib dem Browser 300ms Zeit zum Aufbauen, bevor er die Höhe an Wix meldet
-                setTimeout(sendSettingsToParent, 300);
-            }
+            lucide.createIcons();
+            updateTimers();
+            renderPagination(Math.ceil(filtered.length / itemsPerPage));
+            // NEU: Gib dem Browser 300ms Zeit zum Aufbauen, bevor er die Höhe an Wix meldet
+            setTimeout(sendSettingsToParent, 300);
+        }
 
-            function updateTimers() {
-                const now = new Date().getTime();
-                document.querySelectorAll('.timer-badge').forEach(badge => {
-                    const expiry = new Date(badge.dataset.expiry).getTime();
-                    const diff = expiry - now;
-                    const textEl = badge.querySelector('.timer-text');
-                    
-                    if (diff <= 0) {
-                        badge.classList.remove('bg-slate-900/80');
-                        badge.classList.add('bg-red-600');
-                        textEl.innerText = "Beendet";
-                        return;
-                    }
+        function updateTimers() {
+            const now = new Date().getTime();
+            document.querySelectorAll('.timer-badge').forEach(badge => {
+                const expiry = new Date(badge.dataset.expiry).getTime();
+                const diff = expiry - now;
+                const textEl = badge.querySelector('.timer-text');
 
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    const secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-                    if (days > 0) {
-                        textEl.innerText = `${days}d ${hours}h`;
-                    } else if (hours > 0) {
-                        textEl.innerText = `${hours}h ${mins}m`;
-                        if (hours < 1) badge.classList.replace('bg-slate-900/80', 'bg-orange-600');
-                    } else {
-                        textEl.innerText = `${mins}m ${secs}s`;
-                        badge.classList.remove('bg-slate-900/80');
-                        badge.classList.add('bg-orange-600');
-                    }
-                });
-            }
-
-            setInterval(updateTimers, 1000);
-
-            function resetFilters() { 
-                document.querySelectorAll('.filter-select, #searchInput').forEach(e => e.value = ''); 
-                document.querySelectorAll('.feature-checkbox').forEach(cb => cb.checked = false);
-                document.getElementById('selectedCountText').innerText = "Alle Merkmale";
-                currentPage = 1; 
-                render(); 
-            }
-            
-            function sendSettingsToParent() {
-                const container = document.getElementById('mainContainer');
-                if (container && !document.body.classList.contains('modal-open')) {
-                    // scrollHeight ist auf Handys viel zuverlässiger bei untereinander gestapelten Grids!
-                    const h = Math.max(container.offsetHeight, container.scrollHeight) + 50; 
-                    window.parent.postMessage({ type: 'resize', height: h }, '*');
-                    console.log("Sende Höhe an Wix (V6):", h);
+                if (diff <= 0) {
+                    badge.classList.remove('bg-slate-900/80');
+                    badge.classList.add('bg-red-600');
+                    textEl.innerText = "Beendet";
+                    return;
                 }
-            }
 
-            function updateModalState(isOpen) {
-                if (isOpen) {
-                    document.body.classList.add('modal-open');
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+                if (days > 0) {
+                    textEl.innerText = `${days}d ${hours}h`;
+                } else if (hours > 0) {
+                    textEl.innerText = `${hours}h ${mins}m`;
+                    if (hours < 1) badge.classList.replace('bg-slate-900/80', 'bg-orange-600');
                 } else {
-                    document.body.classList.remove('modal-open');
+                    textEl.innerText = `${mins}m ${secs}s`;
+                    badge.classList.remove('bg-slate-900/80');
+                    badge.classList.add('bg-orange-600');
                 }
-                sendSettingsToParent();
-            }
+            });
+        }
 
-            window.addEventListener('load', () => setTimeout(sendSettingsToParent, 300));
-            window.addEventListener('resize', () => setTimeout(sendSettingsToParent, 300));
-            
-            function renderPagination(t) {
-                const pag = document.getElementById('pagination');
-                if (t <= 1) { pag.innerHTML = ''; return; }
-                let h = `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} class="px-3 py-1.5 bg-white border rounded-lg text-xs font-bold disabled:opacity-50">Zurück</button>`;
-                h += `<span class="text-xs font-bold px-3">Seite ${currentPage}</span>`;
-                h += `<button onclick="changePage(${currentPage + 1})" ${currentPage === t ? 'disabled' : ''} class="px-3 py-1.5 bg-white border rounded-lg text-xs font-bold disabled:opacity-50">Weiter</button>`;
-                pag.innerHTML = h;
-            }
-            
-            function changePage(p) { currentPage = p; render(); window.scrollTo({top: 0, behavior: 'smooth'}); }
+        setInterval(updateTimers, 1000);
 
-            if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-                const syncBtn = document.getElementById('syncGitHub');
-                if(syncBtn) syncBtn.style.display = 'none';
-            }
+        function resetFilters() {
+            document.querySelectorAll('.filter-select, #searchInput').forEach(e => e.value = '');
+            document.querySelectorAll('.feature-checkbox').forEach(cb => cb.checked = false);
+            document.getElementById('selectedCountText').innerText = "Alle Merkmale";
+            currentPage = 1;
+            render();
+        }
 
-            try {
-                initFilters(); 
-                render();
-            } catch (e) {
-                console.error("Render error:", e);
-                document.getElementById('carGrid').innerHTML = '<div class="col-span-full p-8 text-center text-red-500 font-bold bg-red-50 rounded-2xl">Fehler beim Laden der Fahrzeuge. Bitte Seite neu laden.</div>';
+        function sendSettingsToParent() {
+            const container = document.getElementById('mainContainer');
+            if (container && !document.body.classList.contains('modal-open')) {
+                // scrollHeight ist auf Handys viel zuverlässiger bei untereinander gestapelten Grids!
+                const h = Math.max(container.offsetHeight, container.scrollHeight) + 50;
+                window.parent.postMessage({ type: 'resize', height: h }, '*');
+                console.log("Sende Höhe an Wix (V6):", h);
             }
-            if (window.ResizeObserver) { 
-                let resizeTimer;
-                new ResizeObserver(() => {
-                    clearTimeout(resizeTimer);
-                    resizeTimer = setTimeout(sendSettingsToParent, 300);
-                }).observe(document.body); 
+        }
+
+        function updateModalState(isOpen) {
+            if (isOpen) {
+                document.body.classList.add('modal-open');
+            } else {
+                document.body.classList.remove('modal-open');
             }
-            setTimeout(sendSettingsToParent, 500);
-        </script>
-    </body>
-    </html>
-    
+            sendSettingsToParent();
+        }
+
+        window.addEventListener('load', () => setTimeout(sendSettingsToParent, 300));
+        window.addEventListener('resize', () => setTimeout(sendSettingsToParent, 300));
+
+        function renderPagination(t) {
+            const pag = document.getElementById('pagination');
+            if (t <= 1) { pag.innerHTML = ''; return; }
+            let h = `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} class="px-3 py-1.5 bg-white border rounded-lg text-xs font-bold disabled:opacity-50">Zurück</button>`;
+            h += `<span class="text-xs font-bold px-3">Seite ${currentPage}</span>`;
+            h += `<button onclick="changePage(${currentPage + 1})" ${currentPage === t ? 'disabled' : ''} class="px-3 py-1.5 bg-white border rounded-lg text-xs font-bold disabled:opacity-50">Weiter</button>`;
+            pag.innerHTML = h;
+        }
+
+        function changePage(p) { currentPage = p; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+            const syncBtn = document.getElementById('syncGitHub');
+            if (syncBtn) syncBtn.style.display = 'none';
+        }
+
+        try {
+            initFilters();
+            render();
+        } catch (e) {
+            console.error("Render error:", e);
+            document.getElementById('carGrid').innerHTML = '<div class="col-span-full p-8 text-center text-red-500 font-bold bg-red-50 rounded-2xl">Fehler beim Laden der Fahrzeuge. Bitte Seite neu laden.</div>';
+        }
+        if (window.ResizeObserver) {
+            let resizeTimer;
+            new ResizeObserver(() => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(sendSettingsToParent, 300);
+            }).observe(document.body);
+        }
+        setTimeout(sendSettingsToParent, 500);
+    </script>
+</body>
+
+</html>
