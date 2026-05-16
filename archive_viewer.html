@@ -162,6 +162,32 @@
         </div>
     </div>
 
+    <!-- Analysis Modal -->
+    <div id="analysisModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4 transition-opacity opacity-0 duration-300">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl flex flex-col overflow-hidden transform transition-all scale-95 opacity-0 duration-300" id="analysisContent">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-amber-50">
+                <div>
+                    <h2 class="text-2xl font-bold text-amber-800">Preis-Analyse</h2>
+                    <p class="text-sm text-amber-600">Vergleich mit ähnlichen Archiv-Fahrzeugen</p>
+                </div>
+                <button onclick="closeAnalysis()" class="p-2 hover:bg-amber-100 rounded-full transition-colors">
+                    <i data-lucide="x" class="w-6 h-6 text-amber-800"></i>
+                </button>
+            </div>
+            <div class="p-8 space-y-6">
+                <div id="analysisSummary" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Dynamic -->
+                </div>
+                <div class="space-y-3">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Ähnlichste Fahrzeuge im Archiv:</h3>
+                    <div id="similarCarsList" class="space-y-2 max-h-64 overflow-y-auto pr-2">
+                        <!-- Dynamic -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const fmt = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
 
@@ -319,11 +345,14 @@
                                 </div>
                             </div>
 
-                            <div class="flex gap-2">
+                             <div class="flex flex-wrap gap-2">
                                 <button onclick="showDetails('${car.id}')" class="flex-grow py-2 bg-slate-50 hover:bg-blue-50 text-blue-600 font-bold text-sm rounded-xl border border-slate-200 transition-colors flex justify-center items-center gap-2">
-                                    <i data-lucide="file-text" class="w-4 h-4"></i> Alle Details
+                                    <i data-lucide="file-text" class="w-4 h-4"></i> Details
                                 </button>
-                                <button id="delete-btn-${car.id}" type="button" onclick="event.preventDefault(); event.stopPropagation(); confirmDelete('${car.id}')" class="py-2 px-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl border border-red-200 transition-colors flex justify-center items-center min-w-[40px]" title="Fahrzeug aus Datenbank löschen">
+                                <button onclick="analyzePrice('${car.id}')" class="flex-grow py-2 bg-amber-50 hover:bg-amber-100 text-amber-600 font-bold text-sm rounded-xl border border-amber-200 transition-colors flex justify-center items-center gap-2" title="Markt-Analyse basierend auf ähnlichen Fahrzeugen">
+                                    <i data-lucide="trending-up" class="w-4 h-4"></i> Analyse
+                                </button>
+                                <button id="delete-btn-${car.id}" type="button" onclick="event.preventDefault(); event.stopPropagation(); confirmDelete('${car.id}')" class="py-2 px-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl border border-red-200 transition-colors flex justify-center items-center min-w-[40px]" title="Löschen">
                                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                                 </button>
                             </div>
@@ -376,6 +405,104 @@
         function closeDetails() {
             const modal = document.getElementById('detailsModal');
             const content = document.getElementById('modalContent');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function analyzePrice(id) {
+            const target = currentCars.find(c => c.id === id);
+            if (!target) return;
+            
+            const targetMake = target.name.split(' ')[0].toLowerCase();
+            const targetModel = target.name.split(' ').slice(1).join(' ').toLowerCase();
+            const targetVariant = target.raw_data?.Ausstattungsvariante?.toLowerCase() || '';
+            const targetKm = target.km_raw || 0;
+            
+            // Finde ähnliche Fahrzeuge
+            const similar = currentCars.filter(c => {
+                if (c.id === target.id) return false;
+                
+                const cMake = c.name.split(' ')[0].toLowerCase();
+                const cModel = c.name.split(' ').slice(1).join(' ').toLowerCase();
+                const cVariant = c.raw_data?.Ausstattungsvariante?.toLowerCase() || '';
+                const cKm = c.km_raw || 0;
+                
+                // Kriterien:
+                // 1. Selbe Marke & Modell
+                if (cMake !== targetMake || !cModel.includes(targetModel)) return false;
+                
+                // 2. Variante (wenn vorhanden)
+                const variantMatch = targetVariant && cVariant === targetVariant;
+                
+                // 3. Kilometer-Toleranz (30%)
+                const kmDiff = Math.abs(cKm - targetKm);
+                const kmMatch = kmDiff <= (targetKm * 0.35) || kmDiff <= 15000;
+                
+                // Wir nehmen sie in die Liste, wenn die Variante passt ODER wenn die KM sehr ähnlich sind
+                return variantMatch || kmMatch;
+            });
+            
+            // Berechne Durchschnittspreise
+            const avgBca = similar.length > 0 ? similar.reduce((sum, c) => sum + (c.bca_price || 0), 0) / similar.length : 0;
+            const avgFinal = similar.length > 0 ? similar.reduce((sum, c) => {
+                const netto = (c.bca_price || 0);
+                const fees = (netto * 1.19) * 0.035 + 140;
+                const comm = Math.max(500, netto * 0.02);
+                const transport = (c.transport || 400) * 1.5;
+                return sum + (netto + fees + transport + 800 + comm) * 1.20;
+            }, 0) / similar.length : 0;
+
+            const summary = document.getElementById('analysisSummary');
+            summary.innerHTML = `
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Ø Archiv-Auktionspreis</span>
+                    <div class="text-2xl font-black text-slate-800">${fmt.format(avgBca)}</div>
+                    <span class="text-[10px] text-slate-400">Netto-Basis</span>
+                </div>
+                <div class="p-4 bg-amber-50 rounded-2xl border border-amber-100">
+                    <span class="text-[10px] font-bold text-amber-500 uppercase block mb-1">Ø Erwarteter Kundenpreis (AT)</span>
+                    <div class="text-2xl font-black text-amber-600">${fmt.format(avgFinal)}</div>
+                    <span class="text-[10px] text-amber-500">Inkl. NoVA & Provision</span>
+                </div>
+            `;
+            
+            const list = document.getElementById('similarCarsList');
+            if (similar.length === 0) {
+                list.innerHTML = '<p class="text-sm text-slate-400 italic text-center py-8">Keine vergleichbaren Fahrzeuge im Archiv gefunden.</p>';
+            } else {
+                list.innerHTML = similar.sort((a,b) => Math.abs(a.km_raw - targetKm) - Math.abs(b.km_raw - targetKm)).slice(0, 10).map(c => `
+                    <div class="flex items-center justify-between p-3 bg-slate-50 hover:bg-white rounded-xl border border-slate-100 transition-colors group">
+                        <div class="flex items-center gap-3">
+                            <img src="${c.img}" class="w-10 h-10 rounded-lg object-cover">
+                            <div>
+                                <div class="text-xs font-bold text-slate-800">${c.name}</div>
+                                <div class="text-[10px] text-slate-500 font-medium">${c.raw_data?.Ausstattungsvariante || '-'} • ${c.ez} • ${c.km} KM</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm font-bold text-slate-700">${fmt.format(c.bca_price)}</div>
+                            <div class="text-[9px] text-slate-400 uppercase font-bold">Auktions-Netto</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            const modal = document.getElementById('analysisModal');
+            const content = document.getElementById('analysisContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95', 'opacity-0');
+            }, 10);
+            lucide.createIcons();
+        }
+
+        function closeAnalysis() {
+            const modal = document.getElementById('analysisModal');
+            const content = document.getElementById('analysisContent');
             modal.classList.add('opacity-0');
             content.classList.add('scale-95', 'opacity-0');
             setTimeout(() => {
