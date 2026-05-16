@@ -62,8 +62,12 @@ def scrape_prices():
                 return
 
         for car in cars_to_scrape:
-            link = car.get('Link')
-            if not link: continue
+            # Suche Link im Hauptobjekt oder in raw_data
+            link = car.get('Link') or car.get('raw_data', {}).get('Link')
+            
+            if not link:
+                print(f"Kein Link für ID {car.get('id')} gefunden.")
+                continue
             
             if not link.startswith('http'):
                 link = "https://" + link
