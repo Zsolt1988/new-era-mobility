@@ -278,7 +278,10 @@
                     </div>
                     <div class="p-5 flex flex-col flex-grow">
                         <div class="mb-3">
-                            <h3 class="text-lg font-bold text-slate-800 leading-tight">#${car.id} - ${car.name}</h3>
+                            <h3 class="text-lg font-bold text-slate-800 leading-tight">
+                                #${car.id} - ${car.name}
+                                ${car.raw_data?.Ausstattungsvariante && car.raw_data.Ausstattungsvariante !== 'nan' && car.raw_data.Ausstattungsvariante !== '-' ? `<span class="text-blue-600 font-bold ml-1">${car.raw_data.Ausstattungsvariante}</span>` : ''}
+                            </h3>
                             <p class="text-xs text-slate-500">${car.ausfuehrung}</p>
                         </div>
                         <div class="flex gap-4 text-[10px] font-bold text-slate-400 uppercase mb-4">
