@@ -42,12 +42,18 @@ def scrape_prices():
 
         # Check ob wir eingeloggt sind
         print("Prüfe Login-Status...")
-        # Nutze die allgemeine Deutschland-Seite als Startpunkt
-        page.goto("https://de.bca-europe.com/")
+        
+        # Wir nehmen den ersten Link aus der Liste als Startpunkt für den Login
+        first_link = cars_to_scrape[0].get('Link') or cars_to_scrape[0].get('raw_data', {}).get('Link')
+        if first_link:
+            if not first_link.startswith('http'): first_link = "https://" + first_link
+            page.goto(first_link)
+        else:
+            page.goto("https://de.bca-europe.com/")
         
         # Wenn wir nicht eingeloggt sind (kein Abmelden-Link), warten wir auf den Login
         if not page.query_selector("text=Abmelden"):
-            print("Bitte logge dich jetzt manuell bei BCA ein (klicke ggf. oben auf Login)...")
+            print("Bitte logge dich jetzt manuell bei BCA ein...")
             print("Das Script wartet bis du eingeloggt bist (max. 5 Minuten)...")
             try:
                 # Warten bis ein Element erscheint, das nur nach Login sichtbar ist (z.B. Abmelden-Link)
