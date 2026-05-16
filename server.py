@@ -259,6 +259,30 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
 
+        elif self.path == '/api/scrape-prices':
+            try:
+                # Nutzt das Python aus dem .venv
+                venv_python = os.path.join(BASE_DIR, '.venv', 'bin', 'python3')
+                result = subprocess.run([venv_python, 'scrape_bca_prices.py'], capture_output=True, text=True, cwd=BASE_DIR)
+                if result.returncode == 0:
+                    # Zähle wie viele Preise aktualisiert wurden (einfache Logik im Script-Output suchen)
+                    count = 0
+                    match = re.search(r'Updated (\d+) prices', result.stdout)
+                    if match: count = int(match.group(1))
+                    
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'application/json')
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"status": "success", "count": count}).encode('utf-8'))
+                else:
+                    self.send_response(500)
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"status": "error", "message": result.stderr}).encode('utf-8'))
+            except Exception as e:
+                self.send_response(500)
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
+
         elif self.path == '/api/archive/update':
             try:
                 content_length = int(self.headers['Content-Length'])
