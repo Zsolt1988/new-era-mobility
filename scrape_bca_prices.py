@@ -9,6 +9,27 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ARCHIVE_PATH = os.path.join(BASE_DIR, 'sold_archive.json')
 COOKIE_PATH = os.path.join(BASE_DIR, 'bca_cookies.json')
 
+def handle_cookies(page):
+    try:
+        # Suche nach gängigen Cookie-Buttons
+        cookie_selectors = [
+            "text=Alle akzeptieren",
+            "text=Zustimmen",
+            "text=Akzeptieren",
+            "text=Accept All",
+            "#onetrust-accept-btn-handler",
+            ".cookie-accept"
+        ]
+        for selector in cookie_selectors:
+            btn = page.query_selector(selector)
+            if btn and btn.is_visible():
+                btn.click()
+                print("Cookie-Banner automatisch bestätigt.")
+                time.sleep(1)
+                break
+    except:
+        pass
+
 def scrape_prices():
     if not os.path.exists(ARCHIVE_PATH):
         print("Archive not found.")
@@ -48,8 +69,10 @@ def scrape_prices():
         if first_link:
             if not first_link.startswith('http'): first_link = "https://" + first_link
             page.goto(first_link)
+            handle_cookies(page)
         else:
             page.goto("https://de.bca-europe.com/")
+            handle_cookies(page)
         
         # Wenn wir nicht eingeloggt sind (kein Abmelden-Link), warten wir auf den Login
         if not page.query_selector("text=Abmelden"):
@@ -69,9 +92,7 @@ def scrape_prices():
                 return
 
         for car in cars_to_scrape:
-            # Suche Link im Hauptobjekt oder in raw_data
             link = car.get('Link') or car.get('raw_data', {}).get('Link')
-            
             if not link:
                 print(f"Kein Link für ID {car.get('id')} gefunden.")
                 continue
@@ -82,6 +103,7 @@ def scrape_prices():
             try:
                 print(f"Prüfe: {car.get('name', car.get('id'))} -> {link}")
                 page.goto(link, timeout=30000)
+                handle_cookies(page)
                 time.sleep(2) # Kurz warten für dynamische Inhalte
                 
                 # Wir suchen im gesamten Text der Seite nach Preis-Informationen
