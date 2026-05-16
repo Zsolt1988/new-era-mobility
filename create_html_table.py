@@ -343,16 +343,26 @@ def process_bca():
             else:
                 p_raw = str(row.get('Aktuelles Gebot') or row.get('Netto-Preis') or row.get('BCA Netto') or row.get('Ist-Preis') or row.get('Startpreis') or '0')
                 p_netto = float(re.sub(r'[^\d.]', '', p_raw.replace('.', '').replace(',', '.')) or 0)
-            km = row.get('KM Stand', 0)
-            km_str = f"{int(km*1000) if km < 1000 else int(km):,}".replace(',', '.') if not pd.isna(km) else "-"
+            km_val = row.get('KM Stand', 0)
+            km_raw = 0
+            if not pd.isna(km_val):
+                try:
+                    # Logik: Wenn der Wert Nachkommastellen hat (z.B. 67.738), 
+                    # ist es ein falsch interpretierter Tausender-Punkt -> * 1000.
+                    # Wenn es eine ganze Zahl ist (z.B. 327.0), sind es echte KM.
+                    if km_val < 1000 and (km_val % 1) != 0:
+                        km_raw = int(round(km_val * 1000))
+                    else:
+                        km_raw = int(km_val)
+                except:
+                    km_raw = 0
+
+            km_str = f"{km_raw:,}".replace(',', '.') if not pd.isna(km_val) else "-"
             ps = str(row.get('PS', '-')).split('.')[0]
             aus1 = str(row.get('Ausstattung', '')).replace('nan', '')
             aus2 = str(row.get('Ausstattung 2', '')).replace('nan', '')
             aus_full = [a.strip() for a in (aus1 + (", " + aus2 if aus2 else "")).split(',') if a.strip()]
-            km_raw = 0
-            try:
-                if not pd.isna(km): km_raw = int(km*1000) if km < 1000 else int(km)
-            except: pass
+            
             year_raw = 0
             try:
                 ez_str = str(row.get('Erstzulassung', ''))
