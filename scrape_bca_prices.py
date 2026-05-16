@@ -42,11 +42,12 @@ def scrape_prices():
 
         # Check ob wir eingeloggt sind
         print("Prüfe Login-Status...")
-        page.goto("https://de.bca-europe.com/Buyer/Login")
+        # Nutze die allgemeine Deutschland-Seite als Startpunkt
+        page.goto("https://de.bca-europe.com/")
         
-        # Wenn wir nicht direkt zum Dashboard kommen, warten wir auf den Login
-        if "Login" in page.url:
-            print("Bitte logge dich jetzt manuell bei BCA ein...")
+        # Wenn wir nicht eingeloggt sind (kein Abmelden-Link), warten wir auf den Login
+        if not page.query_selector("text=Abmelden"):
+            print("Bitte logge dich jetzt manuell bei BCA ein (klicke ggf. oben auf Login)...")
             print("Das Script wartet bis du eingeloggt bist (max. 5 Minuten)...")
             try:
                 # Warten bis ein Element erscheint, das nur nach Login sichtbar ist (z.B. Abmelden-Link)
