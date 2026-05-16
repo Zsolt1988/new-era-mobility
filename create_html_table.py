@@ -375,6 +375,15 @@ def process_bca():
             fuel_type = row.get('Kraftstoff', '')
             warranty_options = calculate_warranty_prices(ps, age, km_raw, fuel_type)
 
+            # Expiry Date Logik: Prio 1 ist ein bereits vorhandener Zeitstempel
+            expiry_final = row.get('expiry_date')
+            # Falls durch den Merge Suffixe entstanden sind (expiry_date_x/y)
+            if pd.isna(expiry_final) or not expiry_final:
+                expiry_final = row.get('expiry_date_y', row.get('expiry_date_x', None))
+            
+            # Falls immer noch leer, nutze das, was wir evtl. aus dem HTML extrahiert haben (df_html)
+            # (In diesem Skript wird es bereits in df_html unter 'expiry_date' gespeichert)
+
             js_data.append({
                 "id": car_id,
                 "category": "Auktionsfahrzeuge",
@@ -395,7 +404,7 @@ def process_bca():
                 "transport": calc['transport'],
                 "details": calc,
                 "warranty_options": warranty_options,
-                "expiry_date": clean_val(row.get('expiry_date', None), None),
+                "expiry_date": clean_val(expiry_final, None),
                 "uid": item_uid,
                 "verkaufspreis": archive_map[item_uid].get('verkaufspreis', 0) if item_uid in archive_map else 0,
                 "raw_data": {str(k): (v if type(v) in (int, float, str, bool) else str(v)) for k, v in row.items() if pd.notna(v)}
