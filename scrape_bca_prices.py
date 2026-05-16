@@ -92,13 +92,13 @@ def scrape_prices():
             page.goto("https://de.bca-europe.com/")
             handle_cookies(page)
         
-        # Wenn wir nicht eingeloggt sind (kein Abmelden-Link), warten wir auf den Login
-        if not page.query_selector("text=Abmelden"):
+        # Wenn wir nicht eingeloggt sind (kein MeinBCA-Link), warten wir auf den Login
+        if not page.query_selector("text=MeinBCA") and not page.query_selector("text=Abmelden"):
             print("Bitte logge dich jetzt manuell bei BCA ein...")
             print("Das Script wartet bis du eingeloggt bist (max. 5 Minuten)...")
             try:
-                # Warten bis ein Element erscheint, das nur nach Login sichtbar ist (z.B. Abmelden-Link)
-                page.wait_for_selector("text=Abmelden", timeout=300000) 
+                # Warten bis ein Element erscheint, das nur nach Login sichtbar ist (z.B. MeinBCA)
+                page.wait_for_selector("text=MeinBCA", timeout=300000) 
                 print("Login erfolgreich!")
                 # Speichere Session-Status
                 state = context.storage_state()
