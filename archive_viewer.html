@@ -300,15 +300,22 @@
                             </div>
                             
                             <div class="mb-4 pt-4 border-t border-slate-100">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Verkaufspreis (Brutto)</label>
-                                <div class="flex gap-2">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Tats. Einkaufspreis (Basis Brutto)</label>
+                                <div class="flex gap-2 mb-3">
                                     <div class="relative flex-grow">
-                                        <input type="number" id="vp-${car.id}" value="${car.verkaufspreis || 0}" class="w-full pl-3 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold outline-none focus:border-blue-400 transition-colors">
+                                        <input type="number" id="vp-${car.id}" value="${car.verkaufspreis || 0}" 
+                                            oninput="updateFinalPriceDisplay('${car.id}')"
+                                            class="w-full pl-3 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold outline-none focus:border-blue-400 transition-colors">
                                         <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">€</span>
                                     </div>
-                                    <button onclick="saveVerkaufspreis('${car.id}')" id="save-vp-${car.id}" class="p-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all shadow-sm flex items-center justify-center min-w-[42px]" title="Verkaufspreis speichern">
+                                    <button onclick="saveVerkaufspreis('${car.id}')" id="save-vp-${car.id}" class="p-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all shadow-sm flex items-center justify-center min-w-[42px]" title="Preis speichern">
                                         <i data-lucide="save" class="w-4 h-4"></i>
                                     </button>
+                                </div>
+                                <div class="p-3 bg-blue-50 rounded-2xl border border-blue-100">
+                                    <span class="text-[10px] font-bold text-blue-400 uppercase block mb-1">Finaler Kundenpreis (AT)</span>
+                                    <div id="finalPrice-${car.id}" class="text-lg font-black text-blue-600">0 €</div>
+                                    <span class="text-[9px] text-blue-400 italic">Inkl. NoVA, Transport & Provision</span>
                                 </div>
                             </div>
 
@@ -324,6 +331,10 @@
                     </div>
                 </div>
             `).join('');
+
+            // Initialisiere die finale Preisberechnung für alle sichtbaren Karten
+            filtered.forEach(car => updateFinalPriceDisplay(car.id));
+
             lucide.createIcons();
         }
 
@@ -406,6 +417,22 @@
                 textEl.innerText = timerStr;
             });
         }, 1000);
+
+        function updateFinalPriceDisplay(id) {
+            const car = currentCars.find(c => String(c.id) === String(id));
+            if (!car) return;
+            const val = parseFloat(document.getElementById(`vp-${id}`).value) || 0;
+            
+            // Kalkulations-Logik (Analog zu index.html)
+            const netto = val / 1.19; 
+            const fees = (netto * 1.19) * 0.035 + 140;
+            const comm = Math.max(500, netto * 0.02);
+            const transport = (car.transport || 400) * 1.5;
+            const totalBrutto = (netto + fees + transport + 800 + comm) * 1.20;
+            
+            const display = document.getElementById(`finalPrice-${id}`);
+            if (display) display.innerText = fmt.format(totalBrutto);
+        }
 
         async function saveVerkaufspreis(id) {
             const input = document.getElementById(`vp-${id}`);
