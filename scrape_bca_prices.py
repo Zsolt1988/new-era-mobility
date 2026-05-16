@@ -10,30 +10,41 @@ ARCHIVE_PATH = os.path.join(BASE_DIR, 'sold_archive.json')
 COOKIE_PATH = os.path.join(BASE_DIR, 'bca_cookies.json')
 
 def handle_cookies(page):
+    # Versuche es mehrfach, falls der Banner verzögert erscheint
+    for i in range(10):
+        try:
+            # 1. Versuche CleverPush (Benachrichtigungen) zu schließen
+            page.evaluate("""
+                document.querySelector('.cleverpush-confirm-btn-deny')?.click();
+                document.querySelector('.cleverpush-confirm-btn-allow')?.click();
+            """)
+            
+            # 2. Versuche OneTrust Cookie Banner zu klicken (per JS ist zuverlässiger)
+            # Wir suchen nach der ID oder nach Buttons mit entsprechendem Text
+            success = page.evaluate("""
+                const btn = document.querySelector('#onetrust-accept-btn-handler') || 
+                            Array.from(document.querySelectorAll('button')).find(b => b.innerText.includes('Alle Cookies akzeptieren') || b.innerText.includes('Zustimmen'));
+                if (btn) {
+                    btn.click();
+                    return true;
+                }
+                return false;
+            """)
+            
+            if success:
+                print(f"Cookie-Banner im Versuch {i+1} geschlossen.")
+                time.sleep(1)
+                # Prüfen ob er wirklich weg ist
+                if not page.is_visible("#onetrust-accept-btn-handler"):
+                    return
+            
+        except Exception as e:
+            pass
+        time.sleep(0.5)
+    
+    # Letzter Ausweg: Den Banner einfach aus dem DOM löschen, falls er immer noch da ist
     try:
-        # 1. CleverPush Popup (Benachrichtigungen) wegdrecken, falls es blockiert
-        push_selectors = [".cleverpush-confirm-btn-deny", ".cleverpush-confirm-btn-allow"]
-        for sel in push_selectors:
-            btn = page.query_selector(sel)
-            if btn and btn.is_visible():
-                btn.click()
-                print("Push-Popup automatisch geschlossen.")
-                time.sleep(1)
-        
-        # 2. BCA OneTrust Cookie Banner
-        # Spezifischer Selektor für OneTrust "Alle akzeptieren"
-        cookie_selectors = [
-            "#onetrust-accept-btn-handler",
-            "text=Alle Cookies akzeptieren",
-            "text=Zustimmen"
-        ]
-        for selector in cookie_selectors:
-            btn = page.query_selector(selector)
-            if btn and btn.is_visible():
-                btn.click()
-                print("Cookie-Banner automatisch bestätigt.")
-                time.sleep(1)
-                break
+        page.evaluate("document.querySelector('#onetrust-banner-sdk')?.remove();")
     except:
         pass
 
