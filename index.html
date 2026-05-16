@@ -13,7 +13,7 @@
             font-family: 'Outfit', sans-serif;
             background-color: #f8fafc;
             position: relative;
-            min-height: 100vh;
+            min-height: auto;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
         }
@@ -226,7 +226,8 @@
 </head>
 
 <body class="p-4 md:p-8 bg-slate-50 text-slate-800">
-    <div id="toast" onclick="this.style.display='none'">
+    <div id="wixContentWrapper">
+        <div id="toast" onclick="this.style.display='none'">
         <div class="flex items-center gap-3">
             <div id="toastIcon"></div>
             <div id="toastMessage" class="text-sm font-bold"></div>
@@ -971,13 +972,11 @@
         }
 
         function sendSettingsToParent() {
-            const container = document.getElementById('mainContainer');
-            if (container) {
-                // Wir nehmen die maximale Höhe aus Container und Body, 
-                // damit auch absolut positionierte Modals die Höhe vergrößern!
-                const h = Math.max(container.offsetHeight, document.body.scrollHeight) + 60;
+            const wrapper = document.getElementById('wixContentWrapper');
+            if (wrapper) {
+                // Wir messen nur den Wrapper, nicht den Body (um Loops zu vermeiden)
+                const h = Math.max(wrapper.offsetHeight, 600);
                 window.parent.postMessage({ type: 'resize', height: h }, '*');
-                console.log("Sende Höhe an Wix (V7):", h);
             }
         }
 
@@ -1023,19 +1022,26 @@
         }
         if (window.ResizeObserver && document.body) {
             let resizeTimer;
-            new ResizeObserver(() => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(sendSettingsToParent, 300);
-            }).observe(document.body);
+            const target = document.getElementById('wixContentWrapper');
+            if (target) {
+                new ResizeObserver(() => {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(sendSettingsToParent, 300);
+                }).observe(target);
+            }
         } else {
             window.addEventListener('load', () => {
                 if (window.ResizeObserver) {
-                    new ResizeObserver(() => setTimeout(sendSettingsToParent, 300)).observe(document.body);
+                    const target = document.getElementById('wixContentWrapper');
+                    if (target) {
+                        new ResizeObserver(() => setTimeout(sendSettingsToParent, 300)).observe(target);
+                    }
                 }
             });
         }
         setTimeout(sendSettingsToParent, 500);
     </script>
+    </div>
 </body>
 
 </html>
