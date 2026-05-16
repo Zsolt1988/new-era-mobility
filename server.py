@@ -239,7 +239,6 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                     with open(index_path, 'r', encoding='utf-8') as f:
                         index_content = f.read()
                     
-                    import re
                     new_js = f"const cars = {json.dumps(filtered_data)};"
                     new_content = re.sub(r'const cars = \[.*?\];', lambda m: new_js, index_content, flags=re.DOTALL)
                     
