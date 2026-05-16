@@ -11,14 +11,21 @@ COOKIE_PATH = os.path.join(BASE_DIR, 'bca_cookies.json')
 
 def handle_cookies(page):
     try:
-        # Suche nach gängigen Cookie-Buttons
+        # 1. CleverPush Popup (Benachrichtigungen) wegdrecken, falls es blockiert
+        push_selectors = [".cleverpush-confirm-btn-deny", ".cleverpush-confirm-btn-allow"]
+        for sel in push_selectors:
+            btn = page.query_selector(sel)
+            if btn and btn.is_visible():
+                btn.click()
+                print("Push-Popup automatisch geschlossen.")
+                time.sleep(1)
+        
+        # 2. BCA OneTrust Cookie Banner
+        # Spezifischer Selektor für OneTrust "Alle akzeptieren"
         cookie_selectors = [
-            "text=Alle akzeptieren",
-            "text=Zustimmen",
-            "text=Akzeptieren",
-            "text=Accept All",
             "#onetrust-accept-btn-handler",
-            ".cookie-accept"
+            "text=Alle Cookies akzeptieren",
+            "text=Zustimmen"
         ]
         for selector in cookie_selectors:
             btn = page.query_selector(selector)
