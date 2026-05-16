@@ -2,6 +2,7 @@ import json
 import os
 import re
 import time
+import math
 from playwright.sync_api import sync_playwright
 
 # Pfade
@@ -159,9 +160,9 @@ def scrape_prices():
                             break
                 
                 if found_price > 0:
-                    car['verkaufspreis'] = round(found_price, 2)
+                    car['verkaufspreis'] = math.ceil(found_price)
                     updated_count += 1
-                    print(f"-> Erfolg: {found_price} €")
+                    print(f"-> Erfolg: {found_price} € (Gerundet: {math.ceil(found_price)} €)")
                 else:
                     print("-> Kein Preis auf der Seite gefunden.")
                     
