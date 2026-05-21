@@ -467,358 +467,426 @@ def process_bca():
         </style>
     </head>
     <body class="p-4 md:p-8 bg-slate-50 text-slate-800">
+    <div id="wixContentWrapper">
         <div id="toast" onclick="this.style.display='none'">
-            <div class="flex items-center gap-3">
-                <div id="toastIcon"></div>
-                <div id="toastMessage" class="text-sm font-bold"></div>
-            </div>
+        <div class="flex items-center gap-3">
+            <div id="toastIcon"></div>
+            <div id="toastMessage" class="text-sm font-bold"></div>
         </div>
+    </div>
 
-        <!-- Anfrage Modal -->
-        <div id="modalBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-start justify-center p-4 transition-opacity duration-300 opacity-0 min-h-full">
-            <div id="modalContainer" class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col my-4 md:my-8 max-h-[95vh] relative">
-                
-                <!-- Success Overlay -->
-                <div id="successOverlay" class="success-overlay">
-                    <div class="checkmark-circle">
-                        <i data-lucide="check" class="w-10 h-10 text-emerald-600"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Anfrage gesendet!</h3>
-                    <p class="text-slate-500 text-center px-8">Wir melden uns in Kürze bei Ihnen.</p>
-                    <button onclick="closeModal()" class="mt-8 px-8 py-3 bg-blue-600 text-white font-bold rounded-2xl shadow-lg">Schließen</button>
+    <!-- Anfrage Modal -->
+    <div id="modalBackdrop"
+        class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-start justify-center p-4 transition-opacity duration-300 opacity-0 min-h-full">
+        <div id="modalContainer"
+            class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col max-h-[95vh] relative mt-10 md:mt-20">
+
+            <!-- Success Overlay -->
+            <div id="successOverlay" class="success-overlay">
+                <div class="checkmark-circle">
+                    <i data-lucide="check" class="w-10 h-10 text-emerald-600"></i>
                 </div>
-
-                <!-- Modal Header -->
-                <div class="relative h-32 md:h-48 bg-slate-100 flex-shrink-0">
-                    <img id="modalCarImg" src="" class="w-full h-full object-cover" alt="Auto">
-                    <div class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
-                    <button onclick="closeModal()" class="absolute top-4 right-4 p-2 bg-white/80 hover:bg-white rounded-full text-slate-600 shadow-sm">
-                        <i data-lucide="x" class="w-6 h-6"></i>
-                    </button>
-                    <div class="absolute bottom-4 left-6 md:left-8">
-                         <h3 id="modalCarName" class="text-xl md:text-2xl font-bold text-slate-800 leading-tight">...</h3>
-                         <p class="text-xs md:text-sm text-slate-500 font-medium">ID: <span id="modalCarId">...</span></p>
-                    </div>
-                </div>
-
-                <!-- Modal Content -->
-                <div id="modalScrollArea" class="p-4 md:p-8 pt-4 overflow-y-auto flex-grow">
-                    <div class="space-y-4 md:space-y-6">
-                        <div class="grid grid-cols-1 gap-3">
-                            <label class="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group">
-                                <input type="checkbox" id="checkEmail" onchange="validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded">
-                                <div class="flex flex-col">
-                                    <span class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Zustandsbericht</span>
-                                    <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Per E-Mail erhalten</span>
-                                </div>
-                            </label>
-
-                            <label class="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group">
-                                <input type="checkbox" id="checkImport" onchange="toggleMessageField(this.checked); validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded">
-                                <div class="flex flex-col">
-                                    <span class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Allgemeine Frage</span>
-                                    <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Zum Import-Ablauf</span>
-                                </div>
-                            </label>
-
-                            <div class="rounded-2xl border border-slate-100 overflow-hidden" id="calcContainer">
-                                <label class="flex items-center gap-4 p-4 bg-white hover:bg-slate-50 transition-all cursor-pointer group">
-                                    <input type="checkbox" id="checkLimit" onchange="toggleCalculator(this.checked); validateForm()" class="w-5 h-5 text-blue-600 border-slate-300 rounded">
-                                    <div class="flex flex-col">
-                                        <span class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Kalkulieren</span>
-                                        <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Kostenaufstellung</span>
-                                    </div>
-                                </label>
-                                <div id="detailedCalc" class="hidden bg-slate-50 border-t border-slate-100 p-4 md:p-6 space-y-4">
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-[10px] font-bold text-slate-500 uppercase">Gebot Netto</span>
-                                        <div class="relative w-28 md:w-32">
-                                            <input type="number" id="modalLimitInput" oninput="runModalCalc()" value="0" class="w-full pl-3 pr-8 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold outline-none">
-                                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold">€</span>
-                                        </div>
-                                    </div>
-                                    <select id="optWarranty" onchange="runModalCalc()" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm outline-none">
-                                        <option value="0">Keine Zusatzgarantie</option>
-                                    </select>
-                                    <div class="space-y-2 text-[11px] md:text-sm pt-4 border-t border-slate-200">
-                                        <div class="flex justify-between"><span>Netto Gebot:</span><span id="resNetto" class="font-bold">0 €</span></div>
-                                        <div class="flex justify-between"><span>Transport:</span><span id="resTransport">0 €</span></div>
-                                        <div class="flex justify-between"><span>Anmeldung AT:</span><span>800 €</span></div>
-                                        <div class="flex justify-between text-slate-400 italic"><span>Gebühren:</span><span id="resProvision">0 €</span></div>
-                                        <div id="resOptionsRow" class="flex justify-between text-blue-600 hidden"><span>Optionen:</span><span id="resOptions">0 €</span></div>
-                                        <div class="pt-4 border-t border-slate-300">
-                                            <div class="flex justify-between items-baseline">
-                                                <span class="text-[10px] font-black text-slate-400 uppercase">Gesamt Brutto</span>
-                                                <span id="resTotalBrutto" class="text-xl md:text-3xl font-black text-blue-600">0 €</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-4 md:p-6 bg-blue-50/50 rounded-3xl border border-blue-100 space-y-4">
-                            <label class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block">Kontaktdaten</label>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <input type="text" id="userName" placeholder="Name" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm">
-                                <input type="email" id="userEmail" placeholder="E-Mail" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm">
-                            </div>
-                            <div id="messageContainer" class="message-hidden">
-                                <textarea id="userMessage" rows="2" placeholder="Nachricht (optional)" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm resize-none"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Modal Footer -->
-                <div class="p-4 md:p-6 bg-white border-t border-slate-100 flex flex-col md:flex-row gap-3 flex-shrink-0">
-                    <button id="btnSubmitInquiry" disabled onclick="sendInquiry()" class="flex-[2] bg-blue-600 disabled:bg-slate-200 text-white font-bold py-4 rounded-2xl shadow-xl flex items-center justify-center gap-2">
-                        <i data-lucide="send" class="w-5 h-5"></i>
-                        <span id="btnText">Anfrage senden</span>
-                    </button>
-                    <button onclick="closeModal()" class="flex-1 bg-white text-slate-500 font-bold py-4 rounded-2xl border border-slate-200 text-sm">Abbrechen</button>
-                </div>
+                <h3 class="text-2xl font-bold text-slate-800 mb-2">Anfrage gesendet!</h3>
+                <p class="text-slate-500 text-center px-8">Wir melden uns in Kürze bei Ihnen.</p>
+                <button onclick="closeModal()"
+                    class="mt-8 px-8 py-3 bg-blue-600 text-white font-bold rounded-2xl shadow-lg">Schließen</button>
             </div>
-        </div>
 
-        <!-- Data Modal -->
-        <div id="dataModalBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[110] hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
-            <div id="dataModalContainer" class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col relative max-h-[90vh]">
-                <button onclick="closeDataModal()" class="absolute top-4 right-4 z-50 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors">
-                    <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
+            <!-- Modal Header -->
+            <div class="relative h-32 md:h-48 bg-slate-100 flex-shrink-0">
+                <img id="modalCarImg" src="" class="w-full h-full object-cover" alt="Auto">
+                <div class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
+                <button onclick="closeModal()"
+                    class="absolute top-4 right-4 p-2 bg-white/80 hover:bg-white rounded-full text-slate-600 shadow-sm">
+                    <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
-                <div id="dataModalContent" class="overflow-y-auto w-full">
-                    <!-- Dynamic Content -->
+                <div class="absolute bottom-4 left-6 md:left-8">
+                    <h3 id="modalCarName" class="text-xl md:text-2xl font-bold text-slate-800 leading-tight">...</h3>
+                    <p class="text-xs md:text-sm text-slate-500 font-medium">ID: <span id="modalCarId">...</span></p>
                 </div>
             </div>
-        </div>
 
-        <!-- Main Container -->
-        <div id="mainContainer" class="max-w-7xl mx-auto">
-            <header class="mb-8">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-                    <h1 class="text-3xl md:text-4xl font-bold text-slate-800">Auktionsfahrzeuge</h1>
-                    <div class="flex flex-col sm:flex-row items-center gap-3">
-                        <button id="syncGitHub" onclick="syncToGitHub()" class="sync-btn w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2">
-                            <i data-lucide="refresh-cw" class="w-4 h-4"></i> Live-Update
-                        </button>
-                        <div class="relative w-full sm:w-64">
-                            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
-                            <input type="text" id="searchInput" placeholder="Suchen..." class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl outline-none bg-white shadow-sm">
+            <!-- Modal Content -->
+            <div id="modalScrollArea" class="p-4 md:p-8 pt-4 overflow-y-auto flex-grow">
+                <div class="space-y-4 md:space-y-6">
+                    <div class="grid grid-cols-1 gap-3">
+                        <label
+                            class="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group">
+                            <input type="checkbox" id="checkEmail" onchange="validateForm()"
+                                class="w-5 h-5 text-blue-600 border-slate-300 rounded">
+                            <div class="flex flex-col">
+                                <span
+                                    class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Zustandsbericht</span>
+                                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Per E-Mail
+                                    erhalten</span>
+                            </div>
+                        </label>
+
+                        <label
+                            class="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group">
+                            <input type="checkbox" id="checkImport"
+                                onchange="toggleMessageField(this.checked); validateForm()"
+                                class="w-5 h-5 text-blue-600 border-slate-300 rounded">
+                            <div class="flex flex-col">
+                                <span
+                                    class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Allgemeine
+                                    Frage</span>
+                                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Zum
+                                    Import-Ablauf</span>
+                            </div>
+                        </label>
+
+                        <div class="rounded-2xl border border-slate-100 overflow-hidden" id="calcContainer">
+                            <label
+                                class="flex items-center gap-4 p-4 bg-white hover:bg-slate-50 transition-all cursor-pointer group">
+                                <input type="checkbox" id="checkLimit"
+                                    onchange="toggleCalculator(this.checked); validateForm()"
+                                    class="w-5 h-5 text-blue-600 border-slate-300 rounded">
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Kalkulieren</span>
+                                    <span
+                                        class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Kostenaufstellung</span>
+                                </div>
+                            </label>
+                            <div id="detailedCalc"
+                                class="hidden bg-slate-50 border-t border-slate-100 p-4 md:p-6 space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] font-bold text-slate-500 uppercase">Gebot Netto</span>
+                                    <div class="relative w-28 md:w-32">
+                                        <input type="number" id="modalLimitInput" oninput="runModalCalc()" value="0"
+                                            class="w-full pl-3 pr-8 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold outline-none">
+                                        <span
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold">€</span>
+                                    </div>
+                                </div>
+                                <select id="optWarranty" onchange="runModalCalc()"
+                                    class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm outline-none">
+                                    <option value="0">Keine Zusatzgarantie</option>
+                                </select>
+                                <div class="space-y-2 text-[11px] md:text-sm pt-4 border-t border-slate-200">
+                                    <div class="flex justify-between"><span>Netto Gebot:</span><span id="resNetto"
+                                            class="font-bold">0 €</span></div>
+                                    <div class="flex justify-between"><span>Transport:</span><span id="resTransport">0
+                                            €</span></div>
+                                    <div class="flex justify-between"><span>Anmeldung AT:</span><span>800 €</span></div>
+                                    <div class="flex justify-between text-slate-400 italic"><span>Gebühren:</span><span
+                                            id="resProvision">0 €</span></div>
+                                    <div id="resOptionsRow" class="flex justify-between text-blue-600 hidden">
+                                        <span>Optionen:</span><span id="resOptions">0 €</span>
+                                    </div>
+                                    <div class="pt-4 border-t border-slate-300">
+                                        <div class="flex justify-between items-baseline">
+                                            <span class="text-[10px] font-black text-slate-400 uppercase">Gesamt
+                                                Brutto</span>
+                                            <span id="resTotalBrutto"
+                                                class="text-xl md:text-3xl font-black text-blue-600">0 €</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 md:p-6 bg-blue-50/50 rounded-3xl border border-blue-100 space-y-4">
+                        <label
+                            class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block">Kontaktdaten</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <input type="text" id="userName" placeholder="Name"
+                                class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm">
+                            <input type="email" id="userEmail" placeholder="E-Mail"
+                                class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm">
+                        </div>
+                        <div id="messageContainer" class="message-hidden">
+                            <textarea id="userMessage" rows="2" placeholder="Nachricht (optional)"
+                                class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm resize-none"></textarea>
                         </div>
                     </div>
                 </div>
-                
-                <div class="flex flex-col md:flex-row items-end gap-4 p-4 md:p-5 bg-white rounded-2xl border border-slate-200 shadow-sm">
-                    <div class="w-full md:w-32">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Marke</label>
-                        <select id="makeFilter" class="filter-select w-full outline-none text-sm">
-                            <option value="">Alle Marken</option>
-                        </select>
-                    </div>
-                    <div class="w-full md:w-auto">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Baujahr</label>
-                        <div class="flex items-center gap-2">
-                            <select id="yearMin" class="filter-select w-full md:w-24 outline-none text-sm">
-                                <option value="0">Jahr von</option>
-                            </select>
-                            <select id="yearMax" class="filter-select w-full md:w-24 outline-none text-sm">
-                                <option value="9999">Jahr bis</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="w-full md:w-auto">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Kilometer</label>
-                        <div class="flex items-center gap-2">
-                            <select id="kmMin" class="filter-select w-full md:w-28 outline-none text-sm">
-                                <option value="0">KM von</option>
-                                <option value="0">0 KM</option>
-                                <option value="10000">10.000 KM</option>
-                                <option value="20000">20.000 KM</option>
-                                <option value="30000">30.000 KM</option>
-                                <option value="40000">40.000 KM</option>
-                                <option value="50000">50.000 KM</option>
-                                <option value="60000">60.000 KM</option>
-                                <option value="70000">70.000 KM</option>
-                                <option value="80000">80.000 KM</option>
-                                <option value="90000">90.000 KM</option>
-                                <option value="100000">100.000 KM</option>
-                                <option value="125000">125.000 KM</option>
-                                <option value="150000">150.000 KM</option>
-                                <option value="200000">200.000 KM</option>
-                            </select>
-                            <select id="kmMax" class="filter-select w-full md:w-28 outline-none text-sm">
-                                <option value="9999999">KM bis</option>
-                                <option value="10000">10.000 KM</option>
-                                <option value="20000">20.000 KM</option>
-                                <option value="30000">30.000 KM</option>
-                                <option value="40000">40.000 KM</option>
-                                <option value="50000">50.000 KM</option>
-                                <option value="60000">60.000 KM</option>
-                                <option value="70000">70.000 KM</option>
-                                <option value="80000">80.000 KM</option>
-                                <option value="90000">90.000 KM</option>
-                                <option value="100000">100.000 KM</option>
-                                <option value="125000">125.000 KM</option>
-                                <option value="150000">150.000 KM</option>
-                                <option value="200000">200.000 KM</option>
-                                <option value="9999999">Beliebig</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="w-full md:w-56 multi-select-container">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Ausstattung</label>
-                        <div id="multiSelectBtn" onclick="toggleMultiSelect(event)" class="filter-select w-full outline-none text-sm cursor-pointer flex justify-between items-center">
-                            <span id="selectedCountText" class="truncate mr-2">Alle Merkmale</span>
-                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
-                        </div>
-                        <div id="multiSelectDropdown" class="multi-select-dropdown">
-                            <!-- JS populated -->
-                        </div>
-                    </div>
-                    <div class="w-full md:w-40">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Sortierung</label>
-                        <select id="sortOrder" class="filter-select w-full outline-none text-sm">
-                            <option value="newest">Neueste zuerst</option>
-                            <option value="oldest">Älteste zuerst</option>
-                            <option value="price-asc">Preis aufst.</option>
-                            <option value="price-desc">Preis abst.</option>
-                            <option value="km-asc">KM aufst.</option>
-                            <option value="id-asc">ID aufst.</option>
-                            <option value="id-desc">ID abst.</option>
-                        </select>
-                    </div>
-                    <button onclick="resetFilters()" class="w-full md:w-auto px-4 py-2.5 text-xs text-blue-500 font-bold hover:bg-blue-50 rounded-lg transition-colors">Filter Reset</button>
-                </div>
-            </header>
-            
-            <!-- Grid: Mobil 1 Spalte, Desktop 4 Spalten -->
-            <div id="carGrid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-12"></div>
-            <div id="pagination" class="flex justify-center items-center gap-2 pb-12"></div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 md:p-6 bg-white border-t border-slate-100 flex flex-col md:flex-row gap-3 flex-shrink-0">
+                <button id="btnSubmitInquiry" disabled onclick="sendInquiry()"
+                    class="flex-[2] bg-blue-600 disabled:bg-slate-200 text-white font-bold py-4 rounded-2xl shadow-xl flex items-center justify-center gap-2">
+                    <i data-lucide="send" class="w-5 h-5"></i>
+                    <span id="btnText">Anfrage senden</span>
+                </button>
+                <button onclick="closeModal()"
+                    class="flex-1 bg-white text-slate-500 font-bold py-4 rounded-2xl border border-slate-200 text-sm">Abbrechen</button>
+            </div>
         </div>
+    </div>
 
-        <script>
-            const cars = {json.dumps(js_data)};
-            
-            const fmt = new Intl.NumberFormat('de-DE', {{ style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }});
-            let currentPage = 1;
-            const itemsPerPage = 50;
-            let currentCarId = null;
+    <!-- Data Modal -->
+    <div id="dataModalBackdrop"
+        class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-[110] hidden flex items-start justify-center p-4 transition-opacity duration-300 opacity-0 min-h-full">
+        <div id="dataModalContainer"
+            class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col relative max-h-[90vh] mt-10 md:mt-20">
+            <button onclick="closeDataModal()"
+                class="absolute top-4 right-4 z-50 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors">
+                <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
+            </button>
+            <div id="dataModalContent" class="overflow-y-auto w-full">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </div>
 
-            async function syncToGitHub() {{
-                const btn = document.getElementById('syncGitHub');
-                const old = btn.innerHTML;
-                btn.disabled = true; btn.innerText = 'Syncing...';
-                try {{
-                    const res = await fetch('/api/push-github');
-                    const data = await res.json();
-                    showToast(data.status === 'success' ? 'Update Live!' : 'Fehler', data.status);
-                }} catch (e) {{ showToast('Server Fehler', 'error'); }}
-                finally {{ btn.disabled = false; btn.innerHTML = old; lucide.createIcons(); }}
-            }}
+    <!-- Main Container -->
+    <div id="mainContainer" class="max-w-7xl mx-auto">
+        <header class="mb-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-800">Auktionsfahrzeuge</h1>
+                <div class="flex flex-col sm:flex-row items-center gap-3">
+                    <button id="syncGitHub" onclick="syncToGitHub()"
+                        class="sync-btn w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i> Live-Update
+                    </button>
+                    <div class="relative w-full sm:w-64">
+                        <i data-lucide="search"
+                            class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                        <input type="text" id="searchInput" placeholder="Suchen..."
+                            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl outline-none bg-white shadow-sm">
+                    </div>
+                </div>
+            </div>
 
-            function initFilters() {{
-                const makes = [...new Set(cars.map(c => c.name.split(' ')[0]))].sort();
-                const mFilter = document.getElementById('makeFilter');
-                makes.forEach(m => {{ const opt = document.createElement('option'); opt.value = m; opt.innerText = m; mFilter.appendChild(opt); }});
+            <div
+                class="flex flex-col md:flex-row items-end gap-4 p-4 md:p-5 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                <div class="w-full md:w-32">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Marke</label>
+                    <select id="makeFilter" class="filter-select w-full outline-none text-sm">
+                        <option value="">Alle Marken</option>
+                    </select>
+                </div>
+                <div class="w-full md:w-auto">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Baujahr</label>
+                    <div class="flex items-center gap-2">
+                        <select id="yearMin" class="filter-select w-full md:w-24 outline-none text-sm">
+                            <option value="0">Jahr von</option>
+                        </select>
+                        <select id="yearMax" class="filter-select w-full md:w-24 outline-none text-sm">
+                            <option value="9999">Jahr bis</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="w-full md:w-auto">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Kilometer</label>
+                    <div class="flex items-center gap-2">
+                        <select id="kmMin" class="filter-select w-full md:w-28 outline-none text-sm">
+                            <option value="0">KM von</option>
+                            <option value="0">0 KM</option>
+                            <option value="10000">10.000 KM</option>
+                            <option value="20000">20.000 KM</option>
+                            <option value="30000">30.000 KM</option>
+                            <option value="40000">40.000 KM</option>
+                            <option value="50000">50.000 KM</option>
+                            <option value="60000">60.000 KM</option>
+                            <option value="70000">70.000 KM</option>
+                            <option value="80000">80.000 KM</option>
+                            <option value="90000">90.000 KM</option>
+                            <option value="100000">100.000 KM</option>
+                            <option value="125000">125.000 KM</option>
+                            <option value="150000">150.000 KM</option>
+                            <option value="200000">200.000 KM</option>
+                        </select>
+                        <select id="kmMax" class="filter-select w-full md:w-28 outline-none text-sm">
+                            <option value="9999999">KM bis</option>
+                            <option value="10000">10.000 KM</option>
+                            <option value="20000">20.000 KM</option>
+                            <option value="30000">30.000 KM</option>
+                            <option value="40000">40.000 KM</option>
+                            <option value="50000">50.000 KM</option>
+                            <option value="60000">60.000 KM</option>
+                            <option value="70000">70.000 KM</option>
+                            <option value="80000">80.000 KM</option>
+                            <option value="90000">90.000 KM</option>
+                            <option value="100000">100.000 KM</option>
+                            <option value="125000">125.000 KM</option>
+                            <option value="150000">150.000 KM</option>
+                            <option value="200000">200.000 KM</option>
+                            <option value="9999999">Beliebig</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="w-full md:w-56 multi-select-container">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Ausstattung</label>
+                    <div id="multiSelectBtn" onclick="toggleMultiSelect(event)"
+                        class="filter-select w-full outline-none text-sm cursor-pointer flex justify-between items-center">
+                        <span id="selectedCountText" class="truncate mr-2">Alle Merkmale</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+                    </div>
+                    <div id="multiSelectDropdown" class="multi-select-dropdown">
+                        <!-- JS populated -->
+                    </div>
+                </div>
+                <div class="w-full md:w-40">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Sortierung</label>
+                    <select id="sortOrder" class="filter-select w-full outline-none text-sm">
+                        <option value="newest">Neueste zuerst</option>
+                        <option value="oldest">Älteste zuerst</option>
+                        <option value="price-asc">Preis aufst.</option>
+                        <option value="price-desc">Preis abst.</option>
+                        <option value="km-asc">KM aufst.</option>
+                        <option value="id-asc">ID aufst.</option>
+                        <option value="id-desc">ID abst.</option>
+                    </select>
+                </div>
+                <button onclick="resetFilters()"
+                    class="w-full md:w-auto px-4 py-2.5 text-xs text-blue-500 font-bold hover:bg-blue-50 rounded-lg transition-colors">Filter
+                    Reset</button>
+            </div>
+        </header>
 
-                const years = [...new Set(cars.map(c => c.year_raw))].sort((a,b) => b-a);
-                const yMin = document.getElementById('yearMin');
-                const yMax = document.getElementById('yearMax');
-                years.forEach(y => {{
-                    const opt1 = document.createElement('option'); opt1.value = y; opt1.innerText = y; yMin.appendChild(opt1);
-                    const opt2 = document.createElement('option'); opt2.value = y; opt2.innerText = y; yMax.appendChild(opt2);
-                }});
+        <!-- Grid: Mobil 1 Spalte, Desktop 4 Spalten -->
+        <div id="carGrid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-12"></div>
+        <div id="pagination" class="flex justify-center items-center gap-2 pb-12"></div>
+    </div>
 
-                const features = [...new Set(cars.flatMap(c => c.ausstattung_full))].filter(Boolean).sort();
-                const dropdown = document.getElementById('multiSelectDropdown');
-                dropdown.innerHTML = features.map(f => `
+    <script>
+        const cars = {json.dumps(filtered_data)};
+
+        const fmt = new Intl.NumberFormat('de-DE', {{ style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }});
+        let currentPage = 1;
+        const itemsPerPage = 50;
+        let currentCarId = null;
+
+        async function syncToGitHub() {{
+            const btn = document.getElementById('syncGitHub');
+            const old = btn.innerHTML;
+            btn.disabled = true; btn.innerText = 'Syncing...';
+            try {{
+                const res = await fetch('/api/push-github');
+                const data = await res.json();
+                showToast(data.status === 'success' ? 'Update Live!' : 'Fehler', data.status);
+            }} catch (e) {{ showToast('Server Fehler', 'error'); }}
+            finally {{ btn.disabled = false; btn.innerHTML = old; lucide.createIcons(); }}
+        }}
+
+        function initFilters() {{
+            const makes = [...new Set(cars.map(c => c.name.split(' ')[0]))].sort();
+            const mFilter = document.getElementById('makeFilter');
+            makes.forEach(m => {{ const opt = document.createElement('option'); opt.value = m; opt.innerText = m; mFilter.appendChild(opt); }});
+
+            const years = [...new Set(cars.map(c => c.year_raw))].sort((a, b) => b - a);
+            const yMin = document.getElementById('yearMin');
+            const yMax = document.getElementById('yearMax');
+            years.forEach(y => {{
+                const opt1 = document.createElement('option'); opt1.value = y; opt1.innerText = y; yMin.appendChild(opt1);
+                const opt2 = document.createElement('option'); opt2.value = y; opt2.innerText = y; yMax.appendChild(opt2);
+            }});
+
+            const features = [...new Set(cars.flatMap(c => c.ausstattung_full))].filter(Boolean).sort();
+            const dropdown = document.getElementById('multiSelectDropdown');
+            dropdown.innerHTML = features.map(f => `
                     <label class="multi-select-item text-xs font-medium text-slate-600">
                         <input type="checkbox" value="${{f}}" onchange="onFeatureChange()" class="feature-checkbox rounded border-slate-300 text-blue-600 focus:ring-blue-500">
                         <span class="truncate">${{f}}</span>
                     </label>
                 `).join('');
 
-                ['makeFilter', 'yearMin', 'yearMax', 'kmMin', 'kmMax', 'searchInput', 'sortOrder'].forEach(id => {{
-                    document.getElementById(id).addEventListener('change', () => {{ currentPage = 1; render(); }});
-                    document.getElementById(id).addEventListener('input', () => {{ currentPage = 1; render(); }});
-                }});
+            ['makeFilter', 'yearMin', 'yearMax', 'kmMin', 'kmMax', 'searchInput', 'sortOrder'].forEach(id => {{
+                document.getElementById(id).addEventListener('change', () => {{ currentPage = 1; render(); }});
+                document.getElementById(id).addEventListener('input', () => {{ currentPage = 1; render(); }});
+            }});
 
-                window.addEventListener('click', (e) => {{
-                    if (!e.target.closest('.multi-select-container')) {{
-                        document.getElementById('multiSelectDropdown').classList.remove('active');
-                    }}
-                }});
-            }}
-
-            function toggleMultiSelect(e) {{
-                e.stopPropagation();
-                document.getElementById('multiSelectDropdown').classList.toggle('active');
-            }}
-
-            function onFeatureChange() {{
-                const checked = Array.from(document.querySelectorAll('.feature-checkbox:checked')).map(cb => cb.value);
-                const btnText = document.getElementById('selectedCountText');
-                if (checked.length === 0) btnText.innerText = "Alle Merkmale";
-                else if (checked.length === 1) btnText.innerText = checked[0];
-                else btnText.innerText = `${{checked.length}} Merkmale`;
-                currentPage = 1;
-                render();
-            }}
-
-            function showToast(msg, type) {{
-                const toast = document.getElementById('toast');
-                document.getElementById('toastMessage').innerText = msg;
-                document.getElementById('toastIcon').innerHTML = type === 'success' ? '<i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>' : '<i data-lucide="alert-circle" class="w-5 h-5 text-red-500"></i>';
-                lucide.createIcons();
-                toast.style.display = 'block'; setTimeout(() => {{ toast.style.display = 'none'; }}, 3000);
-            }}
-
-            function openModal(name, id, img) {{
-                currentCarId = id;
-                const car = cars.find(c => String(c.id) === String(id));
-                document.getElementById('modalCarName').innerText = name;
-                document.getElementById('modalCarId').innerText = id;
-                document.getElementById('modalCarImg').src = img || 'https://via.placeholder.com/600x400';
-                document.getElementById('modalLimitInput').value = car.bca_price;
-                
-                const wSelect = document.getElementById('optWarranty');
-                wSelect.innerHTML = '<option value="0">Keine Zusatzgarantie</option>';
-                if (car.warranty_options) {{
-                    Object.entries(car.warranty_options).forEach(([level, price]) => {{
-                        const opt = document.createElement('option'); opt.value = price; opt.innerText = `12M ${{level}} - ${{price}}€`;
-                        wSelect.appendChild(opt);
-                    }});
+            window.addEventListener('click', (e) => {{
+                if (!e.target.closest('.multi-select-container')) {{
+                    document.getElementById('multiSelectDropdown').classList.remove('active');
                 }}
+            }});
+        }}
 
-                const backdrop = document.getElementById('modalBackdrop');
-                backdrop.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-                setTimeout(() => {{ backdrop.classList.add('opacity-100'); document.getElementById('modalContainer').classList.add('scale-100', 'opacity-100'); }}, 10);
-                
-                document.getElementById('checkEmail').checked = false;
-                document.getElementById('checkLimit').checked = false;
-                document.getElementById('checkImport').checked = false;
-                document.getElementById('successOverlay').classList.remove('active');
-                toggleCalculator(false); toggleMessageField(false); validateForm();
+        function toggleMultiSelect(e) {{
+            e.stopPropagation();
+            document.getElementById('multiSelectDropdown').classList.toggle('active');
+        }}
+
+        function onFeatureChange() {{
+            const checked = Array.from(document.querySelectorAll('.feature-checkbox:checked')).map(cb => cb.value);
+            const btnText = document.getElementById('selectedCountText');
+            if (checked.length === 0) btnText.innerText = "Alle Merkmale";
+            else if (checked.length === 1) btnText.innerText = checked[0];
+            else btnText.innerText = `${{checked.length}} Merkmale`;
+            currentPage = 1;
+            render();
+        }}
+
+        function showToast(msg, type) {{
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = msg;
+            document.getElementById('toastIcon').innerHTML = type === 'success' ? '<i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>' : '<i data-lucide="alert-circle" class="w-5 h-5 text-red-500"></i>';
+            lucide.createIcons();
+            toast.style.display = 'block'; setTimeout(() => {{ toast.style.display = 'none'; }}, 3000);
+        }}
+
+        function openModal(name, id, img, event) {{
+            currentCarId = id;
+            const container = document.getElementById('modalContainer');
+            
+            // Pop-up ganz oben platzieren
+            container.style.marginTop = '50px';
+            
+            // Wix anweisen, zum iFrame-Anfang zu scrollen (mit 50px Puffer)
+            window.parent.postMessage({{ type: 'scroll_to_top', offset: 50 }}, '*');
+
+            const car = cars.find(c => String(c.id) === String(id));
+            document.getElementById('modalCarName').innerText = name;
+            document.getElementById('modalCarId').innerText = id;
+            document.getElementById('modalCarImg').src = img || 'https://via.placeholder.com/600x400';
+            document.getElementById('modalLimitInput').value = car.bca_price;
+
+            const wSelect = document.getElementById('optWarranty');
+            wSelect.innerHTML = '<option value="0">Keine Zusatzgarantie</option>';
+            if (car.warranty_options) {{
+                Object.entries(car.warranty_options).forEach(([level, price]) => {{
+                    const opt = document.createElement('option'); opt.value = price; opt.innerText = `12M ${{level}} - ${{price}}€`;
+                    wSelect.appendChild(opt);
+                }});
             }}
 
-            function closeModal() {{
-                const backdrop = document.getElementById('modalBackdrop');
-                backdrop.classList.remove('opacity-100');
-                document.getElementById('modalContainer').classList.remove('scale-100', 'opacity-100');
-                document.body.style.overflow = '';
-                setTimeout(() => {{ backdrop.classList.add('hidden'); }}, 300);
-            }}
+            const backdrop = document.getElementById('modalBackdrop');
+            backdrop.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            updateModalState(true);
+            setTimeout(() => {{ backdrop.classList.add('opacity-100'); document.getElementById('modalContainer').classList.add('scale-100', 'opacity-100'); }}, 10);
 
-            function toggleCalculator(s) {{ document.getElementById('detailedCalc').classList.toggle('hidden', !s); if(s) runModalCalc(); }}
-            function toggleMessageField(s) {{ document.getElementById('messageContainer').classList.toggle('message-hidden', !s); if(s) document.getElementById('messageContainer').classList.add('message-visible'); }}
+            document.getElementById('checkEmail').checked = false;
+            document.getElementById('checkLimit').checked = false;
+            document.getElementById('checkImport').checked = false;
+            document.getElementById('successOverlay').classList.remove('active');
+            toggleCalculator(false); toggleMessageField(false); validateForm();
+        }}
 
-            function openDataModal(id) {{
-                const car = cars.find(c => String(c.id) === String(id));
-                if(!car) return;
-                const content = document.getElementById('dataModalContent');
-                content.innerHTML = `
+        function closeModal() {{
+            const backdrop = document.getElementById('modalBackdrop');
+            backdrop.classList.remove('opacity-100');
+            document.getElementById('modalContainer').classList.remove('scale-100', 'opacity-100');
+            document.body.style.overflow = '';
+            updateModalState(false);
+            setTimeout(() => {{ 
+                backdrop.classList.add('hidden'); 
+                document.getElementById('modalContainer').style.marginTop = '';
+            }}, 300);
+        }}
+
+        function toggleCalculator(s) {{ document.getElementById('detailedCalc').classList.toggle('hidden', !s); if (s) runModalCalc(); }}
+        function toggleMessageField(s) {{ document.getElementById('messageContainer').classList.toggle('message-hidden', !s); if (s) document.getElementById('messageContainer').classList.add('message-visible'); }}
+
+        function openDataModal(id, event) {{
+            const container = document.getElementById('dataModalContainer');
+
+            // Pop-up ganz oben platzieren
+            container.style.marginTop = '50px';
+            
+            // Wix anweisen, zum iFrame-Anfang zu scrollen (mit 50px Puffer)
+            window.parent.postMessage({{ type: 'scroll_to_top', offset: 50 }}, '*');
+
+            const car = cars.find(c => String(c.id) === String(id));
+            if (!car) return;
+            const content = document.getElementById('dataModalContent');
+            content.innerHTML = `
                     <div class="flex flex-col w-full">
                         <!-- Hero Section -->
                         <div class="relative h-64 md:h-80 w-full bg-slate-900 flex-shrink-0">
@@ -890,119 +958,167 @@ def process_bca():
                         </div>
                     </div>
                 `;
-                const bg = document.getElementById('dataModalBackdrop');
-                const c = document.getElementById('dataModalContainer');
-                bg.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-                setTimeout(() => {{ bg.classList.add('opacity-100'); c.classList.add('scale-100', 'opacity-100'); }}, 10);
-                lucide.createIcons();
+            const bg = document.getElementById('dataModalBackdrop');
+            const c = document.getElementById('dataModalContainer');
+            bg.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            updateModalState(true);
+            setTimeout(() => {{ bg.classList.add('opacity-100'); c.classList.add('scale-100', 'opacity-100'); }}, 10);
+            lucide.createIcons();
+        }}
+
+        function closeDataModal() {{
+            const bg = document.getElementById('dataModalBackdrop');
+            const c = document.getElementById('dataModalContainer');
+            bg.classList.remove('opacity-100');
+            c.classList.remove('scale-100', 'opacity-100');
+            document.body.style.overflow = '';
+            updateModalState(false);
+            setTimeout(() => {{
+                bg.classList.add('hidden');
+                c.style.marginTop = '';
+            }}, 300);
+        }}
+
+        function validateForm() {{
+            const any = ['checkEmail', 'checkLimit', 'checkImport'].some(id => document.getElementById(id).checked);
+            const name = document.getElementById('userName').value.trim().length > 1;
+            const mail = document.getElementById('userEmail').value.trim().includes('@');
+            document.getElementById('btnSubmitInquiry').disabled = !any || !name || !mail;
+        }}
+
+        document.getElementById('userName').addEventListener('input', validateForm);
+        document.getElementById('userEmail').addEventListener('input', validateForm);
+
+        function runModalCalc() {{
+            if (!currentCarId) return;
+            const car = cars.find(c => c.id === currentCarId);
+            const rawNetto = document.getElementById('modalLimitInput').value.replace(/\./g, '');
+            const netto = parseFloat(rawNetto) || 0;
+            const fees = (netto * 1.19 * 0.035) + 140;
+            const transport = car.transport * 1.5;
+            const commission = Math.max(500, netto * 0.02);
+            const warranty = parseFloat(document.getElementById('optWarranty').value);
+            const totalNetto = netto + fees + transport + 800 + commission + warranty;
+
+            document.getElementById('resNetto').innerText = fmt.format(netto);
+            document.getElementById('resTransport').innerText = fmt.format(transport);
+            document.getElementById('resProvision').innerText = fmt.format(fees + commission);
+            document.getElementById('resTotalBrutto').innerText = fmt.format(totalNetto * 1.20);
+
+            const optRow = document.getElementById('resOptionsRow');
+            if (warranty > 0) {{ optRow.classList.remove('hidden'); document.getElementById('resOptions').innerText = fmt.format(warranty); }}
+            else {{ optRow.classList.add('hidden'); }}
+        }}
+
+        function sendInquiry() {{
+            const car = cars.find(c => c.id === currentCarId);
+            
+            // Grunddaten vorbereiten
+            const data = {{
+                type: 'vehicle_inquiry',
+                carId: currentCarId,
+                carName: car.name,
+                userData: {{
+                    name: document.getElementById('userName').value,
+                    email: document.getElementById('userEmail').value
+                }}
+            }};
+
+            // Nur wenn "Zustandsbericht" angewählt ist, senden wir ein "Ja"
+            if (document.getElementById('checkEmail').checked) {{
+                data.zustandsbericht = 'Ja';
             }}
 
-            function closeDataModal() {{
-                const bg = document.getElementById('dataModalBackdrop');
-                const c = document.getElementById('dataModalContainer');
-                bg.classList.remove('opacity-100');
-                c.classList.remove('scale-100', 'opacity-100');
-                document.body.style.overflow = '';
-                setTimeout(() => bg.classList.add('hidden'), 300);
+            // NEU: Nur wenn "Allgemeine Anfrage" angewählt ist, senden wir die Nachricht mit
+            if (document.getElementById('checkImport').checked) {{
+                data.nachricht = document.getElementById('userMessage').value;
             }}
 
-            function validateForm() {{
-                const any = ['checkEmail', 'checkLimit', 'checkImport'].some(id => document.getElementById(id).checked);
-                const name = document.getElementById('userName').value.trim().length > 1;
-                const mail = document.getElementById('userEmail').value.trim().includes('@');
-                document.getElementById('btnSubmitInquiry').disabled = !any || !name || !mail;
-            }}
-
-            document.getElementById('userName').addEventListener('input', validateForm);
-            document.getElementById('userEmail').addEventListener('input', validateForm);
-
-            function runModalCalc() {{
-                if (!currentCarId) return;
-                const car = cars.find(c => c.id === currentCarId);
-                const netto = parseFloat(document.getElementById('modalLimitInput').value) || 0;
+            // Nur wenn "Kalkulation" angewählt ist, senden wir die Preisdaten mit
+            if (document.getElementById('checkLimit').checked) {{
+                const rawNetto = document.getElementById('modalLimitInput').value.replace(/\./g, '');
+                const netto = parseFloat(rawNetto) || 0;
                 const fees = (netto * 1.19 * 0.035) + 140;
                 const transport = car.transport * 1.5;
                 const commission = Math.max(500, netto * 0.02);
                 const warranty = parseFloat(document.getElementById('optWarranty').value);
                 const totalNetto = netto + fees + transport + 800 + commission + warranty;
-                
-                document.getElementById('resNetto').innerText = fmt.format(netto);
-                document.getElementById('resTransport').innerText = fmt.format(transport);
-                document.getElementById('resProvision').innerText = fmt.format(fees + commission);
-                document.getElementById('resTotalBrutto').innerText = fmt.format(totalNetto * 1.20);
-                
-                const optRow = document.getElementById('resOptionsRow');
-                if(warranty > 0) {{ optRow.classList.remove('hidden'); document.getElementById('resOptions').innerText = fmt.format(warranty); }}
-                else {{ optRow.classList.add('hidden'); }}
+
+                data.calculation = {{
+                    gebotNetto: netto,
+                    transport: transport,
+                    anmeldung: 800,
+                    provision: fees + commission,
+                    garantie: warranty,
+                    gesamtBrutto: totalNetto * 1.20
+                }};
             }}
+            
+            window.parent.postMessage(JSON.stringify(data), "*");
+            
+            document.getElementById('btnSubmitInquiry').disabled = true;
+            setTimeout(() => {{ document.getElementById('successOverlay').classList.add('active'); lucide.createIcons(); }}, 800);
+        }}
 
-            function sendInquiry() {{
-                const car = cars.find(c => c.id === currentCarId);
-                const data = {{ type: 'vehicle_inquiry', carId: currentCarId, carName: car.name, userData: {{ name: document.getElementById('userName').value, email: document.getElementById('userEmail').value }} }};
-                window.parent.postMessage(JSON.stringify(data), "*");
-                document.getElementById('btnSubmitInquiry').disabled = true;
-                setTimeout(() => {{ document.getElementById('successOverlay').classList.add('active'); lucide.createIcons(); }}, 800);
+        function formatNumberInput(el, id) {{
+            let val = el.value.replace(/\./g, '').replace(/[^\d]/g, '');
+            if (val === '') {{
+                updateCalc(id, 0);
+                return;
             }}
+            const num = parseInt(val);
+            el.value = num.toLocaleString('de-DE');
+            updateCalc(id, num);
+        }}
 
-            function formatNumberInput(el, id) {{
-                let val = el.value.replace(/\./g, '').replace(/[^\d]/g, '');
-                if (val === '') {{
-                    updateCalc(id, 0);
-                    return;
-                }}
-                const num = parseInt(val);
-                el.value = num.toLocaleString('de-DE');
-                updateCalc(id, num);
-            }}
+        function updateCalc(id, val) {{
+            const car = cars.find(c => String(c.id) === String(id));
+            if (!car) return;
+            const netto = parseFloat(val) || 0;
+            car.bca_price = netto; // Synchronize with internal data
+            const fees = (netto * 1.19) * 0.035 + 140;
+            const comm = Math.max(500, netto * 0.02);
+            const transport = car.transport * 1.5;
+            const totalBrutto = (netto + fees + transport + 800 + comm) * 1.20;
+            const el = document.getElementById(`mainPrice_${{id}}`);
+            if (el) el.innerText = fmt.format(totalBrutto);
+        }}
 
-            function updateCalc(id, val) {{
-                const car = cars.find(c => String(c.id) === String(id));
-                if (!car) return;
-                const netto = parseFloat(val) || 0;
-                car.bca_price = netto; // Synchronize with internal data
-                const fees = (netto * 1.19) * 0.035 + 140;
-                const comm = Math.max(500, netto * 0.02);
-                const transport = car.transport * 1.5;
-                const totalBrutto = (netto + fees + transport + 800 + comm) * 1.20;
-                const el = document.getElementById(`mainPrice_${{id}}`);
-                if(el) el.innerText = fmt.format(totalBrutto);
-            }}
+        function render() {{
+            const grid = document.getElementById('carGrid');
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const make = document.getElementById('makeFilter').value;
+            const yMin = parseInt(document.getElementById('yearMin').value) || 0;
+            const yMax = parseInt(document.getElementById('yearMax').value) || 9999;
+            const kMin = parseInt(document.getElementById('kmMin').value) || 0;
+            const kMax = parseInt(document.getElementById('kmMax').value) || 9999999;
+            const selectedFeatures = Array.from(document.querySelectorAll('.feature-checkbox:checked')).map(cb => cb.value.toLowerCase());
 
-            function render() {{
-                const grid = document.getElementById('carGrid');
-                const term = document.getElementById('searchInput').value.toLowerCase();
-                const make = document.getElementById('makeFilter').value;
-                const yMin = parseInt(document.getElementById('yearMin').value) || 0;
-                const yMax = parseInt(document.getElementById('yearMax').value) || 9999;
-                const kMin = parseInt(document.getElementById('kmMin').value) || 0;
-                const kMax = parseInt(document.getElementById('kmMax').value) || 9999999;
-                const selectedFeatures = Array.from(document.querySelectorAll('.feature-checkbox:checked')).map(cb => cb.value.toLowerCase());
-                
-                const filtered = cars.filter(c => {{
-                    const matchesTerm = (c.name.toLowerCase().includes(term) || String(c.id).includes(term));
-                    const matchesMake = (!make || c.name.startsWith(make));
-                    const matchesYear = (c.year_raw >= yMin && c.year_raw <= yMax);
-                    const matchesKm = (c.km_raw >= kMin && c.km_raw <= kMax);
-                    const matchesFeature = selectedFeatures.length === 0 || selectedFeatures.every(sf => (c.ausstattung_full || []).some(af => af.toLowerCase().includes(sf)));
-                    return matchesTerm && matchesMake && matchesYear && matchesKm && matchesFeature;
-                }});
+            const filtered = cars.filter(c => {{
+                const matchesTerm = (c.name.toLowerCase().includes(term) || String(c.id).includes(term));
+                const matchesMake = (!make || c.name.startsWith(make));
+                const matchesYear = (c.year_raw >= yMin && c.year_raw <= yMax);
+                const matchesKm = (c.km_raw >= kMin && c.km_raw <= kMax);
+                const matchesFeature = selectedFeatures.length === 0 || selectedFeatures.every(sf => (c.ausstattung_full || []).some(af => af.toLowerCase().includes(sf)));
+                return matchesTerm && matchesMake && matchesYear && matchesKm && matchesFeature;
+            }});
 
-                const sort = document.getElementById('sortOrder').value;
-                filtered.sort((a, b) => {{
-                    if (sort === 'newest') return new Date(b.archive_date) - new Date(a.archive_date);
-                    if (sort === 'oldest') return new Date(a.archive_date) - new Date(b.archive_date);
-                    if (sort === 'price-asc') return a.bca_price - b.bca_price;
-                    if (sort === 'price-desc') return b.bca_price - a.bca_price;
-                    if (sort === 'km-asc') return a.km_raw - b.km_raw;
-                    if (sort === 'id-asc') return parseInt(a.id) - parseInt(b.id);
-                    if (sort === 'id-desc') return parseInt(b.id) - parseInt(a.id);
-                    return 0;
-                }});
+            const sort = document.getElementById('sortOrder').value;
+            filtered.sort((a, b) => {{
+                if (sort === 'newest') return new Date(b.archive_date) - new Date(a.archive_date);
+                if (sort === 'oldest') return new Date(a.archive_date) - new Date(b.archive_date);
+                if (sort === 'price-asc') return a.bca_price - b.bca_price;
+                if (sort === 'price-desc') return b.bca_price - a.bca_price;
+                if (sort === 'km-asc') return a.km_raw - b.km_raw;
+                if (sort === 'id-asc') return parseInt(a.id) - parseInt(b.id);
+                if (sort === 'id-desc') return parseInt(b.id) - parseInt(a.id);
+                return 0;
+            }});
 
-                const items = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-                
-                grid.innerHTML = items.map(car => `
+            const items = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+            grid.innerHTML = items.map(car => `
                     <div class="glass-card rounded-2xl md:rounded-3xl overflow-hidden flex flex-col shadow-sm hover:shadow-lg transition-all duration-300">
                         <div class="relative h-32 md:h-44 bg-slate-100">
                             <img src="${{car.img}}" class="w-full h-full object-cover" alt="${{car.name}}">
@@ -1012,14 +1128,17 @@ def process_bca():
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow card-padding">
                             <div class="mb-2">
-                                <h3 class="text-sm md:text-lg font-bold text-slate-800 leading-tight card-title">${{car.name}}</h3>
+                                <h3 class="text-sm md:text-lg font-bold text-slate-800 leading-tight card-title">
+                                    ${{car.name}}
+                                    ${{car.raw_data?.Ausstattungsvariante && car.raw_data.Ausstattungsvariante !== 'nan' && car.raw_data.Ausstattungsvariante !== '-' ? `<span class="text-slate-800 font-bold ml-1">${{car.raw_data.Ausstattungsvariante}}</span>` : ''}}
+                                </h3>
                                 <p class="text-[9px] md:text-xs text-slate-500 line-clamp-1">${{car.ausfuehrung}}</p>
                             </div>
                             <div class="flex gap-2 md:gap-4 text-[10px] md:text-xs font-bold text-slate-500 uppercase mb-3 card-specs">
                                 <span>${{car.ez.split('.')[2]}}</span> &bull; <span>${{car.km}} KM</span> &bull; <span>${{car.ps}} PS</span>
                             </div>
                             <div class="flex flex-wrap gap-1 mb-4">
-                                ${{car.ausstattung.slice(0,3).map(a => `<span class="ausstattung-badge px-1.5 py-0.5 rounded text-[8px] md:text-[9px]">${{a}}</span>`).join('')}}
+                                ${{car.ausstattung.slice(0, 3).map(a => `<span class="ausstattung-badge px-1.5 py-0.5 rounded text-[8px] md:text-[9px]">${{a}}</span>`).join('')}}
                             </div>
                             <div class="mt-auto space-y-3">
                                 <div class="flex items-end justify-between gap-2 pt-2 border-t border-slate-100">
@@ -1036,10 +1155,10 @@ def process_bca():
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-2">
-                                    <button onclick="openDataModal('${{car.id}}')" class="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-2 md:py-3 rounded-xl transition-all text-[10px] md:text-xs flex items-center justify-center gap-1 border border-slate-200">
+                                    <button onclick="openDataModal('${{car.id}}', event)" class="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-2 md:py-3 rounded-xl transition-all text-[10px] md:text-xs flex items-center justify-center gap-1 border border-slate-200">
                                         <i data-lucide="info" class="w-3 h-3 md:w-4 h-4"></i>Fahrzeugdaten
                                     </button>
-                                    <button onclick="openModal('${{car.name.replace(/'/g, "\\\\'")}}', '${{car.id}}', '${{car.img}}')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 md:py-3 rounded-xl transition-all text-[10px] md:text-xs flex items-center justify-center gap-1 shadow-sm">
+                                    <button onclick="openModal('${{car.name.replace(/'/g, "\\'")}}', '${{car.id}}', '${{car.img}}', event)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 md:py-3 rounded-xl transition-all text-[10px] md:text-xs flex items-center justify-center gap-1 shadow-sm">
                                         <i data-lucide="message-square" class="w-3 h-3 md:w-4 h-4"></i>Anfrage
                                     </button>
                                 </div>
@@ -1047,84 +1166,129 @@ def process_bca():
                         </div>
                     </div>
                 `).join('');
-                lucide.createIcons();
-                updateTimers();
-                renderPagination(Math.ceil(filtered.length / itemsPerPage));
-                sendHeightToWix();
-            }}
+            lucide.createIcons();
+            updateTimers();
+            renderPagination(Math.ceil(filtered.length / itemsPerPage));
+            // NEU: Gib dem Browser 300ms Zeit zum Aufbauen, bevor er die Höhe an Wix meldet
+            setTimeout(sendSettingsToParent, 300);
+        }}
 
-            function updateTimers() {{
-                const now = new Date().getTime();
-                document.querySelectorAll('.timer-badge').forEach(badge => {{
-                    const expiry = new Date(badge.dataset.expiry).getTime();
-                    const diff = expiry - now;
-                    const textEl = badge.querySelector('.timer-text');
-                    
-                    if (diff <= 0) {{
-                        badge.classList.remove('bg-slate-900/80');
-                        badge.classList.add('bg-red-600');
-                        textEl.innerText = "Beendet";
-                        return;
+        function updateTimers() {{
+            const now = new Date().getTime();
+            document.querySelectorAll('.timer-badge').forEach(badge => {{
+                const expiry = new Date(badge.dataset.expiry).getTime();
+                const diff = expiry - now;
+                const textEl = badge.querySelector('.timer-text');
+
+                if (diff <= 0) {{
+                    badge.classList.remove('bg-slate-900/80');
+                    badge.classList.add('bg-red-600');
+                    textEl.innerText = "Beendet";
+                    return;
+                }}
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+                if (days > 0) {{
+                    textEl.innerText = `${{days}}d ${{hours}}h`;
+                }} else if (hours > 0) {{
+                    textEl.innerText = `${{hours}}h ${{mins}}m`;
+                    if (hours < 1) badge.classList.replace('bg-slate-900/80', 'bg-orange-600');
+                }} else {{
+                    textEl.innerText = `${{mins}}m ${{secs}}s`;
+                    badge.classList.remove('bg-slate-900/80');
+                    badge.classList.add('bg-orange-600');
+                }}
+            }});
+        }}
+
+        setInterval(updateTimers, 1000);
+
+        function resetFilters() {{
+            document.querySelectorAll('.filter-select, #searchInput').forEach(e => e.value = '');
+            document.querySelectorAll('.feature-checkbox').forEach(cb => cb.checked = false);
+            document.getElementById('selectedCountText').innerText = "Alle Merkmale";
+            currentPage = 1;
+            render();
+        }}
+
+        function sendSettingsToParent() {{
+            const wrapper = document.getElementById('wixContentWrapper');
+            if (wrapper) {{
+                // Wir messen nur den Wrapper, nicht den Body (um Loops zu vermeiden)
+                const h = Math.max(wrapper.offsetHeight, 600);
+                window.parent.postMessage({{ type: 'resize', height: h }}, '*');
+            }}
+        }}
+
+        function updateModalState(isOpen) {{
+            if (isOpen) {{
+                document.body.classList.add('modal-open');
+            }} else {{
+                document.body.classList.remove('modal-open');
+            }}
+            sendSettingsToParent();
+        }}
+
+        window.addEventListener('load', () => setTimeout(sendSettingsToParent, 300));
+        window.addEventListener('resize', () => setTimeout(sendSettingsToParent, 300));
+
+        function renderPagination(t) {{
+            const pag = document.getElementById('pagination');
+            if (t <= 1) {{ pag.innerHTML = ''; return; }}
+            let h = `<button onclick="changePage(${{currentPage - 1}})" ${{currentPage === 1 ? 'disabled' : ''}} class="px-3 py-1.5 bg-white border rounded-lg text-xs font-bold disabled:opacity-50">Zurück</button>`;
+            h += `<span class="text-xs font-bold px-3">Seite ${{currentPage}}</span>`;
+            h += `<button onclick="changePage(${{currentPage + 1}})" ${{currentPage === t ? 'disabled' : ''}} class="px-3 py-1.5 bg-white border rounded-lg text-xs font-bold disabled:opacity-50">Weiter</button>`;
+            pag.innerHTML = h;
+        }}
+
+        function changePage(p) {{ 
+            currentPage = p; 
+            render(); 
+            window.scrollTo({{ top: 0, behavior: 'smooth' }}); 
+            window.parent.postMessage({{ type: 'scroll_to_top', offset: 0 }}, '*');
+        }}
+
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {{
+            const syncBtn = document.getElementById('syncGitHub');
+            if (syncBtn) syncBtn.style.display = 'none';
+        }}
+
+        try {{
+            initFilters();
+            render();
+        }} catch (e) {{
+            console.error("Render error:", e);
+            document.getElementById('carGrid').innerHTML = '<div class="col-span-full p-8 text-center text-red-500 font-bold bg-red-50 rounded-2xl">Fehler beim Laden der Fahrzeuge. Bitte Seite neu laden.</div>';
+        }}
+        if (window.ResizeObserver && document.body) {{
+            let resizeTimer;
+            const target = document.getElementById('wixContentWrapper');
+            if (target) {{
+                new ResizeObserver(() => {{
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(sendSettingsToParent, 300);
+                }}).observe(target);
+            }}
+        }} else {{
+            window.addEventListener('load', () => {{
+                if (window.ResizeObserver) {{
+                    const target = document.getElementById('wixContentWrapper');
+                    if (target) {{
+                        new ResizeObserver(() => setTimeout(sendSettingsToParent, 300)).observe(target);
                     }}
+                }}
+            }});
+        }}
+        setTimeout(sendSettingsToParent, 500);
+    </script>
+    </div>
+</body>
 
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    const secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-                    if (days > 0) {{
-                        textEl.innerText = `${{days}}d ${{hours}}h`;
-                    }} else if (hours > 0) {{
-                        textEl.innerText = `${{hours}}h ${{mins}}m`;
-                        if (hours < 1) badge.classList.replace('bg-slate-900/80', 'bg-orange-600');
-                    }} else {{
-                        textEl.innerText = `${{mins}}m ${{secs}}s`;
-                        badge.classList.remove('bg-slate-900/80');
-                        badge.classList.add('bg-orange-600');
-                    }}
-                }});
-            }}
-
-            setInterval(updateTimers, 1000);
-
-            function resetFilters() {{ 
-                document.querySelectorAll('.filter-select, #searchInput').forEach(e => e.value = ''); 
-                document.querySelectorAll('.feature-checkbox').forEach(cb => cb.checked = false);
-                document.getElementById('selectedCountText').innerText = "Alle Merkmale";
-                currentPage = 1; 
-                render(); 
-            }}
-            
-            function sendHeightToWix() {{ const c = document.getElementById('mainContainer'); if (c) window.parent.postMessage({{ type: 'resize', height: Math.ceil(c.getBoundingClientRect().height) + 100 }}, '*'); }}
-            
-            function renderPagination(t) {{
-                const pag = document.getElementById('pagination');
-                if (t <= 1) {{ pag.innerHTML = ''; return; }}
-                let h = `<button onclick="changePage(${{currentPage - 1}})" ${{currentPage === 1 ? 'disabled' : ''}} class="px-3 py-1.5 bg-white border rounded-lg text-xs font-bold disabled:opacity-50">Zurück</button>`;
-                h += `<span class="text-xs font-bold px-3">Seite ${{currentPage}}</span>`;
-                h += `<button onclick="changePage(${{currentPage + 1}})" ${{currentPage === t ? 'disabled' : ''}} class="px-3 py-1.5 bg-white border rounded-lg text-xs font-bold disabled:opacity-50">Weiter</button>`;
-                pag.innerHTML = h;
-            }}
-            
-            function changePage(p) {{ currentPage = p; render(); window.scrollTo({{top: 0, behavior: 'smooth'}}); }}
-
-            if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {{
-                const syncBtn = document.getElementById('syncGitHub');
-                if(syncBtn) syncBtn.style.display = 'none';
-            }}
-
-            try {{
-                initFilters(); 
-                render();
-            }} catch (e) {{
-                console.error("Render error:", e);
-                document.getElementById('carGrid').innerHTML = '<div class="col-span-full p-8 text-center text-red-500 font-bold bg-red-50 rounded-2xl">Fehler beim Laden der Fahrzeuge. Bitte Seite neu laden.</div>';
-            }}
-            if (window.ResizeObserver) {{ new ResizeObserver(() => sendHeightToWix()).observe(document.getElementById('mainContainer')); }}
-            setTimeout(sendHeightToWix, 1000);
-        </script>
-    </body>
-    </html>
+</html>
     """
         with open(output_html_path, 'w', encoding='utf-8') as f:
             f.write(html_template)
