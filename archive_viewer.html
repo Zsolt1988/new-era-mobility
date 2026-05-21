@@ -259,6 +259,15 @@
             render();
         }
 
+        function getAustrianGrossPrice(car, val) {
+            const netto = val / 1.19; 
+            const fees = (netto * 1.19) * 0.035 + 140;
+            const comm = Math.max(500, netto * 0.02);
+            const transport = (car.transport || 400) * 1.5;
+            const totalBrutto = (netto + fees + transport + 800 + comm) * 1.20;
+            return totalBrutto;
+        }
+
         function render() {
             const term = document.getElementById('searchInput').value.toLowerCase();
             const make = document.getElementById('makeFilter').value;
@@ -296,13 +305,27 @@
                 return;
             }
 
-            grid.innerHTML = filtered.map(car => `
-                <div class="glass-card rounded-3xl overflow-hidden flex flex-col shadow-sm hover:shadow-md transition-all">
+            grid.innerHTML = filtered.map(car => {
+                const isSold = car.verkaufspreis && car.verkaufspreis > 0;
+                return `
+                <div class="glass-card rounded-3xl overflow-hidden flex flex-col shadow-sm hover:shadow-md transition-all ${isSold ? 'border-2 border-emerald-500 shadow-emerald-50/50' : ''}">
                     <div class="relative h-48 bg-slate-100">
                         <img src="${car.img || 'https://via.placeholder.com/400'}" class="w-full h-full object-cover opacity-80" alt="${car.name}">
                         <div class="absolute top-3 left-3 date-badge px-3 py-1 rounded-full text-[10px] font-bold shadow-sm">Erfasst: ${car.archive_date}</div>
                         ${car.expiry_date ? `<div class="absolute bottom-3 left-3 bg-slate-900/80 text-white px-3 py-1 rounded-md text-[11px] font-bold shadow-sm flex items-center gap-1 timer-badge" data-expiry="${car.expiry_date}"><i data-lucide="clock" class="w-3 h-3"></i> <span class="timer-text">Lade Timer...</span></div>` : ''}
                         ${car.category === 'Auktionsfahrzeuge' ? `<div class="absolute top-3 right-3 bg-amber-100 text-amber-600 border border-amber-200 px-3 py-1 rounded-full text-[10px] font-bold shadow-sm uppercase tracking-wider flex items-center gap-1"><i data-lucide="gavel" class="w-3 h-3"></i> AUKTION</div>` : `<div class="absolute top-3 right-3 sold-badge px-3 py-1 rounded-full text-[10px] font-bold shadow-sm uppercase tracking-wider">Referenzwert</div>`}
+                        
+                        ${isSold ? `
+                            <div class="absolute inset-0 bg-emerald-600/90 backdrop-blur-sm flex flex-col items-center justify-center text-white z-10 p-4 transition-all">
+                                <div class="bg-white/20 p-2 rounded-full mb-1">
+                                    <i data-lucide="check-circle" class="w-7 h-7 text-white"></i>
+                                </div>
+                                <span class="text-[10px] font-black uppercase tracking-wider text-emerald-100 opacity-90">Verkauft</span>
+                                <span class="text-lg font-black text-white drop-shadow-md">
+                                    ${fmt.format(getAustrianGrossPrice(car, car.verkaufspreis))}
+                                </span>
+                            </div>
+                        ` : ''}
                     </div>
                     <div class="p-5 flex flex-col flex-grow">
                         <div class="mb-3">
@@ -361,7 +384,8 @@
                         </div>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
 
             // Initialisiere die finale Preisberechnung für alle sichtbaren Karten
             filtered.forEach(car => updateFinalPriceDisplay(car.id));
