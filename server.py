@@ -220,18 +220,33 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                     if cat == 'Direktverkauf':
                         continue
                     
-                    is_auction = (cat == 'Auktionsfahrzeuge')
-                    is_recent = False
-                    arch_date_str = car.get('archive_date', '')
-                    if arch_date_str:
+                    is_running_auction = False
+                    is_recent_auction = False
+                    
+                    expiry_str = car.get('expiry_date', '')
+                    if expiry_str:
                         try:
-                            arch_date = datetime.strptime(arch_date_str, '%Y-%m-%d')
-                            if (now - arch_date).days <= max_age_days:
-                                is_recent = True
-                        except:
+                            expiry_date = datetime.strptime(expiry_str, '%Y-%m-%d %H:%M:%S')
+                            if expiry_date > now:
+                                is_running_auction = True
+                            else:
+                                if (now - expiry_date).total_seconds() <= max_age_days * 86400:
+                                    is_recent_auction = True
+                        except Exception:
                             pass
                     
-                    if is_auction or is_recent:
+                    # Fallback to archive_date if expiry_date is missing or invalid
+                    if not is_running_auction and not is_recent_auction:
+                        arch_date_str = car.get('archive_date', '')
+                        if arch_date_str:
+                            try:
+                                arch_date = datetime.strptime(arch_date_str, '%Y-%m-%d')
+                                if (now - arch_date).days <= max_age_days:
+                                    is_recent_auction = True
+                            except Exception:
+                                pass
+                    
+                    if is_running_auction or is_recent_auction:
                         filtered_data.append(car)
                         
                 index_path = os.path.join(BASE_DIR, 'index.html')
