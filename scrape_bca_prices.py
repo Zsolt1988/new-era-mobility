@@ -57,11 +57,34 @@ def scrape_prices():
     with open(ARCHIVE_PATH, 'r', encoding='utf-8') as f:
         archive = json.load(f)
 
-    # Filter Fahrzeuge ohne Verkaufspreis
-    cars_to_scrape = [c for c in archive if not c.get('verkaufspreis') or c.get('verkaufspreis') == 0]
+    # Filter Fahrzeuge ohne Verkaufspreis (robust gegen None, 0, "", "0", "None" etc.)
+    cars_to_scrape = []
+    skipped_count = 0
+    
+    for car in archive:
+        vp = car.get('verkaufspreis')
+        is_empty = False
+        
+        if vp is None:
+            is_empty = True
+        elif isinstance(vp, (int, float)) and vp == 0:
+            is_empty = True
+        elif isinstance(vp, str):
+            vp_clean = vp.strip()
+            if vp_clean == "" or vp_clean == "0" or vp_clean.lower() == "none" or vp_clean.lower() == "null":
+                is_empty = True
+        
+        if is_empty:
+            cars_to_scrape.append(car)
+        else:
+            skipped_count += 1
+
+    print(f"Archiv geladen: {len(archive)} Fahrzeuge insgesamt.")
+    print(f"Bereits gepreist (übersprungen): {skipped_count} Fahrzeuge.")
+    print(f"Müssen ausgelesen werden: {len(cars_to_scrape)} Fahrzeuge.")
     
     if not cars_to_scrape:
-        print("Updated 0 prices. Alle Fahrzeuge haben bereits einen Preis.")
+        print("Alle Fahrzeuge haben bereits einen Einkaufspreis. 0 Preise zu aktualisieren.")
         return
 
     updated_count = 0
