@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent 2 | Austria Price Calculator</title>
+    <link rel="stylesheet" href="style.css?v=1.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        .input-card {
+            padding: 1.5rem;
+        }
+        .result-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px border rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+        .result-row.total {
+            border-bottom: none;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-light);
+        }
+        .badge-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .badge-brutto { background: rgba(255, 100, 0, 0.2); color: #ff6400; }
+        .badge-netto { background: rgba(0, 255, 100, 0.2); color: #00ff64; }
+        
+        .tabs-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .tab-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(100, 108, 255, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .calc-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-blob blob-1"></div>
+    <div class="background-blob blob-2"></div>
+
+    <main class="container">
+        <nav class="workflow-header">
+            <a href="launcher.html" class="home-link">🚀 Mission Control</a>
+            <div class="nav-links">
+                <a href="index.html">1. Acquisition</a>
+                <a href="pricing.html" class="active">2. Pricing</a>
+                <a href="autoscout.html">3. Market</a>
+                <a href="agent4.html">4. Creator</a>
+                <a href="agent5.html">5. Sync 🚀</a>
+            </div>
+        </nav>
+
+        <header class="glass-hero">
+            <h1 class="gradient-text">Austria Price Calculator</h1>
+            <p class="subtitle">Agent 2: Calculate final selling costs for the Austrian market</p>
+        </header>
+
+        <section class="extraction-card glass">
+            <div id="no-data-warning" class="hidden" style="padding: 2rem; text-align: center;">
+                <p>⚠️ No car data found. Please run <strong>Agent 1: Data Acquisition</strong> first.</p>
+                <a href="index.html" class="primary-btn" style="display: inline-block; margin-top: 1rem; text-decoration: none;">Launch Agent 1</a>
+            </div>
+
+            <div id="calculator-ui" class="">
+                <div class="card-header">
+                    <h2 id="car-name">Loading car data...</h2>
+                    <div class="status-indicator">
+                        <span id="price-status-badge" class="badge-status">Checking...</span>
+                    </div>
+                    <div class="tabs-container">
+                        <button id="btn-tab-at" class="tab-btn active">🇦🇹 Austria Import</button>
+                        <button id="btn-tab-bca" class="tab-btn">🇩🇪 BCA Germany</button>
+                    </div>
+                </div>
+
+                <!-- Mode 1: Austria Import (AT) -->
+                <div id="mode-at-ui" class="calc-grid">
+                    <div class="input-section">
+                        <div class="input-group">
+                            <label for="base-price">Base Price (€)</label>
+                            <input type="number" id="base-price" placeholder="e.g. 28799">
+                        </div>
+                        <div class="input-group">
+                            <label for="distance">Distance from Seller to Pfaffstätt (km)</label>
+                            <input type="number" id="distance" placeholder="e.g. 500" value="500">
+                            <p class="helper-text">Transport cost: 1.20€ per km</p>
+                        </div>
+                        <div class="input-group">
+                            <label for="registration">Registration Fee (€)</label>
+                            <input type="number" id="registration" value="150">
+                        </div>
+                        <div class="input-group">
+                            <label for="reg-year">Registration Year</label>
+                            <input type="number" id="reg-year" placeholder="e.g. 2025" value="2025">
+                            <p class="helper-text">For NoVA calculation (M1, 2025/2026 rules)</p>
+                        </div>
+                        <div class="input-group">
+                            <label for="co2-value">CO2 Emissions (g/km)</label>
+                            <input type="number" id="co2-value" placeholder="e.g. 110" value="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="margin-percent">Revenue Margin (%)</label>
+                            <input type="number" id="margin-percent" value="7" step="0.5">
+                        </div>
+                        <div style="margin-top: 1.5rem;">
+                            <button id="recalculate-btn" class="primary-btn" style="width: 100%;">
+                                Recalculate Price
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>Price Breakdown (AT)</h3>
+                        <div class="result-row">
+                            <span>Original Price</span>
+                            <span id="display-original">0 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Netto Value (DE)</span>
+                            <span id="display-netto">0 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Transport Costs</span>
+                            <span id="display-transport">0 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Registration</span>
+                            <span id="display-reg">0 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Internal Costs Total</span>
+                            <span id="display-internal">0 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Revenue Margin (7%)</span>
+                            <span id="display-margin">0 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Austrian Taxes (20%)</span>
+                            <span id="display-vat-at">0 €</span>
+                        </div>
+                        <div class="result-row" style="color: #ff9900;">
+                            <span>NoVA (Tax + Malus)</span>
+                            <span id="display-nova">0 €</span>
+                        </div>
+                        <div class="result-row total">
+                            <span>Total Selling Price (AT)</span>
+                            <span id="display-total">0 €</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mode 2: BCA Germany (BCA) -->
+                <div id="mode-bca-ui" class="calc-grid hidden">
+                    <div class="input-section">
+                        <div class="input-group">
+                            <label for="bca-ep">Einkaufspreis Deutschland (€)</label>
+                            <input type="number" id="bca-ep" placeholder="Auto-filled from Agent 3">
+                        </div>
+                        <div class="input-group">
+                            <label for="bca-damage">Schäden (inkl. MwSt) (€)</label>
+                            <input type="number" id="bca-damage" value="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="bca-auction-percent">Auktionsgebühr (%)</label>
+                            <input type="number" id="bca-auction-percent" value="3.5" step="0.1">
+                        </div>
+                        <div class="input-group">
+                            <label for="bca-auction-fix">Auktionsgebühr fix (ohne MwSt) (€)</label>
+                            <input type="number" id="bca-auction-fix" value="140">
+                        </div>
+                        <div class="input-group">
+                            <label for="bca-margin">Gewinn (%)</label>
+                            <input type="number" id="bca-margin" value="7" step="0.5">
+                        </div>
+                        <div style="margin-top: 1.5rem;">
+                            <button id="bca-recalculate-btn" class="primary-btn" style="width: 100%;">
+                                Max. Einkaufspreis berechnen
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>BCA Kalkulation (DE)</h3>
+                        <div class="result-row">
+                            <span>Einkaufspreis (Netto 19%)</span>
+                            <span id="display-bca-v1">0 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Schäden (Netto)</span>
+                            <span id="display-bca-v2">0 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Auktionsgebühr (%-Satz)</span>
+                            <span id="display-bca-v3">0 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Auktionsgebühr fix</span>
+                            <span id="display-bca-v4">0 €</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Gewinn (7%)</span>
+                            <span id="display-bca-v5">0 €</span>
+                        </div>
+                        <div class="result-row total" style="color: #00ff64;">
+                            <span>Maximaler Einkaufspreis</span>
+                            <span id="display-bca-result">0 €</span>
+                        </div>
+                    </div>
+                </div>
+                        
+                        <!-- Market Comparison Section -->
+                        <div id="comparison-section" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                            <h4 style="margin-bottom: 1rem;">Market Comparison (Agent 3)</h4>
+                            
+                            <div id="comparison-data" class="hidden">
+                                <div class="result-row">
+                                    <span>Market Price Austria (AS24)</span>
+                                    <span id="display-market-price">0 €</span>
+                                </div>
+                                <div class="result-row">
+                                    <span>Market Price Germany (Uncle)</span>
+                                    <span id="display-german-price">—</span>
+                                </div>
+                                <div class="result-row">
+                                    <span>Price Diff (Austria)</span>
+                                    <span id="display-diff">0%</span>
+                                </div>
+                            </div>
+
+                            <div class="ampel-container" style="display: flex; gap: 1.5rem; align-items: center; margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 12px;">
+                                <div class="traffic-light">
+                                    <div id="light-red" class="light"></div>
+                                    <div id="light-orange" class="light"></div>
+                                    <div id="light-green" class="light"></div>
+                                </div>
+                                <div style="flex: 1;">
+                                    <p id="recommendation-text" style="font-weight: 600; font-size: 0.95rem;">Please fetch prices in Agent 3 first</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="next-step-container">
+                            <a href="autoscout.html" class="secondary-btn">Next Step: Market Search →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <style>
+            .traffic-light {
+                background: #1a1a1a;
+                padding: 10px;
+                border-radius: 15px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                border: 2px solid #333;
+            }
+            .light {
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: #333;
+                transition: all 0.3s ease;
+            }
+            
+            /* States */
+            .ampel-container.red #light-red { background: #ff3e3e; box-shadow: 0 0 15px #ff3e3e; }
+            .ampel-container.red { border: 1px solid rgba(255, 62, 62, 0.3); }
+            
+            .ampel-container.orange #light-orange { background: #ffa500; box-shadow: 0 0 15px #ffa500; }
+            .ampel-container.orange { border: 1px solid rgba(255, 165, 0, 0.3); }
+            
+            .ampel-container.green #light-green { background: #00ff64; box-shadow: 0 0 15px #00ff64; }
+            .ampel-container.green { border: 1px solid rgba(0, 255, 100, 0.3); }
+            
+            .ampel-container.red p { color: #ff3e3e; }
+            .ampel-container.orange p { color: #ffa500; }
+            .ampel-container.green p { color: #00ff64; }
+        </style>
+
+        <footer>
+            <p>Powered by Antigravity Multi-Agent Environment</p>
+        </footer>
+    </main>
+
+    <script src="pricing.js?v=2"></script>
+</body>
+</html>

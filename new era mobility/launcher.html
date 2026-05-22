@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control | Car Homepage Creator</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <main class="dashboard-container">
+        <header class="header">
+            <h1>Mission Control</h1>
+            <p>Select your agent tool to begin the workflow.</p>
+            <button id="reset-query-btn" class="reset-btn">
+                🔄 New Query (Reset Workflow)
+            </button>
+        </header>
+
+        <div class="cards-grid">
+            <!-- Agent 1: Data Acquisition -->
+            <a href="agent1.html" class="card">
+                <div>
+                    <span class="badge">Part 1</span>
+                    <div class="icon-placeholder">🔍</div>
+                    <h2>Data Acquisition</h2>
+                    <p>Enter a car listing URL to extract technical details, pricing, and features using Agent 1's smart parsing logic.</p>
+                </div>
+                <div class="card-footer">
+                    <span>Launch Tool</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </div>
+            </a>
+
+            <!-- Agent 2: Price Calculator -->
+            <a href="pricing.html" class="card">
+                <div>
+                    <span class="badge">Part 2</span>
+                    <div class="icon-placeholder" style="background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);">💰</div>
+                    <h2>Price Calculator</h2>
+                    <p>Calculate the possible selling price in Austria, including transport from Germany, registration, and revenue margins.</p>
+                </div>
+                <div class="card-footer">
+                    <span>Launch Tool</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </div>
+            </a>
+
+            <!-- Agent 3: AutoScout24 Configurator -->
+            <a href="autoscout.html" class="card">
+                <div>
+                    <span class="badge">Part 3</span>
+                    <div class="icon-placeholder" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">🌐</div>
+                    <h2>Market Search</h2>
+                    <p>Generate a customized AutoScout24 search URL for Austria based on the extracted technical vehicle data.</p>
+                </div>
+                <div class="card-footer">
+                    <span>Launch Tool</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </div>
+            </a>
+
+            <!-- Agent 4: Homepage Creator -->
+            <a href="index.html" class="card">
+                <div>
+                    <span class="badge">Part 4</span>
+                    <div class="icon-placeholder" style="background: linear-gradient(135deg, #01fd77 0%, #0c7dff 100%);">✨</div>
+                    <h2>Homepage Creator</h2>
+                    <p>View the automatically generated premium, high-converting landing page for the vehicles using the final calculated pricing and specs.</p>
+                </div>
+                <div class="card-footer">
+                    <span>View Output</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </div>
+            </a>
+
+            <!-- Agent 5: Sync Dashboard -->
+            <a href="agent5.html" class="card">
+                <div>
+                    <span class="badge">Part 5</span>
+                    <div class="icon-placeholder" style="background: linear-gradient(135deg, #bb86fc 0%, #7c4dff 100%);">🚀</div>
+                    <h2>Sync Dashboard</h2>
+                    <p>Review and edit your data before syncing with Wix or exporting to CSV. The final step in the automation workflow.</p>
+                </div>
+                <div class="card-footer">
+                    <span>Launch Tool</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </div>
+            </a>
+
+            <!-- Dedicated Buy Recommendation Card -->
+            <div id="buy-status-card" class="card status-card">
+                <div>
+                    <span class="badge">Live Status</span>
+                    <div class="icon-placeholder" style="background: #1a1a1a; border: 1px solid #333;">🚥</div>
+                    <h2>Buy Recommendation</h2>
+                    <p id="status-desc">Calculating market position...</p>
+                    
+                    <div id="launcher-buy-indicator" class="buy-indicator large" style="display: none;">
+                        <div id="launcher-status-light" class="status-light"></div>
+                        <div class="status-details">
+                            <span id="launcher-status-text" class="status-text">Ready</span>
+                            <span id="launcher-status-diff" class="status-diff">0.00%</span>
+                        </div>
+                    </div>
+                    
+                    <div id="waiting-indicator" class="buy-indicator" style="background: rgba(255,255,255,0.05);">
+                        <span style="color: var(--text-secondary); font-size: 0.9rem;">Waiting for Agent 2 & 3 data...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const indicator = document.getElementById('launcher-buy-indicator');
+            const light = document.getElementById('launcher-status-light');
+            const text = document.getElementById('launcher-status-text');
+            const diffText = document.getElementById('launcher-status-diff');
+            const waiting = document.getElementById('waiting-indicator');
+            const desc = document.getElementById('status-desc');
+
+            function updateRecommendation() {
+                const finalPriceStr = localStorage.getItem('lastCalculatedFinalPrice');
+                const marketPriceStr = localStorage.getItem('lastMarketCheapestPrice');
+
+                if (finalPriceStr && marketPriceStr) {
+                    const finalPrice = parseFloat(finalPriceStr);
+                    const marketPrice = parseFloat(marketPriceStr);
+                    
+                    const diff = (marketPrice - finalPrice) / marketPrice;
+                    const diffPercent = (diff * 100).toFixed(2);
+                    const diffEuro = (marketPrice - finalPrice);
+                    const formattedDiffEuro = new Intl.NumberFormat('de-DE', { signDisplay: 'always' }).format(diffEuro) + '€';
+                    
+                    waiting.style.display = 'none';
+                    indicator.style.display = 'flex';
+                    
+                    light.classList.remove('green', 'orange', 'red');
+                    
+                    if (diff >= 0.02) {
+                        light.classList.add('green');
+                        text.innerText = 'Kaufempfehlung: JA';
+                        text.style.color = '#00ff64';
+                        desc.innerText = 'Das Fahrzeug liegt deutlich unter dem Marktpreis.';
+                    } else if (diff <= -0.02) {
+                        light.classList.add('red');
+                        text.innerText = 'Kaufempfehlung: NEIN';
+                        text.style.color = '#ff3e3e';
+                        desc.innerText = 'Das Fahrzeug ist teurer als der günstigste Marktpreis.';
+                    } else {
+                        light.classList.add('orange');
+                        text.innerText = 'Kaufempfehlung: NEUTRAL';
+                        text.style.color = '#ffa500';
+                        desc.innerText = 'Der Preis entspricht dem aktuellen Marktniveau.';
+                    }
+                    
+                    diffText.innerText = `${(diff > 0 ? '+' : '')}${diffPercent}% (${formattedDiffEuro}) vs. Markt`;
+                } else {
+                    indicator.style.display = 'none';
+                    waiting.style.display = 'flex';
+                    desc.innerText = 'Bitte fülle zuerst Agent 2 (Preis) und Agent 3 (Markt) aus.';
+                }
+            }
+
+            updateRecommendation();
+
+            const resetBtn = document.getElementById('reset-query-btn');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                    if (confirm('Are you sure you want to start a new query? This will clear all manual changes and extracted data.')) {
+                        localStorage.removeItem('lastExtractedCar');
+                        localStorage.removeItem('lastCalculatedFinalPrice');
+                        localStorage.removeItem('lastMarketCheapestPrice');
+                        localStorage.removeItem('lastBuyStatus');
+                        localStorage.removeItem('pricingState');
+                        localStorage.removeItem('autoscoutState');
+                        localStorage.removeItem('autoscoutLastPrices');
+                        
+                        // Clear Agent 4 overrides
+                        const inputs = ['edit-title', 'edit-mileage', 'edit-reg', 'edit-color', 'edit-power', 'edit-price', 'edit-interieur', 'edit-technologie'];
+                        inputs.forEach(id => localStorage.removeItem(`override_${id}`));
+
+                        window.location.reload();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

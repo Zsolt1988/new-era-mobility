@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCA Import Kalkulator</title>
+    <!-- Tailwind CSS für ein modernes, responsives Design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+        .result-row:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen p-4 md:p-8 flex items-center justify-center">
+
+    <div class="max-w-4xl w-full mx-auto glass-panel rounded-2xl overflow-hidden shadow-xl grid grid-cols-1 md:grid-cols-5">
+        
+        <!-- Linke Seite: Eingaben -->
+        <div class="p-8 md:col-span-3 bg-white">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6">BCA Fahrzeug-Kalkulator</h2>
+            
+            <form id="calcForm" class="space-y-6">
+                
+                <!-- Fahrzeugpreis Netto -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Fahrzeugpreis (Netto in €)</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <span class="text-slate-400 font-semibold">€</span>
+                        </div>
+                        <input type="number" id="nettoPrice" class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-lg font-medium outline-none" placeholder="z.B. 15000" value="10000" required>
+                    </div>
+                </div>
+
+                <!-- Fahrzeugtyp -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Fahrzeugtyp</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="carType" value="pkw" class="peer sr-only" checked>
+                            <div class="text-center px-4 py-3 rounded-xl border border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-700 font-medium transition-all">
+                                🚗 PKW
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="carType" value="suv" class="peer sr-only">
+                            <div class="text-center px-4 py-3 rounded-xl border border-slate-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-700 font-medium transition-all">
+                                🚙 SUV
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Standort (Compound Name)</label>
+                    <select id="locationSelect" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-slate-700 font-medium outline-none appearance-none bg-white">
+                        <!-- Optionen werden via JS generiert -->
+                    </select>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Rechte Seite: Ergebnisse -->
+        <div class="p-8 md:col-span-2 bg-slate-900 text-white flex flex-col justify-center">
+            <h3 class="text-xl font-bold text-slate-100 mb-6 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                Kalkulation
+            </h3>
+            
+            <div class="space-y-1 text-sm text-slate-300 flex-grow">
+                
+                <div class="result-row">
+                    <span>Nettopreis</span>
+                    <span id="resNetto" class="font-medium text-white">0,00 €</span>
+                </div>
+                
+                <div class="result-row">
+                    <span class="flex items-center text-xs text-slate-400" title="Zur Berechnung der Auktionsgebühr">Bruttopreis (19%)</span>
+                    <span id="resBrutto" class="text-slate-400 text-xs">0,00 €</span>
+                </div>
+
+                <div class="result-row mt-4">
+                    <span>Auktionsgebühr (3,5% vom Brutto)</span>
+                    <span id="resAuctionPercent" class="font-medium text-white">0,00 €</span>
+                </div>
+
+                <div class="result-row">
+                    <span>Auktionsgebühr (Fix)</span>
+                    <span id="resAuctionFix" class="font-medium text-white">140,00 €</span>
+                </div>
+
+                <div class="result-row">
+                    <span>Transportkosten</span>
+                    <span id="resTransport" class="font-medium text-white">0,00 €</span>
+                </div>
+
+                <div class="result-row">
+                    <span>Importgebühr</span>
+                    <span id="resImport" class="font-medium text-white">800,00 €</span>
+                </div>
+
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-slate-700">
+                <div class="text-sm text-slate-400 mb-1">Gesamtkosten (Netto Basis)</div>
+                <div id="resTotal" class="text-3xl font-bold text-green-400">0,00 €</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Transport Data
+        const transportData = [
+            { name: "Bad Hersfeld", pkw: 374, suv: 487 },
+            { name: "BCA Berlin / Hoppegarten", pkw: 402, suv: 522 },
+            { name: "BCA Heidenheim", pkw: 253, suv: 329 },
+            { name: "BCA Neuss", pkw: 484, suv: 630 },
+            { name: "Bitterfeld-Wolfen", pkw: 402, suv: 522 },
+            { name: "Bochum", pkw: 501, suv: 651 },
+            { name: "Brackel", pkw: 490, suv: 637 },
+            { name: "Braunschweig", pkw: 490, suv: 637 },
+            { name: "Bremen", pkw: 523, suv: 680 },
+            { name: "Buch", pkw: 253, suv: 329 },
+            { name: "Calden", pkw: 484, suv: 630 },
+            { name: "Dorfmark / Hartmann Bad Fallingbostel", pkw: 490, suv: 637 },
+            { name: "Dortmund", pkw: 484, suv: 630 },
+            { name: "Duisburg", pkw: 484, suv: 630 },
+            { name: "Duisburg Salloum", pkw: 484, suv: 630 },
+            { name: "Düren", pkw: 479, suv: 623 },
+            { name: "Düsseldorf", pkw: 484, suv: 630 },
+            { name: "Emmering", pkw: 197, suv: 256 },
+            { name: "Hakenstedt", pkw: 407, suv: 530 },
+            { name: "Illingen", pkw: 253, suv: 329 },
+            { name: "Kerpen", pkw: 468, suv: 608 },
+            { name: "Ketzin", pkw: 402, suv: 522 },
+            { name: "Kitzingen", pkw: 253, suv: 329 },
+            { name: "Krefeld ARS", pkw: 484, suv: 630 },
+            { name: "Lähden", pkw: 484, suv: 630 },
+            { name: "Leipzig-Knautnaundorf ARS", pkw: 402, suv: 522 },
+            { name: "Lüdersfeld", pkw: 490, suv: 637 },
+            { name: "Mönchengladbach", pkw: 495, suv: 644 },
+            { name: "Mücke", pkw: 396, suv: 515 },
+            { name: "Neuss ATN", pkw: 484, suv: 630 },
+            { name: "Niederaula - Hartmann", pkw: 374, suv: 487 },
+            { name: "Nürnberg", pkw: 253, suv: 329 },
+            { name: "Oberndorf am Neckar", pkw: 330, suv: 429 },
+            { name: "Rackwitz", pkw: 402, suv: 522 },
+            { name: "Rehden", pkw: 484, suv: 630 },
+            { name: "Riedstadt ARS", pkw: 374, suv: 487 },
+            { name: "Schkopau", pkw: 402, suv: 522 },
+            { name: "Schöneck-Kilianstädten", pkw: 374, suv: 487 },
+            { name: "Seddiner See", pkw: 391, suv: 508 },
+            { name: "Wegberg", pkw: 484, suv: 630 },
+            { name: "Wiedemar", pkw: 402, suv: 522 },
+            { name: "Wolnzach", pkw: 204, suv: 265 },
+            { name: "Zörbig", pkw: 402, suv: 522 },
+            { name: "Zülpich", pkw: 473, suv: 615 },
+            { name: "Denmark", pkw: 400, suv: 520 }
+        ];
+
+        // Init Location Dropdown
+        const locationSelect = document.getElementById('locationSelect');
+        // Sort alphabetically
+        transportData.sort((a, b) => a.name.localeCompare(b.name));
+        
+        transportData.forEach((loc, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.text = loc.name;
+            locationSelect.appendChild(option);
+        });
+
+        // DOM Elements
+        const nettoInput = document.getElementById('nettoPrice');
+        const typeInputs = document.querySelectorAll('input[name="carType"]');
+        
+        const resNetto = document.getElementById('resNetto');
+        const resBrutto = document.getElementById('resBrutto');
+        const resAuctionPercent = document.getElementById('resAuctionPercent');
+        const resAuctionFix = document.getElementById('resAuctionFix');
+        const resTransport = document.getElementById('resTransport');
+        const resImport = document.getElementById('resImport');
+        const resTotal = document.getElementById('resTotal');
+
+        const formatter = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' });
+
+        function calculate() {
+            // Inputs
+            const netto = parseFloat(nettoInput.value) || 0;
+            const locIndex = locationSelect.value;
+            const location = transportData[locIndex];
+            
+            let selectedType = 'pkw';
+            typeInputs.forEach(input => {
+                if (input.checked) selectedType = input.value;
+            });
+
+            // Fix Costs
+            const importFee = 800;
+            const auctionFix = 140;
+
+            // Calculations
+            const brutto = netto * 1.19;
+            const auctionPercentCost = brutto * 0.035;
+            const transportCost = selectedType === 'suv' ? location.suv : location.pkw;
+
+            // Total (Summe aller Netto-Aufwände inkl. Gebühren)
+            const total = netto + auctionPercentCost + auctionFix + transportCost + importFee;
+
+            // Update UI
+            resNetto.innerText = formatter.format(netto);
+            resBrutto.innerText = formatter.format(brutto);
+            resAuctionPercent.innerText = formatter.format(auctionPercentCost);
+            resAuctionFix.innerText = formatter.format(auctionFix);
+            resTransport.innerText = formatter.format(transportCost);
+            resImport.innerText = formatter.format(importFee);
+            resTotal.innerText = formatter.format(total);
+        }
+
+        // Event Listeners
+        nettoInput.addEventListener('input', calculate);
+        locationSelect.addEventListener('change', calculate);
+        typeInputs.forEach(input => input.addEventListener('change', calculate));
+
+        // Initial Calc
+        calculate();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+{
+    "source": "https://www.auto-mega-store.com/de/details?wgID=:29285&backlink=TDJSbEwyWmhhSEo2WlhWblpTOW1ZV2h5ZW1WMVp5MXJZWFZtWlc0L1pqMHhKbTFoYmw5cFpEMHhPREUwSm0xdlpGOXBaRDB5TWpJM0ptMXBiRDB3T2prNU9UazVPUT09&man_id=1814&mod_id=2227&mil=0:999999",
+    "cars": [
+        {
+            "carReference": "29285",
+            "carBrand": "BYD",
+            "carModel": "SEAL 6 Touring 1.5 PHEV DM-i Boost",
+            "carColor": "Weiss",
+            "carDrive": "Automatik",
+            "carFuel": "Plug-in-Hybrid/Benzin",
+            "carPower": "135",
+            "carMileage": "10",
+            "carRegistration": "2025/09",
+            "carCategory": "Kombi",
+            "carPrice": "28749",
+            "specs": {
+                "Ref-Nr.": "LA10349_T",
+                "Erstzulassung": "29.09.2025",
+                "KM": "10 km",
+                "Leistung": "135 KW / 184 PS",
+                "Getriebe": "Automatik",
+                "Antriebsart": "Frontantrieb",
+                "Motor": "Plug-in-Hybrid/Benzin",
+                "Hubraum": "1498 ccm",
+                "Bauart": "Kombi",
+                "Anzahl der Sitze": "5",
+                "Anzahl der Türen": "5",
+                "Vorbesitzer": "1",
+                "Farbe": "Weiss Metallic",
+                "Farbe (Hersteller)": "Polar-Weiss",
+                "Innenausstattung": "Leder, Leder - vegan",
+                "CO2 WLTP": "60 g/km",
+                "Effizienzklasse": "A_3",
+                "Umweltplakette": "Grün"
+            },
+            "highlights": [
+                "1000 Fzg. im Bestand",
+                "Kaufabwicklung Digital",
+                "Gutachten"
+            ],
+            "co2_details": "14,5 kWh/100km + 4,8 l/100km (gew. komb.), 7,8 l/100km (entladen, komb.) • 110 g CO₂/km (gew. komb.), 170 g CO₂/km (gew. komb.) • CO₂-Klasse C (gew. komb.), F (entladen, komb.)",
+            "features": {
+                "mega einfach - einfach mega": [
+                    "Vor Ort oder Digital",
+                    "Online Kauf und Finanzierung",
+                    "Zustandsbericht Verfügbar"
+                ],
+                "Außen": [
+                    "Aussenspiegel anlegbar",
+                    "Dachreling",
+                    "elektr. Heckklappe",
+                    "Wärmeschutz/Getönte Scheiben"
+                ],
+                "Innen": [
+                    "2-Zonen-Klimaautomatik",
+                    "elektr. Fenster hinten",
+                    "elektr. Fenster vorn",
+                    "Elektronische Parkbremse",
+                    "Keyless Entry",
+                    "Lederlenkrad",
+                    "Lenkrad Multifunktion",
+                    "Mittelarmlehne",
+                    "Servo"
+                ],
+                "Sitze": [
+                    "El. beheizbare Sitze - vorne",
+                    "El. verstellbare Sitze - vorne",
+                    "Isofix hinten",
+                    "Rücksitzbank geteilt"
+                ],
+                "Technologie": [
+                    "Abstandstempomat",
+                    "Android Auto",
+                    "Apple CarPlay",
+                    "Autonomes Fahren Level 2",
+                    "Berganfahrassistent",
+                    "Bluetooth",
+                    "Bordcomputer",
+                    "Einparkhilfe hinten",
+                    "Einparkhilfe vorne",
+                    "Geschw.begrenzer",
+                    "HeadUpDisplay",
+                    "iPad/iPod-Anschluss",
+                    "MP3 fähiges Radio",
+                    "Müdigkeitswarner",
+                    "Musikstreaming",
+                    "Navigationssystem",
+                    "Notbremsassistent",
+                    "Radio - DAB",
+                    "Regensensor",
+                    "Rückfahrkamera",
+                    "Sprachsteuerung",
+                    "Spurhalteassistent",
+                    "Tempomat",
+                    "Totwinkelassistent",
+                    "Touchscreen",
+                    "Uhr &amp; Drehzahlmesser",
+                    "USB",
+                    "Verkehrszeichenerkennung",
+                    "Volldigitales Kombiinstrument"
+                ],
+                "Beleuchtung": [
+                    "Fernlichtassistent",
+                    "LED-Tagfahrlicht",
+                    "Lichtsensor",
+                    "Voll-LED Scheinwerfer"
+                ],
+                "Sicherheit": [
+                    "ABS",
+                    "Abstandswarner",
+                    "Beifahrerairbag",
+                    "ESP",
+                    "Fahrerairbag",
+                    "Kopfairbag",
+                    "Notrufsystem",
+                    "Pannenkit",
+                    "Reifendruckkontrollsystem",
+                    "Seitenairbag",
+                    "Traktionskontrolle",
+                    "Wegfahrsperre"
+                ]
+            }
+        }
+    ],
+    "extraction_status": "success",
+    "method": "dataLayer"
+}
