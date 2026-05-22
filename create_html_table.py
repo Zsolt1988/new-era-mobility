@@ -6,6 +6,7 @@ import argparse
 import sys
 import os
 import json
+import html as html_lib
 from datetime import datetime, timedelta
 
 def parse_args():
@@ -18,25 +19,204 @@ def parse_args():
     return parser.parse_args()
 
 def parse_expiry_date(listing_html):
-    # Try "Ende: 28.04 10:00"
+    listing_html = html_lib.unescape(str(listing_html))
+    now = datetime.now()
+    year = now.year
+    
+    # Try "Ende: 28.04.2025 10:00" (with year)
+    ende_match = re.search(r'Ende:\s*(\d{2})\.(\d{2})\.(\d{4})\s+(\d{2}):(\d{2})', listing_html)
+    if ende_match:
+        day, month, yr, hour, minute = map(int, ende_match.groups())
+        if yr >= 2024 and yr <= 2030:
+            return datetime(yr, month, day, hour, minute).strftime('%Y-%m-%d %H:%M:%S')
+
+    # Try "Ende: 28.04 10:00" (without year)
     ende_match = re.search(r'Ende:\s*(\d{2})\.(\d{2})\s+(\d{2}):(\d{2})', listing_html)
     if ende_match:
         day, month, hour, minute = map(int, ende_match.groups())
-        now = datetime.now()
-        year = now.year
-        # If month is earlier than current month, it's likely next year (rare for auctions)
         expiry = datetime(year, month, day, hour, minute)
-        if expiry < now - timedelta(days=1): # If it's in the past (more than 1 day), assume next year
+        if expiry < now - timedelta(days=1):
             expiry = expiry.replace(year=year + 1)
         return expiry.strftime('%Y-%m-%d %H:%M:%S')
+
+    # Try "Ende: 28.04.25 10:00" (short year)
+    ende_match = re.search(r'Ende:\s*(\d{2})\.(\d{2})\.(\d{2})\s+(\d{2}):(\d{2})', listing_html)
+    if ende_match:
+        day, month, yr, hour, minute = map(int, ende_match.groups())
+        yr += 2000
+        if yr >= 2024 and yr <= 2030:
+            return datetime(yr, month, day, hour, minute).strftime('%Y-%m-%d %H:%M:%S')
+
+    # Try "Auktionsende: DD.MM.YYYY HH:MM" or "Endet: DD.MM.YYYY HH:MM"
+    ende_match = re.search(r'(?:Auktionsende|Endet|Laufzeit|Läuft bis):?\s*(\d{2})\.(\d{2})\.(\d{4})\s+(\d{2}):(\d{2})', listing_html)
+    if ende_match:
+        day, month, yr, hour, minute = map(int, ende_match.groups())
+        if yr >= 2024 and yr <= 2030:
+            return datetime(yr, month, day, hour, minute).strftime('%Y-%m-%d %H:%M:%S')
 
     # Try "3Tag(e) 0Std. 21Min."
     countdown_match = re.search(r'(\d+)Tag\(e\)\s*(\d+)Std\.\s*(\d+)Min\.', listing_html)
     if countdown_match:
         days, hours, mins = map(int, countdown_match.groups())
-        expiry = datetime.now() + timedelta(days=days, hours=hours, minutes=mins)
+        expiry = now + timedelta(days=days, hours=hours, minutes=mins)
         return expiry.strftime('%Y-%m-%d %H:%M:%S')
+
+    # Try German "0 Tage 1 Stunden 0 Minuten"
+    countdown_match = re.search(r'(\d+)\s*Tage?\s*(\d+)\s*Stunden?\s*(\d+)\s*Minuten?', listing_html, re.IGNORECASE)
+    if countdown_match:
+        days, hours, mins = map(int, countdown_match.groups())
+        expiry = now + timedelta(days=days, hours=hours, minutes=mins)
+        return expiry.strftime('%Y-%m-%d %H:%M:%S')
+
+    # Try German "2Std. 42Min." countdowns
+    countdown_match = re.search(r'(\d+)\s*Std\.?\s*(\d+)\s*Min\.?', listing_html, re.IGNORECASE)
+    if countdown_match:
+        hours, mins = map(int, countdown_match.groups())
+        expiry = now + timedelta(hours=hours, minutes=mins)
+        return expiry.strftime('%Y-%m-%d %H:%M:%S')
+
+    # Try JSON countdown attributes like data-bid-session-start-date
+    json_match = re.search(r'data-bid-session-start-date\s*=\s*\'(\{[^\']+\})\'|data-bid-session-start-date\s*=\s*"(\{[^\"]+\})"', listing_html)
+    if json_match:
+        json_text = json_match.group(1) or json_match.group(2)
+        try:
+            data = json.loads(html_lib.unescape(json_text).replace("'", '"'))
+            days = int(data.get('Days', 0))
+            hours = int(data.get('Hours', 0))
+            mins = int(data.get('Minutes', 0))
+            expiry = now + timedelta(days=days, hours=hours, minutes=mins)
+            return expiry.strftime('%Y-%m-%d %H:%M:%S')
+        except Exception:
+            pass
     
+    # Try href or label-based duration text
+    countdown_match = re.search(r'Auktion endet in:\s*<div[^>]*>([^<]+)<', listing_html, re.IGNORECASE)
+    if countdown_match:
+        inner = countdown_match.group(1)
+        return parse_expiry_date(inner)
+
+    return None
+
+
+def extract_sheet_expiry(df_temp):
+    """Find a sheet-level expiry date from metadata rows in the raw Excel sheet."""
+    if df_temp is None:
+        return None
+
+    for _, row in df_temp.iterrows():
+        for idx, cell in row.items():
+            if isinstance(cell, str) and 'enddatum' in cell.lower():
+                try:
+                    candidate = row.iloc[idx + 1]
+                except Exception:
+                    candidate = None
+                if candidate is not None and str(candidate).strip():
+                    parsed = extract_expiry_from_row(pd.Series({0: candidate}))
+                    if parsed:
+                        return parsed
+    return None
+
+
+def extract_expiry_from_row(row):
+    """Try to extract an expiry datetime from a pandas Series (row).
+    Handles explicit columns (like 'F5', 'Ende', 'Auktionsende'), Excel serials,
+    unix timestamps and free-form date strings.
+    Returns an ISO formatted string or None.
+    """
+    if row is None:
+        return None
+
+    def format_dt(dt):
+        try:
+            return dt.strftime('%Y-%m-%d %H:%M:%S')
+        except:
+            return None
+
+    def try_parse_value(val):
+        if val is None or (isinstance(val, float) and pd.isna(val)):
+            return None
+        # pandas Timestamp or datetime
+        if hasattr(val, 'to_pydatetime'):
+            try:
+                return format_dt(pd.to_datetime(val).to_pydatetime())
+            except:
+                pass
+        if isinstance(val, datetime):
+            return format_dt(val)
+        # Numeric: could be excel serial or unix timestamp
+        if isinstance(val, (int, float)) and not pd.isna(val):
+            try:
+                ival = float(val)
+                # Unix seconds
+                if ival > 1e9:
+                    try:
+                        return format_dt(datetime.fromtimestamp(int(ival)))
+                    except:
+                        pass
+                # Excel serial (days since 1899-12-30)
+                if ival > 20000 and ival < 60000:
+                    try:
+                        base = datetime(1899, 12, 30)
+                        days = int(ival)
+                        frac = ival - days
+                        secs = int(round(frac * 86400))
+                        dt = base + timedelta(days=days, seconds=secs)
+                        return format_dt(dt)
+                    except:
+                        pass
+            except:
+                pass
+        # String: try parse_expiry_date (HTML-like) first
+        if isinstance(val, str):
+            s = val.strip()
+            if not s:
+                return None
+            now = datetime.now()
+            year = now.year
+            # Some strings include the label 'Ende:' etc.
+            parsed = parse_expiry_date(s)
+            if parsed:
+                return parsed
+            # Try plain German date/time without year: 22.05 13:59
+            short_match = re.match(r'^(\d{1,2})\.(\d{1,2})\s+(\d{1,2}):(\d{2})$', s)
+            if short_match:
+                day, month, hour, minute = map(int, short_match.groups())
+                expiry = datetime(year, month, day, hour, minute)
+                if expiry < now - timedelta(days=1):
+                    expiry = expiry.replace(year=year + 1)
+                return format_dt(expiry)
+            # Try pandas parser (dayfirst)
+            try:
+                dt = pd.to_datetime(s, dayfirst=True, errors='coerce')
+                if not pd.isna(dt):
+                    return format_dt(dt.to_pydatetime())
+            except:
+                pass
+        return None
+
+    # 1) look for likely column names
+    for col in row.index:
+        low = str(col).lower()
+        if any(key in low for key in ['f5', 'ende', 'auktions', 'endet', 'laufzeit', 'läuft', 'endzeit', 'expiry', 'ablauf']):
+            val = row.get(col)
+            res = try_parse_value(val)
+            if res:
+                return res
+
+    # 2) try some specific common column labels if present
+    common_cols = ['expiry_date', 'expiry', 'Ende', 'Auktionsende', 'Endet', 'Ende Datum']
+    for cname in common_cols:
+        if cname in row.index:
+            res = try_parse_value(row.get(cname))
+            if res: return res
+
+    # 3) fallback: scan all values for something that parses
+    for col in row.index:
+        val = row.get(col)
+        res = try_parse_value(val)
+        if res:
+            return res
+
     return None
 
 TRANSPORT_COSTS = {
@@ -265,7 +445,9 @@ def process_bca():
             
         content = content.replace('\\<', '<').replace('\\>', '>').replace('\\"', '"').replace('\\/', '/')
         content = re.sub(r"\\'([0-9a-f]{2})", lambda m: chr(int(m.group(1), 16)), content)
-        
+        content = html_lib.unescape(content)
+
+        sheet_expiry = extract_sheet_expiry(df_temp)
         listings = re.split(r'(?=<div class="listing")', content)
         extracted_html_data = []
         for l in listings:
@@ -283,7 +465,7 @@ def process_bca():
                     "BCA_Bild_URL": img_url,
                     "BCA_Standort": "Unbekannt",
                     "BCA_HTML_Price": 0.0,
-                    "expiry_date": parse_expiry_date(l)
+                    "expiry_date": parse_expiry_date(l) or sheet_expiry
                 })
                 p_match = re.search(r'>\s*([\d.]+)\s*(?:€|\x80|â‚¬|EUR)', l)
                 if p_match: extracted_html_data[-1]["BCA_HTML_Price"] = float(p_match.group(1).replace('.', ''))
@@ -378,12 +560,23 @@ def process_bca():
             # Expiry Date Logik: Prio 1 ist ein bereits vorhandener Zeitstempel
             expiry_final = row.get('expiry_date')
             # Falls durch den Merge Suffixe entstanden sind (expiry_date_x/y)
-            if pd.isna(expiry_final) or not expiry_final:
+            if expiry_final is None or (isinstance(expiry_final, float) and pd.isna(expiry_final)):
                 expiry_final = row.get('expiry_date_y', row.get('expiry_date_x', None))
-            
-            # Falls immer noch leer, nutze das, was wir evtl. aus dem HTML extrahiert haben (df_html)
-            # (In diesem Skript wird es bereits in df_html unter 'expiry_date' gespeichert)
+            # Stelle sicher, dass NaN-Werte zu None werden
+            if expiry_final is not None and isinstance(expiry_final, float) and pd.isna(expiry_final):
+                expiry_final = None
 
+            # Wenn noch kein Ablaufdatum vorhanden ist, versuche XLS-Fallback oder andere Spalten
+            if expiry_final is None:
+                try:
+                    expiry_from_row = extract_expiry_from_row(row)
+                    if expiry_from_row:
+                        expiry_final = expiry_from_row
+                except Exception:
+                    expiry_final = None
+
+            if expiry_final is None:
+                expiry_final = sheet_expiry
             js_data.append({
                 "id": car_id,
                 "category": "Auktionsfahrzeuge",
@@ -745,7 +938,7 @@ def process_bca():
     </div>
 
     <script>
-        const cars = {json.dumps(filtered_data)};
+        const cars = {json.dumps(filtered_data, allow_nan=False)};
 
         const fmt = new Intl.NumberFormat('de-DE', {{ style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }});
         let currentPage = 1;
