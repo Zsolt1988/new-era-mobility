@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        html,
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f8fafc;
+            position: relative;
+            min-height: auto;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        body::-webkit-scrollbar { display: none; }
+        body { -ms-overflow-style: none; scrollbar-width: none; }
+        .glass-card { background: white; border: 1px solid #e2e8f0; }
+        .calc-box { background: #f1f5f9; border: 1px dashed #cbd5e1; }
+        .ausstattung-badge { background-color: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+        .filter-select { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 8px 12px; }
+        .glass-modal { background: white; backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        #toast { position: absolute; top: 2rem; right: 2rem; padding: 1rem 1.5rem; border-radius: 1rem; background: white; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0; display: none; z-index: 9999; animation: slideDown 0.3s ease-out; }
+        @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .sync-btn { background: #059669; color: white; transition: all 0.3s; cursor: pointer; }
+        .sync-btn:hover { background: #047857; transform: translateY(-1px); }
+        #modalScrollArea::-webkit-scrollbar { width: 6px; }
+        #modalScrollArea::-webkit-scrollbar-track { background: transparent; }
+        #modalScrollArea::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .message-hidden { display: none; opacity: 0; max-height: 0; overflow: hidden; }
+        .message-visible { display: block; opacity: 1; max-height: 200px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .success-overlay { position: absolute; inset: 0; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+        .success-overlay.active { opacity: 1; pointer-events: auto; }
+        .checkmark-circle { width: 80px; height: 80px; border-radius: 50%; background: #f0fdf4; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; transform: scale(0.5); transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .success-overlay.active .checkmark-circle { transform: scale(1); }
+        input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+        .timer-badge { transition: background-color 0.5s ease; }
+        @media (max-width: 480px) { .card-padding { padding: 0.75rem !important; } .card-title { font-size: 0.9rem !important; } .card-specs { font-size: 9px !important; } }
+        .multi-select-container { position: relative; }
+        .multi-select-dropdown { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); z-index: 100; max-height: 250px; overflow-y: auto; display: none; padding: 0.5rem; }
+        .multi-select-dropdown.active { display: block; }
+        .multi-select-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
+        .multi-select-item:hover { background: #f1f5f9; }
+        .multi-select-item input { cursor: pointer; }
+    </style>
+</head>
+
+<body class="p-4 md:p-8 bg-slate-50 text-slate-800">
+    <div id="wixContentWrapper">
+        <div id="toast" onclick="this.style.display='none'">
+        <div class="flex items-center gap-3">
+            <div id="toastIcon"></div>
+            <div id="toastMessage" class="text-sm font-bold"></div>
+        </div>
+    </div>
+
+    <!-- Anfrage Modal -->
+    <div id="modalBackdrop"
+        class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-start justify-center p-4 transition-opacity duration-300 opacity-0 min-h-full">
+        <div id="modalContainer"
+            class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col max-h-[95vh] relative mt-10 md:mt-20">
+
+            <!-- Success Overlay -->
+            <div id="successOverlay" class="success-overlay">
+                <div class="checkmark-circle">
+                    <i data-lucide="check" class="w-10 h-10 text-emerald-600"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-800 mb-2">Anfrage gesendet!</h3>
+                <p class="text-slate-500 text-center px-8">Wir melden uns in Kürze bei Ihnen.</p>
+                <button onclick="closeModal()"
+                    class="mt-8 px-8 py-3 bg-blue-600 text-white font-bold rounded-2xl shadow-lg">Schließen</button>
+            </div>
+
+            <!-- Modal Header -->
+            <div class="relative h-32 md:h-48 bg-slate-100 flex-shrink-0">
+                <img id="modalCarImg" src="" class="w-full h-full object-cover" alt="Auto">
+                <div class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
+                <button onclick="closeModal()"
+                    class="absolute top-4 right-4 p-2 bg-white/80 hover:bg-white rounded-full text-slate-600 shadow-sm">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+                <div class="absolute bottom-4 left-6 md:left-8">
+                    <h3 id="modalCarName" class="text-xl md:text-2xl font-bold text-slate-800 leading-tight">...</h3>
+                    <p class="text-xs md:text-sm text-slate-500 font-medium">ID: <span id="modalCarId">...</span></p>
+                </div>
+            </div>
+
+            <!-- Modal Content -->
+            <div id="modalScrollArea" class="p-4 md:p-8 pt-4 overflow-y-auto flex-grow">
+                <div class="space-y-4 md:space-y-6">
+                    <div class="grid grid-cols-1 gap-3">
+                        <label
+                            class="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group">
+                            <input type="checkbox" id="checkEmail" onchange="validateForm()"
+                                class="w-5 h-5 text-blue-600 border-slate-300 rounded">
+                            <div class="flex flex-col">
+                                <span class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Zustandsbericht</span>
+                                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Per E-Mail erhalten</span>
+                            </div>
+                        </label>
+
+                        <label
+                            class="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-blue-200 transition-all cursor-pointer group">
+                            <input type="checkbox" id="checkImport"
+                                onchange="toggleMessageField(this.checked); validateForm()"
+                                class="w-5 h-5 text-blue-600 border-slate-300 rounded">
+                            <div class="flex flex-col">
+                                <span class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Allgemeine Frage</span>
+                                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Zum Import-Ablauf</span>
+                            </div>
+                        </label>
+
+                        <div class="rounded-2xl border border-slate-100 overflow-hidden" id="calcContainer">
+                            <label
+                                class="flex items-center gap-4 p-4 bg-white hover:bg-slate-50 transition-all cursor-pointer group">
+                                <input type="checkbox" id="checkLimit"
+                                    onchange="toggleCalculator(this.checked); validateForm()"
+                                    class="w-5 h-5 text-blue-600 border-slate-300 rounded">
+                                <div class="flex flex-col">
+                                    <span class="text-slate-800 font-semibold text-sm md:text-base group-hover:text-blue-600 transition-colors">Kalkulieren</span>
+                                    <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Kostenaufstellung</span>
+                                </div>
+                            </label>
+                            <div id="detailedCalc"
+                                class="hidden bg-slate-50 border-t border-slate-100 p-4 md:p-6 space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] font-bold text-slate-500 uppercase">Netto-Basis (AT-Marktwert bereinigt)</span>
+                                    <div class="text-sm md:text-base font-bold text-slate-800" id="modalNettoDisplay">0 €</div>
+                                </div>
+                                <select id="optWarranty" onchange="runModalCalc()"
+                                    class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm outline-none">
+                                    <option value="0">Keine Zusatzgarantie</option>
+                                </select>
+                                <div class="space-y-2 text-[11px] md:text-sm pt-4 border-t border-slate-200">
+                                    <div class="flex justify-between"><span>Netto Gebot:</span><span id="resNetto" class="font-bold">0 €</span></div>
+                                    <div class="flex justify-between"><span>Transport:</span><span id="resTransport">0 €</span></div>
+                                    <div class="flex justify-between"><span>Anmeldung AT:</span><span id="resAnmeldung">0 €</span></div>
+                                    <div class="flex justify-between text-slate-400 italic"><span>Gebühren:</span><span id="resProvision">0 €</span></div>
+                                    <div id="resOptionsRow" class="flex justify-between text-blue-600 hidden">
+                                        <span>Optionen:</span><span id="resOptions">0 €</span>
+                                    </div>
+                                    <div class="pt-4 border-t border-slate-300">
+                                        <div class="flex justify-between items-baseline">
+                                            <span class="text-[10px] font-black text-slate-400 uppercase">Gesamt Brutto</span>
+                                            <span id="resTotalBrutto" class="text-xl md:text-3xl font-black text-blue-600">0 €</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 md:p-6 bg-blue-50/50 rounded-3xl border border-blue-100 space-y-4">
+                        <label class="text-[10px] font-bold text-blue-400 uppercase tracking-widest block">Kontaktdaten</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <input type="text" id="userName" placeholder="Name"
+                                class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm">
+                            <input type="email" id="userEmail" placeholder="E-Mail"
+                                class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm">
+                        </div>
+                        <div id="messageContainer" class="message-hidden">
+                            <textarea id="userMessage" rows="2" placeholder="Nachricht (optional)"
+                                class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl outline-none text-sm resize-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 md:p-6 bg-white border-t border-slate-100 flex flex-col md:flex-row gap-3 flex-shrink-0">
+                <button id="btnSubmitInquiry" disabled onclick="sendInquiry()"
+                    class="flex-[2] bg-blue-600 disabled:bg-slate-200 text-white font-bold py-4 rounded-2xl shadow-xl flex items-center justify-center gap-2">
+                    <i data-lucide="send" class="w-5 h-5"></i>
+                    <span id="btnText">Anfrage senden</span>
+                </button>
+                <button onclick="closeModal()"
+                    class="flex-1 bg-white text-slate-500 font-bold py-4 rounded-2xl border border-slate-200 text-sm">Abbrechen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Modal -->
+    <div id="dataModalBackdrop"
+        class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-[110] hidden flex items-start justify-center p-4 transition-opacity duration-300 opacity-0 min-h-full">
+        <div id="dataModalContainer"
+            class="max-w-2xl w-full glass-modal rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0 flex flex-col relative max-h-[90vh] mt-10 md:mt-20">
+            <button onclick="closeDataModal()"
+                class="absolute top-4 right-4 z-50 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors">
+                <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
+            </button>
+            <div id="dataModalContent" class="overflow-y-auto w-full">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox-modal" class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/90 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <button onclick="closeImageGallery()" class="absolute top-4 right-4 text-white hover:text-slate-300 z-50 p-2">
+            <i data-lucide="x" class="w-8 h-8"></i>
+        </button>
+        <button onclick="prevImage(event)" class="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-slate-300 z-50 p-2">
+            <i data-lucide="chevron-left" class="w-10 h-10"></i>
+        </button>
+        <div class="relative max-w-5xl w-full max-h-[90vh] px-12 flex items-center justify-center" onclick="closeImageGallery()">
+            <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] object-contain shadow-2xl rounded-lg cursor-default" alt="Gallery Image" onclick="event.stopPropagation()">
+        </div>
+        <button onclick="nextImage(event)" class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-slate-300 z-50 p-2">
+            <i data-lucide="chevron-right" class="w-10 h-10"></i>
+        </button>
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/80 font-bold text-sm tracking-widest bg-black/50 px-4 py-1 rounded-full pointer-events-none">
+            <span id="lightbox-counter">1 / 1</span>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div id="mainContainer" class="max-w-7xl mx-auto">
+        <header class="mb-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-800">Auktionsfahrzeuge</h1>
+                <div class="flex flex-col sm:flex-row items-center gap-3">
+                    <button id="syncGitHub" onclick="syncToGitHub()"
+                        class="sync-btn w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i> Live-Update
+                    </button>
+                    <div class="relative w-full sm:w-64">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                        <input type="text" id="searchInput" placeholder="Suchen..."
+                            class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl outline-none bg-white shadow-sm">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-end gap-4 p-4 md:p-5 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                <div class="w-full md:w-32">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Marke</label>
+                    <select id="makeFilter" class="filter-select w-full outline-none text-sm"><option value="">Alle Marken</option></select>
+                </div>
+                <div class="w-full md:w-auto">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Baujahr</label>
+                    <div class="flex items-center gap-2">
+                        <select id="yearMin" class="filter-select w-full md:w-24 outline-none text-sm"><option value="0">Jahr von</option></select>
+                        <select id="yearMax" class="filter-select w-full md:w-24 outline-none text-sm"><option value="9999">Jahr bis</option></select>
+                    </div>
+                </div>
+                <div class="w-full md:w-auto">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Kilometer</label>
+                    <div class="flex items-center gap-2">
+                        <select id="kmMin" class="filter-select w-full md:w-28 outline-none text-sm">
+                            <option value="0">KM von</option><option value="0">0 KM</option><option value="10000">10.000 KM</option><option value="20000">20.000 KM</option><option value="30000">30.000 KM</option><option value="40000">40.000 KM</option><option value="50000">50.000 KM</option><option value="60000">60.000 KM</option><option value="70000">70.000 KM</option><option value="80000">80.000 KM</option><option value="90000">90.000 KM</option><option value="100000">100.000 KM</option><option value="125000">125.000 KM</option><option value="150000">150.000 KM</option><option value="200000">200.000 KM</option>
+                        </select>
+                        <select id="kmMax" class="filter-select w-full md:w-28 outline-none text-sm">
+                            <option value="9999999">KM bis</option><option value="10000">10.000 KM</option><option value="20000">20.000 KM</option><option value="30000">30.000 KM</option><option value="40000">40.000 KM</option><option value="50000">50.000 KM</option><option value="60000">60.000 KM</option><option value="70000">70.000 KM</option><option value="80000">80.000 KM</option><option value="90000">90.000 KM</option><option value="100000">100.000 KM</option><option value="125000">125.000 KM</option><option value="150000">150.000 KM</option><option value="200000">200.000 KM</option><option value="9999999">Beliebig</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="w-full md:w-56 multi-select-container">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Ausstattung</label>
+                    <div id="multiSelectBtn" onclick="toggleMultiSelect(event)" class="filter-select w-full outline-none text-sm cursor-pointer flex justify-between items-center">
+                        <span id="selectedCountText" class="truncate mr-2">Alle Merkmale</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+                    </div>
+                    <div id="multiSelectDropdown" class="multi-select-dropdown"><!-- JS populated --></div>
+                </div>
+                <div class="w-full md:w-40">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 block mb-1">Sortierung</label>
+                    <select id="sortOrder" class="filter-select w-full outline-none text-sm">
+                        <option value="newest">Neueste zuerst</option><option value="oldest">Älteste zuerst</option><option value="price-asc">Preis aufst.</option><option value="price-desc">Preis abst.</option><option value="km-asc">KM aufst.</option><option value="id-asc">ID aufst.</option><option value="id-desc">ID abst.</option>
+                    </select>
+                </div>
+                <button onclick="resetFilters()" class="w-full md:w-auto px-4 py-2.5 text-xs text-blue-500 font-bold hover:bg-blue-50 rounded-lg transition-colors">Filter Reset</button>
+            </div>
+        </header>
+
+        <div id="carGrid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-12"></div>
+        <div id="pagination" class="flex justify-center items-center gap-2 pb-12"></div>
+    </div>
+
+    <script>
+        const cars = [{"id": 1341, "cluster_id": 35, "source_id": null, "vin": null, "source_listing_id": "47734d90-6d8b-4a76-b614-41c15eccc544", "insert_date": "2026-06-08", "mileage": 80000, "first_registration": "2022-03", "price_gross": 28950.0, "is_vat_deductible": 1, "first_seen_date": "2026-06-08", "days_on_market": 0, "initial_price_gross": 28950, "price_changes_count": 0, "postal_code": "98587", "is_tax_new": 1, "status": "online", "scraped_at": "2026-06-08 11:53:29", "equipment_line": "Standard", "country": "DE", "power_kw": 377.0, "sold_at": null, "anhaengerkupplung": "Nein", "panoramadach": "Ja", "brand": "Tesla", "model": "Model 3", "battery_capacity_kwh": 75.0, "is_awd": 1, "autoscout_url": "https://www.autoscout24.de/angebote/47734d90-6d8b-4a76-b614-41c15eccc544", "ausstattung_full": ["2-Zonen-Klimaautomatik", "ABS", "Abstandstempomat", "Abstandswarner", "Alufelgen", "Armlehne", "Beheizbares Lenkrad", "Beifahrerairbag", "Berganfahrassistent", "Blendfreies Fernlicht", "Bluetooth", "Bordcomputer", "DAB-Radio", "Dachreling", "ESP", "Einparkhilfe", "Einparkhilfe R\u00fcckfahrkamera", "Einparkhilfe Sensoren hinten", "Einparkhilfe Sensoren vorne", "Elektrische Fensterheber", "Elektrische Seitenspiegel", "Elektrische Sitze", "Fahrerairbag", "Fernlichtassistent", "Freisprecheinrichtung", "Geschwindigkeits-begrenzungsanlage", "Get\u00f6nte Scheiben", "Isofix", "LED-Scheinwerfer", "LED-Tagfahrlicht", "Lederausstattung", "Lederlenkrad", "Lichtsensor", "Multifunktionslenkrad", "M\u00fcdigkeitswarnsystem", "Navigationssystem", "Nebelscheinwerfer", "Notbremsassistent", "Notrufsystem", "Panoramadach", "Radio", "Regensensor", "Reifendruckkontrollsystem", "Schl\u00fcssellose Zentralverriegelung", "Seitenairbag", "Servolenkung", "Sitzheizung", "Soundsystem", "Sportpaket", "Sprachsteuerung", "Spurhalteassistent", "Start/Stop-Automatik", "Totwinkel-Assistent", "Touchscreen", "Traktionskontrolle", "USB", "Verkehrszeichenerkennung", "Volldigitales Kombiinstrument", "W-Lan / Wifi Hotspot", "Wegfahrsperre", "Zentralverriegelung mit Funkfernbedienung"], "features": {"2-Zonen-Klimaautomatik": 1, "ABS": 1, "Abstandstempomat": 1, "Abstandswarner": 1, "Alufelgen": 1, "Armlehne": 1, "Beheizbares Lenkrad": 1, "Beifahrerairbag": 1, "Berganfahrassistent": 1, "Blendfreies Fernlicht": 1, "Bluetooth": 1, "Bordcomputer": 1, "DAB-Radio": 1, "Dachreling": 1, "ESP": 1, "Einparkhilfe": 1, "Einparkhilfe R\u00fcckfahrkamera": 1, "Einparkhilfe Sensoren hinten": 1, "Einparkhilfe Sensoren vorne": 1, "Elektrische Fensterheber": 1, "Elektrische Seitenspiegel": 1, "Elektrische Sitze": 1, "Fahrerairbag": 1, "Fernlichtassistent": 1, "Freisprecheinrichtung": 1, "Geschwindigkeits-begrenzungsanlage": 1, "Get\u00f6nte Scheiben": 1, "Isofix": 1, "LED-Scheinwerfer": 1, "LED-Tagfahrlicht": 1, "Lederausstattung": 1, "Lederlenkrad": 1, "Lichtsensor": 1, "Multifunktionslenkrad": 1, "M\u00fcdigkeitswarnsystem": 1, "Navigationssystem": 1, "Nebelscheinwerfer": 1, "Notbremsassistent": 1, "Notrufsystem": 1, "Panoramadach": 1, "Radio": 1, "Regensensor": 1, "Reifendruckkontrollsystem": 1, "Schl\u00fcssellose Zentralverriegelung": 1, "Seitenairbag": 1, "Servolenkung": 1, "Sitzheizung": 1, "Soundsystem": 1, "Sportpaket": 1, "Sprachsteuerung": 1, "Spurhalteassistent": 1, "Start/Stop-Automatik": 1, "Totwinkel-Assistent": 1, "Touchscreen": 1, "Traktionskontrolle": 1, "USB": 1, "Verkehrszeichenerkennung": 1, "Volldigitales Kombiinstrument": 1, "W-Lan / Wifi Hotspot": 1, "Wegfahrsperre": 1, "Zentralverriegelung mit Funkfernbedienung": 1}, "name": "Tesla Model 3", "ausfuehrung": "Standard \u2013 DE", "km": "80.000", "km_raw": 80000, "ez": "2022-03", "year_raw": 2022, "archive_date": "2026-06-21", "category": "AS24-Import", "img": "assets/car_images_opal/47734d90-6d8b-4a76-b614-41c15eccc544/0.webp", "bca_price": 0.0, "verkaufspreis": 0, "details": {"netto_basis": 28712.29, "auction_percent": 0.0, "auction_fix": 0, "transport": 654.33, "import_fee": 150.0, "total_netto": 27907.96, "total_brutto_at": 34454.75}, "transport": 654.33, "images": ["assets/car_images_opal/47734d90-6d8b-4a76-b614-41c15eccc544/0.webp", "assets/car_images_opal/47734d90-6d8b-4a76-b614-41c15eccc544/1.webp"], "uid": "47734d90-6d8b-4a76-b614-41c15eccc544"}, {"id": 1389, "cluster_id": 34, "source_id": null, "vin": null, "source_listing_id": "3a7f632c-46b2-414e-85bb-b91fa51e6e03", "insert_date": "2026-06-08", "mileage": 40000, "first_registration": "2022-12", "price_gross": 29500.0, "is_vat_deductible": 1, "first_seen_date": "2026-06-08", "days_on_market": 0, "initial_price_gross": 29500, "price_changes_count": 0, "postal_code": "67346", "is_tax_new": 0, "status": "online", "scraped_at": "2026-06-08 11:57:14", "equipment_line": "Standard", "country": "DE", "power_kw": 208.0, "sold_at": null, "anhaengerkupplung": "Nein", "panoramadach": "Nein", "brand": "Tesla", "model": "Model 3", "battery_capacity_kwh": 5.0, "is_awd": 0, "autoscout_url": "https://www.autoscout24.de/angebote/3a7f632c-46b2-414e-85bb-b91fa51e6e03", "ausstattung_full": ["Abstandswarner", "Airbag hinten", "Alufelgen", "Beifahrerairbag", "Bluetooth", "DAB-Radio", "ESP", "Elektrische Sitze", "Fahrerairbag", "Induktionsladen f\u00fcr Smartphones", "Klimaanlage", "Kopfairbag", "Navigationssystem", "Notbremsassistent", "Panoramadach", "Radio", "Reifendruckkontrollsystem", "Schl\u00fcssellose Zentralverriegelung", "Seitenairbag", "Sitzheizung", "Sitzheizung hinten", "Soundsystem", "Tempomat", "Touchscreen", "Traktionskontrolle", "USB", "W-Lan / Wifi Hotspot", "Wegfahrsperre", "teilb. R\u00fccksitzbank"], "features": {"Abstandswarner": 1, "Airbag hinten": 1, "Alufelgen": 1, "Beifahrerairbag": 1, "Bluetooth": 1, "DAB-Radio": 1, "ESP": 1, "Elektrische Sitze": 1, "Fahrerairbag": 1, "Induktionsladen f\u00fcr Smartphones": 1, "Klimaanlage": 1, "Kopfairbag": 1, "Navigationssystem": 1, "Notbremsassistent": 1, "Panoramadach": 1, "Radio": 1, "Reifendruckkontrollsystem": 1, "Schl\u00fcssellose Zentralverriegelung": 1, "Seitenairbag": 1, "Sitzheizung": 1, "Sitzheizung hinten": 1, "Soundsystem": 1, "Tempomat": 1, "Touchscreen": 1, "Traktionskontrolle": 1, "USB": 1, "W-Lan / Wifi Hotspot": 1, "Wegfahrsperre": 1, "teilb. R\u00fccksitzbank": 1}, "name": "Tesla Model 3", "ausfuehrung": "Standard \u2013 DE", "km": "40.000", "km_raw": 40000, "ez": "2022-12", "year_raw": 2022, "archive_date": "2026-06-21", "category": "AS24-Import", "img": "assets/car_images_opal/3a7f632c-46b2-414e-85bb-b91fa51e6e03/0.webp", "bca_price": 0.0, "verkaufspreis": 0, "details": {"netto_basis": 30590.0, "auction_percent": 0.0, "auction_fix": 0, "transport": 698.93, "import_fee": 150.0, "total_netto": 29741.07, "total_brutto_at": 36708.0}, "transport": 698.93, "images": ["assets/car_images_opal/3a7f632c-46b2-414e-85bb-b91fa51e6e03/0.webp"], "uid": "3a7f632c-46b2-414e-85bb-b91fa51e6e03"}];
+
+        const fmt = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+        let currentPage = 1;
+        const itemsPerPage = 50;
+        let currentCarId = null;
+
+        async function syncToGitHub() {
+            const btn = document.getElementById('syncGitHub');
+            const old = btn.innerHTML;
+            btn.disabled = true; btn.innerText = 'Syncing...';
+            try {
+                const res = await fetch('/api/push-github');
+                const data = await res.json();
+                showToast(data.status === 'success' ? 'Update Live!' : 'Fehler', data.status);
+            } catch (e) { showToast('Server Fehler', 'error'); }
+            finally { btn.disabled = false; btn.innerHTML = old; lucide.createIcons(); }
+        }
+
+        function initFilters() {
+            const makes = [...new Set(cars.map(c => c.name.split(' ')[0]))].sort();
+            const mFilter = document.getElementById('makeFilter');
+            makes.forEach(m => { const opt = document.createElement('option'); opt.value = m; opt.innerText = m; mFilter.appendChild(opt); });
+
+            const years = [...new Set(cars.map(c => c.year_raw))].sort((a, b) => b - a);
+            const yMin = document.getElementById('yearMin');
+            const yMax = document.getElementById('yearMax');
+            years.forEach(y => {
+                const opt1 = document.createElement('option'); opt1.value = y; opt1.innerText = y; yMin.appendChild(opt1);
+                const opt2 = document.createElement('option'); opt2.value = y; opt2.innerText = y; yMax.appendChild(opt2);
+            });
+
+            const features = [...new Set(cars.flatMap(c => c.ausstattung_full))].filter(Boolean).sort();
+            const dropdown = document.getElementById('multiSelectDropdown');
+            dropdown.innerHTML = features.map(f => `
+                    <label class="multi-select-item text-xs font-medium text-slate-600">
+                        <input type="checkbox" value="${f}" onchange="onFeatureChange()" class="feature-checkbox rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                        <span class="truncate">${f}</span>
+                    </label>
+                `).join('');
+
+            ['makeFilter', 'yearMin', 'yearMax', 'kmMin', 'kmMax', 'searchInput', 'sortOrder'].forEach(id => {
+                document.getElementById(id).addEventListener('change', () => { currentPage = 1; render(); });
+                document.getElementById(id).addEventListener('input', () => { currentPage = 1; render(); });
+            });
+
+            window.addEventListener('click', (e) => {
+                if (!e.target.closest('.multi-select-container')) {
+                    document.getElementById('multiSelectDropdown').classList.remove('active');
+                }
+            });
+        }
+
+        function toggleMultiSelect(e) {
+            e.stopPropagation();
+            document.getElementById('multiSelectDropdown').classList.toggle('active');
+        }
+
+        function onFeatureChange() {
+            const checked = Array.from(document.querySelectorAll('.feature-checkbox:checked')).map(cb => cb.value);
+            const btnText = document.getElementById('selectedCountText');
+            if (checked.length === 0) btnText.innerText = "Alle Merkmale";
+            else if (checked.length === 1) btnText.innerText = checked[0];
+            else btnText.innerText = `${checked.length} Merkmale`;
+            currentPage = 1;
+            render();
+        }
+
+        function showToast(msg, type) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = msg;
+            document.getElementById('toastIcon').innerHTML = type === 'success' ? '<i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>' : '<i data-lucide="alert-circle" class="w-5 h-5 text-red-500"></i>';
+            lucide.createIcons();
+            toast.style.display = 'block'; setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        function openModal(name, id, img, event) {
+            // Store the numeric ID so that later lookups (runModalCalc, sendInquiry) using strict equality work correctly
+            currentCarId = parseInt(id, 10);
+            const container = document.getElementById('modalContainer');
+            
+            container.style.marginTop = '50px';
+            window.parent.postMessage({ type: 'scroll_to_top', offset: 50 }, '*');
+
+            const car = cars.find(c => c.id === currentCarId);
+            document.getElementById('modalCarName').innerText = name;
+            document.getElementById('modalCarId').innerText = id;
+            document.getElementById('modalCarImg').src = img || 'https://via.placeholder.com/600x400';
+            
+            // Fix 2: Modal-Kalkulation mit Read-only netto_basis befüllen
+            document.getElementById('modalNettoDisplay').innerText = fmt.format(car.details.netto_basis || 0);
+
+            const wSelect = document.getElementById('optWarranty');
+            wSelect.innerHTML = '<option value="0">Keine Zusatzgarantie</option>';
+            if (car.warranty_options) {
+                Object.entries(car.warranty_options).forEach(([level, price]) => {
+                    const opt = document.createElement('option'); opt.value = price; opt.innerText = `12M ${level} - ${price}€`;
+                    wSelect.appendChild(opt);
+                });
+            }
+
+            const backdrop = document.getElementById('modalBackdrop');
+            backdrop.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            updateModalState(true);
+            setTimeout(() => { backdrop.classList.add('opacity-100'); document.getElementById('modalContainer').classList.add('scale-100', 'opacity-100'); }, 10);
+
+            document.getElementById('checkEmail').checked = false;
+            document.getElementById('checkLimit').checked = false;
+            document.getElementById('checkImport').checked = false;
+            document.getElementById('successOverlay').classList.remove('active');
+            toggleCalculator(false); toggleMessageField(false); validateForm();
+        }
+
+        function closeModal() {
+            const backdrop = document.getElementById('modalBackdrop');
+            backdrop.classList.remove('opacity-100');
+            document.getElementById('modalContainer').classList.remove('scale-100', 'opacity-100');
+            document.body.style.overflow = '';
+            updateModalState(false);
+            setTimeout(() => { 
+                backdrop.classList.add('hidden'); 
+                document.getElementById('modalContainer').style.marginTop = '';
+            }, 300);
+        }
+
+        function toggleCalculator(s) { document.getElementById('detailedCalc').classList.toggle('hidden', !s); if (s) runModalCalc(); }
+        function toggleMessageField(s) { document.getElementById('messageContainer').classList.toggle('message-hidden', !s); if (s) document.getElementById('messageContainer').classList.add('message-visible'); }
+
+        function openDataModal(id, event) {
+            const container = document.getElementById('dataModalContainer');
+            container.style.marginTop = '50px';
+            window.parent.postMessage({ type: 'scroll_to_top', offset: 50 }, '*');
+
+            const car = cars.find(c => String(c.id) === String(id));
+            if (!car) return;
+            
+            const ps = car.ps || Math.round((car.power_kw || 0) * 1.36) || '-';
+            const kraftstoff = car.kraftstoff || (car.battery_capacity_kwh > 0 ? 'Elektro' : (car.power_kw > 0 ? 'Elektro' : '-'));
+            
+            const content = document.getElementById('dataModalContent');
+            content.innerHTML = `
+                    <div class="flex flex-col w-full">
+                        <div class="relative h-64 md:h-80 w-full bg-slate-900 flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity" onclick="openImageGallery('${car.id}')" title="Bildergalerie öffnen">
+                            <img src="${car.img}" class="w-full h-full object-cover opacity-90" alt="${car.name}">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent pointer-events-none"></div>
+                            <div class="absolute bottom-0 left-0 p-6 md:p-8 w-full">
+                                <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-3 tracking-tight drop-shadow-md">${car.name}</h2>
+                                ${car.ausfuehrung && car.ausfuehrung.trim() !== '' && car.ausfuehrung !== '-' && car.ausfuehrung !== 'nan' ? `<div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-600/90 text-white text-xs md:text-sm font-semibold backdrop-blur-md border border-blue-400/30 shadow-sm"><i data-lucide="tag" class="w-3 h-3 md:w-4 md:h-4"></i> ${car.ausfuehrung}</div>` : ''}
+                            </div>
+                        </div>
+                        <div class="p-6 md:p-8 flex flex-col gap-8 bg-white">
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><i data-lucide="activity" class="w-5 h-5 text-blue-600"></i> Fahrzeugdaten</h3>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <div class="flex flex-col p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:shadow-md transition-all">
+                                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600"><i data-lucide="calendar" class="w-5 h-5"></i></div>
+                                        <span class="text-[11px] font-bold text-slate-400 uppercase mb-1">Erstzulassung</span>
+                                        <span class="font-bold text-slate-800 text-base md:text-lg">${car.ez}</span>
+                                    </div>
+                                    <div class="flex flex-col p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:shadow-md transition-all">
+                                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600"><i data-lucide="gauge" class="w-5 h-5"></i></div>
+                                        <span class="text-[11px] font-bold text-slate-400 uppercase mb-1">Laufleistung</span>
+                                        <span class="font-bold text-slate-800 text-base md:text-lg">${car.km} KM</span>
+                                    </div>
+                                    <div class="flex flex-col p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:shadow-md transition-all">
+                                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600"><i data-lucide="zap" class="w-5 h-5"></i></div>
+                                        <span class="text-[11px] font-bold text-slate-400 uppercase mb-1">Leistung</span>
+                                        <span class="font-bold text-slate-800 text-base md:text-lg">${ps} PS</span>
+                                    </div>
+                                    <div class="flex flex-col p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:shadow-md transition-all">
+                                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-blue-600"><i data-lucide="fuel" class="w-5 h-5"></i></div>
+                                        <span class="text-[11px] font-bold text-slate-400 uppercase mb-1">Kraftstoff</span>
+                                        <span class="font-bold text-slate-800 text-base md:text-lg whitespace-nowrap overflow-hidden text-ellipsis w-full block">${kraftstoff}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><i data-lucide="list-checks" class="w-5 h-5 text-blue-600"></i> Ausstattungshighlights</h3>
+                                <div class="flex flex-wrap gap-2">
+                                    ${(car.ausstattung_full || []).map(a => `<span class="px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs md:text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors">${a}</span>`).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 md:p-6 bg-slate-50 border-t border-slate-100 flex justify-end">
+                            <button onclick="closeDataModal()" class="px-8 py-3 bg-white text-slate-700 font-bold rounded-xl text-sm border border-slate-200 shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2"><i data-lucide="x" class="w-4 h-4"></i> Schließen</button>
+                        </div>
+                    </div>
+                `;
+            const bg = document.getElementById('dataModalBackdrop');
+            const c = document.getElementById('dataModalContainer');
+            bg.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            updateModalState(true);
+            setTimeout(() => { bg.classList.add('opacity-100'); c.classList.add('scale-100', 'opacity-100'); }, 10);
+            lucide.createIcons();
+        }
+
+        function closeDataModal() {
+            const bg = document.getElementById('dataModalBackdrop');
+            const c = document.getElementById('dataModalContainer');
+            bg.classList.remove('opacity-100');
+            c.classList.remove('scale-100', 'opacity-100');
+            document.body.style.overflow = '';
+            updateModalState(false);
+            setTimeout(() => { bg.classList.add('hidden'); c.style.marginTop = ''; }, 300);
+        }
+
+        function validateForm() {
+            const any = ['checkEmail', 'checkLimit', 'checkImport'].some(id => document.getElementById(id).checked);
+            const name = document.getElementById('userName').value.trim().length > 1;
+            const mail = document.getElementById('userEmail').value.trim().includes('@');
+            document.getElementById('btnSubmitInquiry').disabled = !any || !name || !mail;
+        }
+
+        document.getElementById('userName').addEventListener('input', validateForm);
+        document.getElementById('userEmail').addEventListener('input', validateForm);
+
+        function runModalCalc() {
+            if (!currentCarId) return;
+            const car = cars.find(c => c.id === currentCarId);
+            if (!car) return;
+            
+            // Fix 1 & 3 & 4: Nutze car.details.netto_basis, car.details.transport, car.details.import_fee
+            const netto = car.details.netto_basis || 0;
+            // Gebühren (z. B. 2.500 €) werden nicht mehr berücksichtigt.
+            // Setze fees auf 0, damit sie nicht in die Kalkulation einfließen.
+            const fees = 0;
+            // Transport wird bereits als Netto‑Wert in car.details.transport gespeichert.
+            // Keine zusätzliche Multiplikation mehr, sonst würden die Werte doppelt
+            // hochgerechnet (vgl. Dashboard‑Berechnung).
+            const transport = car.details.transport || car.transport || 0;
+            const commission = Math.max(500, netto * 0.02);
+            const importFee = car.details.import_fee || 800;
+            const warranty = parseFloat(document.getElementById('optWarranty').value || 0);
+            // Gebühren werden nicht mehr addiert
+            const totalNetto = netto + transport + importFee + commission + warranty;
+
+            document.getElementById('resNetto').innerText = fmt.format(netto);
+            document.getElementById('resTransport').innerText = fmt.format(transport);
+            document.getElementById('resAnmeldung').innerText = fmt.format(importFee);
+            document.getElementById('resProvision').innerText = fmt.format(fees + commission);
+            document.getElementById('resTotalBrutto').innerText = fmt.format(totalNetto * 1.20);
+
+            const optRow = document.getElementById('resOptionsRow');
+            if (warranty > 0) { optRow.classList.remove('hidden'); document.getElementById('resOptions').innerText = fmt.format(warranty); }
+            else { optRow.classList.add('hidden'); }
+        }
+
+        function sendInquiry() {
+            const car = cars.find(c => c.id === currentCarId);
+            
+            const data = {
+                type: 'vehicle_inquiry',
+                carId: currentCarId,
+                carName: car.name,
+                userData: {
+                    name: document.getElementById('userName').value,
+                    email: document.getElementById('userEmail').value
+                }
+            };
+
+            if (document.getElementById('checkEmail').checked) {
+                data.zustandsbericht = 'Ja';
+            }
+
+            if (document.getElementById('checkImport').checked) {
+                data.nachricht = document.getElementById('userMessage').value;
+            }
+
+            // Fix 1: Nutze car.details Werte statt modalLimitInput
+            if (document.getElementById('checkLimit').checked) {
+                const netto = car.details.netto_basis || 0;
+                // Gebühren (z. B. 2.500 €) werden nicht mehr berücksichtigt.
+                // Setze fees auf 0, damit sie nicht in die Kalkulation einfließen.
+                const fees = 0;
+                // Transport‑Wert aus den Details übernehmen (keine 1.5‑Multiplikation)
+                const transport = car.details.transport || car.transport || 0;
+                const commission = Math.max(500, netto * 0.02);
+                const importFee = car.details.import_fee || 800;
+                const warranty = parseFloat(document.getElementById('optWarranty').value || 0);
+                // Gebühren werden nicht mehr addiert
+                const totalNetto = netto + transport + importFee + commission + warranty;
+
+                data.calculation = {
+                    gebotNetto: netto,
+                    transport: transport,
+                    anmeldung: importFee,
+                    provision: fees + commission,
+                    garantie: warranty,
+                    gesamtBrutto: totalNetto * 1.20
+                };
+            }
+            
+            window.parent.postMessage(JSON.stringify(data), "*");
+            
+            document.getElementById('btnSubmitInquiry').disabled = true;
+            setTimeout(() => { document.getElementById('successOverlay').classList.add('active'); lucide.createIcons(); }, 800);
+        }
+
+        function render() {
+            const grid = document.getElementById('carGrid');
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const make = document.getElementById('makeFilter').value;
+            const yMin = parseInt(document.getElementById('yearMin').value) || 0;
+            const yMax = parseInt(document.getElementById('yearMax').value) || 9999;
+            const kMin = parseInt(document.getElementById('kmMin').value) || 0;
+            const kMax = parseInt(document.getElementById('kmMax').value) || 9999999;
+            const selectedFeatures = Array.from(document.querySelectorAll('.feature-checkbox:checked')).map(cb => cb.value.toLowerCase());
+
+            const filtered = cars.filter(c => {
+                const matchesTerm = (c.name.toLowerCase().includes(term) || String(c.id).includes(term));
+                const matchesMake = (!make || c.name.startsWith(make));
+                const matchesYear = (c.year_raw >= yMin && c.year_raw <= yMax);
+                const matchesKm = (c.km_raw >= kMin && c.km_raw <= kMax);
+                const matchesFeature = selectedFeatures.length === 0 || selectedFeatures.every(sf => (c.ausstattung_full || []).some(af => af.toLowerCase().includes(sf)));
+                return matchesTerm && matchesMake && matchesYear && matchesKm && matchesFeature;
+            });
+
+            const sort = document.getElementById('sortOrder').value;
+            filtered.sort((a, b) => {
+                if (sort === 'newest') return new Date(b.archive_date) - new Date(a.archive_date);
+                if (sort === 'oldest') return new Date(a.archive_date) - new Date(b.archive_date);
+                if (sort === 'price-asc') return a.bca_price - b.bca_price;
+                if (sort === 'price-desc') return b.bca_price - a.bca_price;
+                if (sort === 'km-asc') return a.km_raw - b.km_raw;
+                if (sort === 'id-asc') return parseInt(a.id) - parseInt(b.id);
+                if (sort === 'id-desc') return parseInt(b.id) - parseInt(a.id);
+                return 0;
+            });
+
+            const items = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+            grid.innerHTML = items.map(car => `
+                    <div class="glass-card rounded-2xl md:rounded-3xl overflow-hidden flex flex-col shadow-sm hover:shadow-lg transition-all duration-300">
+                        <div class="relative h-32 md:h-44 bg-slate-100 cursor-pointer hover:opacity-90 transition-opacity" onclick="openImageGallery('${car.id}')" title="Bildergalerie öffnen">
+                            <img src="${car.img}" class="w-full h-full object-cover" alt="${car.name}">
+                            <div class="absolute top-2 left-2 bg-white/90 px-2 py-0.5 rounded-full text-[8px] md:text-[10px] font-bold text-slate-600">ID: ${car.id}</div>
+                            <div class="absolute top-2 right-2 bg-amber-100 text-amber-600 border border-amber-200 px-2 py-0.5 rounded-full text-[8px] md:text-[10px] font-bold shadow-sm uppercase tracking-wider flex items-center gap-1"><i data-lucide="gavel" class="w-2 h-2 md:w-3 h-3"></i> AUKTION</div>
+                            ${car.expiry_date ? `<div class="absolute bottom-2 left-2 bg-slate-900/80 text-white px-2 py-0.5 rounded-md text-[9px] md:text-[11px] font-bold shadow-sm flex items-center gap-1 timer-badge" data-expiry="${car.expiry_date}"><i data-lucide="clock" class="w-2 h-2 md:w-3 h-3"></i> <span class="timer-text">Lade...</span></div>` : ''}
+                        </div>
+                        <div class="p-3 md:p-5 flex flex-col flex-grow card-padding">
+                            <div class="mb-2">
+                                <h3 class="text-sm md:text-lg font-bold text-slate-800 leading-tight card-title">
+                                    ${car.name}
+                                    ${car.raw_data?.Ausstattungsvariante && car.raw_data.Ausstattungsvariante !== 'nan' && car.raw_data.Ausstattungsvariante !== '-' ? `<span class="text-slate-800 font-bold ml-1">${car.raw_data.Ausstattungsvariante}</span>` : ''}
+                                </h3>
+                                <p class="text-[9px] md:text-xs text-slate-500 line-clamp-1">${car.ausfuehrung}</p>
+                            </div>
+                            <div class="flex gap-2 md:gap-4 text-[10px] md:text-xs font-bold text-slate-500 uppercase mb-3 card-specs">
+                                <span>${car.ez ? car.ez.split('.')[2] || car.ez : '-'}</span> &bull; <span>${car.km} KM</span> &bull; <span>${car.ps || Math.round((car.power_kw || 0) * 1.36) || '-'} PS</span>
+                            </div>
+                            <div class="flex flex-wrap gap-1 mb-4">
+                                ${(car.ausstattung || car.ausstattung_full || []).slice(0, 3).map(a => `<span class="ausstattung-badge px-1.5 py-0.5 rounded text-[8px] md:text-[9px]">${a}</span>`).join('')}
+                            </div>
+                            <div class="mt-auto space-y-3">
+                                <div class="flex items-end justify-between gap-2 pt-2 border-t border-slate-100">
+                                    <div class="flex-1">
+                                        <span class="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase mb-1 block">Netto-Basis (AT-Marktwert bereinigt)</span>
+                                        <div class="text-xs md:text-lg font-bold text-slate-800">${fmt.format(car.details.netto_basis || car.bca_price || 0)}</div>
+                                    </div>
+                                    <div class="flex-1 text-right">
+                                        <span class="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase block mb-1">Brutto</span>
+                                        <div id="mainPrice_${car.id}" class="text-xs md:text-lg font-bold text-blue-600 truncate">${fmt.format(car.details.total_brutto_at)}</div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button onclick="openDataModal('${car.id}', event)" class="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-2 md:py-3 rounded-xl transition-all text-[10px] md:text-xs flex items-center justify-center gap-1 border border-slate-200">
+                                        <i data-lucide="info" class="w-3 h-3 md:w-4 h-4"></i>Fahrzeugdaten
+                                    </button>
+                                    <button onclick="openModal('${car.name.replace(/'/g, "\\'")}', '${car.id}', '${car.img}', event)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 md:py-3 rounded-xl transition-all text-[10px] md:text-xs flex items-center justify-center gap-1 shadow-sm">
+                                        <i data-lucide="message-square" class="w-3 h-3 md:w-4 h-4"></i>Anfrage
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            lucide.createIcons();
+            updateTimers();
+            renderPagination(Math.ceil(filtered.length / itemsPerPage));
+            setTimeout(sendSettingsToParent, 300);
+        }
+
+        function updateTimers() {
+            const now = new Date().getTime();
+            document.querySelectorAll('.timer-badge').forEach(badge => {
+                const expiry = new Date(badge.dataset.expiry).getTime();
+                const diff = expiry - now;
+                const textEl = badge.querySelector('.timer-text');
+                if (diff <= 0) {
+                    badge.classList.remove('bg-slate-900/80');
+                    badge.classList.add('bg-red-600');
+                    textEl.innerText = "Beendet";
+                    return;
+                }
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((diff % (1000 * 60)) / 1000);
+                if (days > 0) { textEl.innerText = `${days}d ${hours}h`; }
+                else if (hours > 0) { textEl.innerText = `${hours}h ${mins}m`; if (hours < 1) badge.classList.replace('bg-slate-900/80', 'bg-orange-600'); }
+                else { textEl.innerText = `${mins}m ${secs}s`; badge.classList.remove('bg-slate-900/80'); badge.classList.add('bg-orange-600'); }
+            });
+        }
+
+        setInterval(updateTimers, 1000);
+
+        function resetFilters() {
+            document.querySelectorAll('.filter-select, #searchInput').forEach(e => e.value = '');
+            document.querySelectorAll('.feature-checkbox').forEach(cb => cb.checked = false);
+            document.getElementById('selectedCountText').innerText = "Alle Merkmale";
+            currentPage = 1;
+            render();
+        }
+
+        function sendSettingsToParent() {
+            const wrapper = document.getElementById('wixContentWrapper');
+            if (wrapper) {
+                const h = Math.max(wrapper.offsetHeight, 600);
+                window.parent.postMessage({ type: 'resize', height: h }, '*');
+            }
+        }
+
+        function updateModalState(isOpen) {
+            if (isOpen) { document.body.classList.add('modal-open'); } else { document.body.classList.remove('modal-open'); }
+            sendSettingsToParent();
+        }
+
+        window.addEventListener('load', () => setTimeout(sendSettingsToParent, 300));
+        window.addEventListener('resize', () => setTimeout(sendSettingsToParent, 300));
+
+        function renderPagination(t) {
+            const pag = document.getElementById('pagination');
+            if (t <= 1) { pag.innerHTML = ''; return; }
+            let h = `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} class="px-3 py-1.5 bg-white border rounded-lg text-xs font-bold disabled:opacity-50">Zurück</button>`;
+            h += `<span class="text-xs font-bold px-3">Seite ${currentPage}</span>`;
+            h += `<button onclick="changePage(${currentPage + 1})" ${currentPage === t ? 'disabled' : ''} class="px-3 py-1.5 bg-white border rounded-lg text-xs font-bold disabled:opacity-50">Weiter</button>`;
+            pag.innerHTML = h;
+        }
+
+        function changePage(p) { currentPage = p; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); window.parent.postMessage({ type: 'scroll_to_top', offset: 0 }, '*'); }
+
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+            const syncBtn = document.getElementById('syncGitHub');
+            if (syncBtn) syncBtn.style.display = 'none';
+        }
+
+        try {
+            initFilters();
+            render();
+        } catch (e) {
+            console.error("Render error:", e);
+            document.getElementById('carGrid').innerHTML = '<div class="col-span-full p-8 text-center text-red-500 font-bold bg-red-50 rounded-2xl">Fehler beim Laden der Fahrzeuge. Bitte Seite neu laden.</div>';
+        }
+        if (window.ResizeObserver && document.body) {
+            let resizeTimer;
+            const target = document.getElementById('wixContentWrapper');
+            if (target) { new ResizeObserver(() => { clearTimeout(resizeTimer); resizeTimer = setTimeout(sendSettingsToParent, 300); }).observe(target); }
+        } else {
+            window.addEventListener('load', () => {
+                if (window.ResizeObserver) {
+                    const target = document.getElementById('wixContentWrapper');
+                    if (target) { new ResizeObserver(() => setTimeout(sendSettingsToParent, 300)).observe(target); }
+                }
+            });
+        }
+        setTimeout(sendSettingsToParent, 500);
+
+        // --- Lightbox Gallery JS ---
+        let currentGalleryImages = [];
+        let currentGalleryIndex = 0;
+
+        function openImageGallery(carId) {
+            let car;
+            if (typeof cars !== 'undefined') {
+                car = cars.find(c => String(c.id) === String(carId));
+            } else if (typeof currentCars !== 'undefined') {
+                car = currentCars.find(c => String(c.id) === String(carId));
+            }
+            if (!car) return;
+            
+            // Fallback to single image if images array doesn't exist
+            currentGalleryImages = (car.images && car.images.length > 0) ? car.images : [car.img];
+            currentGalleryIndex = 0;
+            
+            updateLightboxImage();
+            
+            const modal = document.getElementById('lightbox-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            // Small delay for transition
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
+            
+            document.addEventListener('keydown', handleGalleryKeyboard);
+        }
+
+        function closeImageGallery() {
+            const modal = document.getElementById('lightbox-modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+            document.removeEventListener('keydown', handleGalleryKeyboard);
+        }
+
+        function updateLightboxImage() {
+            const imgEl = document.getElementById('lightbox-img');
+            const counterEl = document.getElementById('lightbox-counter');
+            
+            if (currentGalleryImages.length > 0) {
+                imgEl.src = currentGalleryImages[currentGalleryIndex];
+                counterEl.innerText = `${currentGalleryIndex + 1} / ${currentGalleryImages.length}`;
+            }
+        }
+
+        function nextImage(e) {
+            if (e) e.stopPropagation();
+            if (currentGalleryImages.length <= 1) return;
+            currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryImages.length;
+            updateLightboxImage();
+        }
+
+        function prevImage(e) {
+            if (e) e.stopPropagation();
+            if (currentGalleryImages.length <= 1) return;
+            currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
+            updateLightboxImage();
+        }
+
+        function handleGalleryKeyboard(e) {
+            if (e.key === 'Escape') closeImageGallery();
+            if (e.key === 'ArrowRight') nextImage();
+            if (e.key === 'ArrowLeft') prevImage();
+        }
+    </script>
+    </div>
+</body>
+
+</html>
