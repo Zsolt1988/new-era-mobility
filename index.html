@@ -438,10 +438,15 @@
                 </div>
 
                 <!-- Filters Control Board -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-7 gap-4 p-5 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-8 gap-4 p-5 bg-white rounded-2xl border border-slate-200 shadow-sm">
                     <div class="w-full">
                         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 block mb-1.5">Marke</label>
                         <select id="makeFilter" class="filter-select w-full outline-none text-sm font-medium"></select>
+                    </div>
+
+                    <div class="w-full">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 block mb-1.5">Modell</label>
+                        <select id="modelFilter" class="filter-select w-full outline-none text-sm font-medium"></select>
                     </div>
 
                     <div class="w-full">
@@ -450,7 +455,7 @@
                     </div>
 
                     <div class="w-full">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 block mb-1.5">Baujahr (von-bis)</label>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 block mb-1.5">Baujahr</label>
                         <div class="flex items-center gap-2">
                             <select id="yearMin" class="filter-select w-full outline-none text-sm font-medium"></select>
                             <select id="yearMax" class="filter-select w-full outline-none text-sm font-medium"></select>
@@ -458,7 +463,7 @@
                     </div>
 
                     <div class="w-full">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 block mb-1.5">Laufleistung (von-bis)</label>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 block mb-1.5">Laufleistung</label>
                         <div class="flex items-center gap-2">
                             <select id="kmMin" class="filter-select w-full outline-none text-sm font-medium">
                                 <option value="0">KM von</option>
@@ -537,7 +542,7 @@
         </div>
 
         <script>
-            const cars = [{"id": 183, "cluster_id": 1, "source_id": null, "vin": null, "source_listing_id": "9511cb92-683e-470f-b510-bcc5603d0e80", "insert_date": "2026-07-11", "mileage": 9322, "first_registration": "2025-09", "price_gross": 26980.0, "is_vat_deductible": 1, "first_seen_date": "2026-07-08", "days_on_market": 2, "initial_price_gross": 26980, "price_changes_count": 0, "postal_code": "40589", "is_tax_new": 1, "status": "verkauft", "scraped_at": "2026-07-08 10:51:18", "equipment_line": "Boost", "country": "DE", "power_kw": 160.0, "sold_at": null, "anhaengerkupplung": "Nein", "panoramadach": "Ja", "brand": "BYD", "model": "Seal U", "color": "Silber", "interior_color": "Schwarz", "kraftstoff": "Elektro/Benzin", "battery_capacity_kwh": "18,2", "is_awd": 0, "image_path": "assets/car_images_opal/BYD_Seal_U", "cluster_kraftstoff": "Elektro/Benzin", "autoscout_url": "https://www.autoscout24.de/angebote/9511cb92-683e-470f-b510-bcc5603d0e80", "ausstattung_full": ["2-Zonen-Klimaautomatik", "360\u00b0 Kamera", "ABS", "Abstandswarner", "Airbag hinten", "Alarmanlage", "Alufelgen", "Ambientebeleuchtung", "Android Auto", "Apple CarPlay", "Armlehne", "Beheizbares Lenkrad", "Beifahrerairbag", "Berganfahrassistent", "Bi-Xenon Scheinwerfer", "Bluetooth", "DAB-Radio", "Dachreling", "ESP", "Einparkhilfe", "Einparkhilfe Sensoren hinten", "Elektrische Fensterheber", "Elektrische Heckklappe", "Elektrische Seitenspiegel", "Elektrische Sitze", "Elektronische Parkbremse", "Fahrerairbag", "Fernlichtassistent", "Freisprecheinrichtung", "Geschwindigkeits-begrenzungsanlage", "Get\u00f6nte Scheiben", "Head-up display", "Induktionsladen f\u00fcr Smartphones", "Innenspiegel automatisch abblendend", "Isofix", "Klimaanlage", "Kopfairbag", "LED-Scheinwerfer", "LED-Tagfahrlicht", "Lederausstattung", "Lederlenkrad", "Lichtsensor", "MP3", "Multifunktionslenkrad", "M\u00fcdigkeitswarnsystem", "Notbremsassistent", "Notrufsystem", "Panoramadach", "Radio", "Regensensor", "Reifendruckkontrollsystem", "Schiebedach", "Seitenairbag", "Servolenkung", "Sitzbel\u00fcftung", "Sitzheizung", "Soundsystem", "Spurhalteassistent", "Tagfahrlicht", "Tempomat", "Totwinkel-Assistent", "Touchscreen", "Traktionskontrolle", "USB", "Verkehrszeichenerkennung", "Voll-LED Scheinwerfer", "Xenonscheinwerfer", "Zentralverriegelung", "teilb. R\u00fccksitzbank"], "features": {"2-Zonen-Klimaautomatik": 1, "360\u00b0 Kamera": 1, "ABS": 1, "Abstandswarner": 1, "Airbag hinten": 1, "Alarmanlage": 1, "Alufelgen": 1, "Ambientebeleuchtung": 1, "Android Auto": 1, "Apple CarPlay": 1, "Armlehne": 1, "Beheizbares Lenkrad": 1, "Beifahrerairbag": 1, "Berganfahrassistent": 1, "Bi-Xenon Scheinwerfer": 1, "Bluetooth": 1, "DAB-Radio": 1, "Dachreling": 1, "ESP": 1, "Einparkhilfe": 1, "Einparkhilfe Sensoren hinten": 1, "Elektrische Fensterheber": 1, "Elektrische Heckklappe": 1, "Elektrische Seitenspiegel": 1, "Elektrische Sitze": 1, "Elektronische Parkbremse": 1, "Fahrerairbag": 1, "Fernlichtassistent": 1, "Freisprecheinrichtung": 1, "Geschwindigkeits-begrenzungsanlage": 1, "Get\u00f6nte Scheiben": 1, "Head-up display": 1, "Induktionsladen f\u00fcr Smartphones": 1, "Innenspiegel automatisch abblendend": 1, "Isofix": 1, "Klimaanlage": 1, "Kopfairbag": 1, "LED-Scheinwerfer": 1, "LED-Tagfahrlicht": 1, "Lederausstattung": 1, "Lederlenkrad": 1, "Lichtsensor": 1, "MP3": 1, "Multifunktionslenkrad": 1, "M\u00fcdigkeitswarnsystem": 1, "Notbremsassistent": 1, "Notrufsystem": 1, "Panoramadach": 1, "Radio": 1, "Regensensor": 1, "Reifendruckkontrollsystem": 1, "Schiebedach": 1, "Seitenairbag": 1, "Servolenkung": 1, "Sitzbel\u00fcftung": 1, "Sitzheizung": 1, "Soundsystem": 1, "Spurhalteassistent": 1, "Tagfahrlicht": 1, "Tempomat": 1, "Totwinkel-Assistent": 1, "Touchscreen": 1, "Traktionskontrolle": 1, "USB": 1, "Verkehrszeichenerkennung": 1, "Voll-LED Scheinwerfer": 1, "Xenonscheinwerfer": 1, "Zentralverriegelung": 1, "teilb. R\u00fccksitzbank": 1}, "name": "BYD Seal U", "ausfuehrung": "Boost \u2013 DE", "km": "9.322", "km_raw": 9322, "ez": "2025-09", "year_raw": 2025, "archive_date": "2026-07-16", "category": "AS24-Import", "img": "assets/car_images_opal/BYD_Seal_U/imgi_20_1.webp", "bca_price": 0.0, "verkaufspreis": 26980.0, "warranty_options": {"Komfort": 543, "Premium": 835}, "details": {"netto_basis": 22672.27, "auction_percent": 0.0, "auction_fix": 0, "transport": 909.32, "import_fee": 850.0, "total_netto": 24431.59, "total_brutto_at": 29317.91, "spar": 105, "at_market_gross": 29422.91}, "transport": 909.32, "spar": 105, "at_market_gross": 29422.91, "raw_images": ["assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/0.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/1.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/2.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/3.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/4.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/5.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/6.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/7.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/8.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/9.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/10.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/11.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/12.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/13.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/14.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/15.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/16.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/17.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/18.webp", "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/19.webp"], "raw_img": "assets/car_images/9511cb92-683e-470f-b510-bcc5603d0e80/0.webp", "images": ["assets/car_images_opal/BYD_Seal_U/imgi_20_1.webp", "assets/car_images_opal/BYD_Seal_U/imgi_25_6.webp", "assets/car_images_opal/BYD_Seal_U/imgi_48_2.webp", "assets/car_images_opal/BYD_Seal_U/imgi_51_3.webp", "assets/car_images_opal/BYD_Seal_U/imgi_5_sealu_dm_i_pc_exterior_2.webp", "assets/car_images_opal/BYD_Seal_U/imgi_7_1.webp"], "uid": "9511cb92-683e-470f-b510-bcc5603d0e80"}];
+            const cars = [{"id": 154, "cluster_id": 1, "source_id": null, "vin": null, "source_listing_id": "87e85fab-5b11-4336-a515-60ceec0d2833", "insert_date": "2026-07-16", "mileage": 32, "first_registration": "2026-01", "price_gross": 28000.0, "is_vat_deductible": 1, "first_seen_date": "2026-07-08", "days_on_market": 5, "initial_price_gross": 34780, "price_changes_count": 0, "postal_code": "96052", "is_tax_new": 1, "status": "online", "scraped_at": "2026-07-08 10:49:10", "equipment_line": "Boost", "country": "DE", "power_kw": 160.0, "sold_at": null, "anhaengerkupplung": "Nein", "panoramadach": "Ja", "brand": "BYD", "model": "Seal U", "color": "Grau", "interior_color": "Schwarz", "kraftstoff": "Elektro/Benzin", "battery_capacity_kwh": "18,2", "is_awd": 0, "image_path": "assets/car_images_opal/BYD_Seal_U", "cluster_kraftstoff": "Elektro/Benzin", "autoscout_url": "https://www.autoscout24.de/angebote/87e85fab-5b11-4336-a515-60ceec0d2833", "ausstattung_full": ["2-Zonen-Klimaautomatik", "360° Kamera", "ABS", "Abstandstempomat", "Abstandswarner", "Alarmanlage", "Alufelgen", "Ambientebeleuchtung", "Android Auto", "Apple CarPlay", "Armlehne", "Beheizbare Frontscheibe", "Beheizbares Lenkrad", "Beifahrerairbag", "Berganfahrassistent", "Bidirektionales Laden", "Bluetooth", "Bordcomputer", "DAB-Radio", "Dachreling", "E10-geeignet", "ESP", "Einparkhilfe", "Einparkhilfe Rückfahrkamera", "Einparkhilfe Sensoren hinten", "Einparkhilfe Sensoren vorne", "Elektrische Fensterheber", "Elektrische Heckklappe", "Elektrische Seitenspiegel", "Elektrische Sitze", "Fahrerairbag", "Fernlichtassistent", "Freisprecheinrichtung", "Geschwindigkeits-begrenzungsanlage", "Getönte Scheiben", "Head-up display", "Induktionsladen für Smartphones", "Innenspiegel automatisch abblendend", "Isofix", "Klimaanlage", "LED-Scheinwerfer", "LED-Tagfahrlicht", "Lederlenkrad", "Lichtsensor", "Lordosenstütze", "Multifunktionslenkrad", "Müdigkeitswarnsystem", "Navigationssystem", "Notbremsassistent", "Notrufsystem", "Pannenkit", "Panoramadach", "Radio", "Raucherpaket", "Regensensor", "Reifendruckkontrollsystem", "Schiebedach", "Schlüssellose Zentralverriegelung", "Seitenairbag", "Servolenkung", "Sitzbelüftung", "Sitzheizung", "Sommerreifen", "Soundsystem", "Sportsitze", "Sprachsteuerung", "Spurhalteassistent", "TV", "Tagfahrlicht", "Totwinkel-Assistent", "Touchscreen", "Traktionskontrolle", "USB", "Verkehrszeichenerkennung", "Volldigitales Kombiinstrument", "W-Lan / Wifi Hotspot", "Wegfahrsperre", "Winterpaket", "Wärmepumpe", "Zentralverriegelung"], "features": {"2-Zonen-Klimaautomatik": 1, "360° Kamera": 1, "ABS": 1, "Abstandstempomat": 1, "Abstandswarner": 1, "Alarmanlage": 1, "Alufelgen": 1, "Ambientebeleuchtung": 1, "Android Auto": 1, "Apple CarPlay": 1, "Armlehne": 1, "Beheizbare Frontscheibe": 1, "Beheizbares Lenkrad": 1, "Beifahrerairbag": 1, "Berganfahrassistent": 1, "Bidirektionales Laden": 1, "Bluetooth": 1, "Bordcomputer": 1, "DAB-Radio": 1, "Dachreling": 1, "E10-geeignet": 1, "ESP": 1, "Einparkhilfe": 1, "Einparkhilfe Rückfahrkamera": 1, "Einparkhilfe Sensoren hinten": 1, "Einparkhilfe Sensoren vorne": 1, "Elektrische Fensterheber": 1, "Elektrische Heckklappe": 1, "Elektrische Seitenspiegel": 1, "Elektrische Sitze": 1, "Fahrerairbag": 1, "Fernlichtassistent": 1, "Freisprecheinrichtung": 1, "Geschwindigkeits-begrenzungsanlage": 1, "Getönte Scheiben": 1, "Head-up display": 1, "Induktionsladen für Smartphones": 1, "Innenspiegel automatisch abblendend": 1, "Isofix": 1, "Klimaanlage": 1, "LED-Scheinwerfer": 1, "LED-Tagfahrlicht": 1, "Lederlenkrad": 1, "Lichtsensor": 1, "Lordosenstütze": 1, "Multifunktionslenkrad": 1, "Müdigkeitswarnsystem": 1, "Navigationssystem": 1, "Notbremsassistent": 1, "Notrufsystem": 1, "Pannenkit": 1, "Panoramadach": 1, "Radio": 1, "Raucherpaket": 1, "Regensensor": 1, "Reifendruckkontrollsystem": 1, "Schiebedach": 1, "Schlüssellose Zentralverriegelung": 1, "Seitenairbag": 1, "Servolenkung": 1, "Sitzbelüftung": 1, "Sitzheizung": 1, "Sommerreifen": 1, "Soundsystem": 1, "Sportsitze": 1, "Sprachsteuerung": 1, "Spurhalteassistent": 1, "TV": 1, "Tagfahrlicht": 1, "Totwinkel-Assistent": 1, "Touchscreen": 1, "Traktionskontrolle": 1, "USB": 1, "Verkehrszeichenerkennung": 1, "Volldigitales Kombiinstrument": 1, "W-Lan / Wifi Hotspot": 1, "Wegfahrsperre": 1, "Winterpaket": 1, "Wärmepumpe": 1, "Zentralverriegelung": 1}, "name": "BYD Seal U", "ausfuehrung": "Boost – DE", "km": "32", "km_raw": 32, "ez": "2026-01", "year_raw": 2026, "archive_date": "2026-07-17", "category": "AS24-Import", "img": "assets/car_images_opal/BYD_Seal_U/imgi_20_1.webp", "bca_price": 0.0, "verkaufspreis": 0, "warranty_options": {"Komfort": 543, "Premium": 835}, "details": {"netto_basis": 23529.41, "auction_percent": 0.0, "auction_fix": 0, "transport": 428.75, "import_fee": 850.0, "total_netto": 24808.16, "total_brutto_at": 29769.79, "spar": 3673, "at_market_gross": 33442.37}, "transport": 428.75, "spar": 3673, "at_market_gross": 33442.37, "raw_images": ["assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/0.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/1.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/2.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/3.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/4.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/5.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/6.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/7.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/8.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/9.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/10.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/11.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/12.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/13.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/14.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/15.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/16.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/17.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/18.webp", "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/19.webp"], "raw_img": "assets/car_images/87e85fab-5b11-4336-a515-60ceec0d2833/0.webp", "images": ["assets/car_images_opal/BYD_Seal_U/imgi_20_1.webp", "assets/car_images_opal/BYD_Seal_U/imgi_25_6.webp", "assets/car_images_opal/BYD_Seal_U/imgi_48_2.webp", "assets/car_images_opal/BYD_Seal_U/imgi_51_3.webp", "assets/car_images_opal/BYD_Seal_U/imgi_5_sealu_dm_i_pc_exterior_2.webp", "assets/car_images_opal/BYD_Seal_U/imgi_7_1.webp"], "uid": "87e85fab-5b11-4336-a515-60ceec0d2833"}];
 
             const fmt = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
             let currentPage = 1;
@@ -561,6 +566,36 @@
                 return c.kraftstoff || '-';
             }
 
+            // Modellname (ohne Marke) – konsistent zur Cluster-Namensbildung in render()
+            function carModel(c) {
+                return (c.model || c.name.split(' ').slice(1).join(' ') || '').trim();
+            }
+
+            // Modell-Dropdown abhängig von der gewählten Marke befüllen (kaskadierend)
+            function populateModelFilter() {
+                const make = document.getElementById('makeFilter').value;
+                const mdlFilter = document.getElementById('modelFilter');
+                const prev = mdlFilter.value;
+                const models = [...new Set(cars.filter(c => !make || c.name.startsWith(make)).map(carModel))].filter(Boolean).sort();
+                mdlFilter.innerHTML = '<option value="">Alle Modelle</option>';
+                models.forEach(m => { const opt = document.createElement('option'); opt.value = m; opt.innerText = m; mdlFilter.appendChild(opt); });
+                mdlFilter.value = models.includes(prev) ? prev : '';
+            }
+
+            // Brutto-Einzelposten für die Kalkulationsanzeige (Karte + Anfrage-Modal).
+            // Fahrzeugpreis: steuerneu = DE-Preis / 1,19 * 1,20 (ig. Erwerb, AT-USt),
+            // steueralt = DE-Preis direkt (keine Vorsteuer). Transport/Anmeldung
+            // sind eigene Leistungen -> immer * 1,20 (AT-USt).
+            function carCostBreakdown(car) {
+                const d = car.details || {};
+                const fahrzeugpreis = car.is_tax_new
+                    ? (car.price_gross || 0) / 1.19 * 1.20
+                    : (car.price_gross || 0);
+                const transport = (d.transport ?? car.transport ?? 0) * 1.20;
+                const anmeldung = (d.import_fee ?? 850) * 1.20;
+                return { fahrzeugpreis, transport, anmeldung };
+            }
+
             async function syncToGitHub() {
                 const btn = document.getElementById('syncGitHub');
                 const old = btn.innerHTML;
@@ -578,6 +613,8 @@
                 const mFilter = document.getElementById('makeFilter');
                 mFilter.innerHTML = '<option value="">Alle Marken</option>';
                 makes.forEach(m => { const opt = document.createElement('option'); opt.value = m; opt.innerText = m; mFilter.appendChild(opt); });
+
+                populateModelFilter();
 
                 const fuels = [...new Set(cars.map(carFuel))].filter(v => v && v !== '-').sort();
                 const fFilter = document.getElementById('fuelFilter');
@@ -603,7 +640,10 @@
                     </label>
                 `).join('');
 
-                ['makeFilter', 'fuelFilter', 'yearMin', 'yearMax', 'kmMin', 'kmMax', 'searchInput', 'sortOrder'].forEach(id => {
+                // Marke ändert die verfügbaren Modelle (vor dem render-Listener registriert -> läuft zuerst)
+                document.getElementById('makeFilter').addEventListener('change', populateModelFilter);
+
+                ['makeFilter', 'modelFilter', 'fuelFilter', 'yearMin', 'yearMax', 'kmMin', 'kmMax', 'searchInput', 'sortOrder'].forEach(id => {
                     document.getElementById(id).addEventListener('change', () => { currentPage = 1; render(); });
                     document.getElementById(id).addEventListener('input', () => { currentPage = 1; render(); });
                 });
@@ -957,18 +997,12 @@
                 const car = cars.find(c => c.id === currentCarId);
                 if (!car) return;
 
-                // Fahrzeugpreis: deutscher Preis inkl. MwSt. – 20% bei steuerneuem Fahrzeug
-                // (innergemeinschaftlicher Erwerb, AT-USt), sonst der DE-Bruttopreis inkl. 19%.
-                const dePriceNetto = (car.price_gross || 0) / 1.19;
-                const fahrzeugpreisBrutto = car.is_tax_new ? dePriceNetto * 1.20 : (car.price_gross || 0);
-
-                const transportNetto = car.details.transport || car.transport || 0;
-                const importFeeNetto = car.details.import_fee || 800;
+                // Einheitliche Brutto-Logik (identisch zur Karte)
+                const costs = carCostBreakdown(car);
+                const fahrzeugpreisBrutto = costs.fahrzeugpreis;
+                const transportBrutto = costs.transport;
+                const anmeldungBrutto = costs.anmeldung;
                 const warranty = parseFloat(document.getElementById('optWarranty').value || 0);
-
-                // Eigene Leistungen unterliegen der AT-USt (20%) → brutto anzeigen
-                const transportBrutto = transportNetto * 1.20;
-                const anmeldungBrutto = importFeeNetto * 1.20;
                 const endpreisBrutto = fahrzeugpreisBrutto + transportBrutto + anmeldungBrutto + warranty;
 
                 document.getElementById('resNetto').innerText = fmt.format(fahrzeugpreisBrutto);
@@ -1031,6 +1065,7 @@
                 const grid = document.getElementById('carGrid');
                 const term = document.getElementById('searchInput').value.toLowerCase();
                 const make = document.getElementById('makeFilter').value;
+                const model = document.getElementById('modelFilter').value;
                 const fuel = document.getElementById('fuelFilter').value;
                 const yMin = parseInt(document.getElementById('yearMin').value) || 0;
                 const yMax = parseInt(document.getElementById('yearMax').value) || 9999;
@@ -1042,11 +1077,12 @@
                 const filtered = cars.filter(c => {
                     const matchesTerm = (c.name.toLowerCase().includes(term) || String(c.id).includes(term));
                     const matchesMake = (!make || c.name.startsWith(make));
+                    const matchesModel = (!model || carModel(c) === model);
                     const matchesFuel = (!fuel || carFuel(c) === fuel);
                     const matchesYear = (c.year_raw >= yMin && c.year_raw <= yMax);
                     const matchesKm = (c.km_raw >= kMin && c.km_raw <= kMax);
                     const matchesFeature = selectedFeatures.length === 0 || selectedFeatures.every(sf => (c.ausstattung_full || []).some(af => af.toLowerCase().includes(sf)));
-                    return matchesTerm && matchesMake && matchesFuel && matchesYear && matchesKm && matchesFeature;
+                    return matchesTerm && matchesMake && matchesModel && matchesFuel && matchesYear && matchesKm && matchesFeature;
                 });
 
                 // ---- Ansicht 1: CLUSTER-ÜBERSICHT (Automatisch generiert) ----
@@ -1166,6 +1202,7 @@
                 grid.innerHTML = backBtn + items.map(car => {
                     const cleanName = car.name.replace(/[-–]\s*DE/gi, '').trim();
                     const kraftstoff = carFuel(car);
+                    const costs = carCostBreakdown(car);
 
                     return `
                     <div class="premium-card rounded-3xl overflow-hidden flex flex-col">
@@ -1212,16 +1249,16 @@
 
                                 <div class="premium-calc-box p-4 space-y-2 text-xs">
                                     <div class="flex justify-between items-center text-slate-600">
-                                        <span class="font-medium">Fahrzeugpreis DE</span>
-                                        <span class="font-bold text-slate-800">${fmt.format(car.price_gross || 0)}</span>
+                                        <span class="font-medium">Fahrzeugpreis</span>
+                                        <span class="font-bold text-slate-800">${fmt.format(costs.fahrzeugpreis)}</span>
                                     </div>
                                     <div class="flex justify-between items-center text-slate-600">
                                         <span class="font-medium">Transport</span>
-                                        <span class="font-bold text-slate-800">${fmt.format(car.details.transport || car.transport || 0)}</span>
+                                        <span class="font-bold text-slate-800">${fmt.format(costs.transport)}</span>
                                     </div>
                                     <div class="flex justify-between items-center text-slate-600">
                                         <span class="font-medium">Anmeldung AT</span>
-                                        <span class="font-bold text-slate-800">${fmt.format(car.details.import_fee || 850)}</span>
+                                        <span class="font-bold text-slate-800">${fmt.format(costs.anmeldung)}</span>
                                     </div>
                                     <div class="h-[1px] bg-slate-200/60 my-1"></div>
                                     <div class="flex justify-between items-center pt-0.5">
@@ -1298,6 +1335,7 @@
                 document.querySelectorAll('.filter-select, #searchInput').forEach(e => e.value = '');
                 document.querySelectorAll('.feature-checkbox').forEach(cb => cb.checked = false);
                 document.getElementById('selectedCountText').innerText = "Alle Merkmale";
+                populateModelFilter();
                 currentView = 'clusters';
                 activeClusterId = null;
                 currentPage = 1;
