@@ -423,31 +423,36 @@
 
         <!-- Lightbox Gallery Modal -->
         <div id="lightbox-modal"
-            class="fixed inset-0 z-[200] hidden flex-col items-center justify-center bg-slate-950/95 backdrop-blur-md transition-opacity duration-300 opacity-0 h-[100dvh]">
-            <!-- Close button -->
-            <button onclick="closeImageGallery()"
-                class="absolute top-4 right-4 text-white hover:text-slate-300 z-50 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all">
-                <i data-lucide="x" class="w-7 h-7"></i>
-            </button>
-            <!-- Image Area -->
-            <div class="relative flex-1 w-full flex items-center justify-center px-6 sm:px-14 py-10 min-h-0"
-                onclick="closeImageGallery()">
-                <button onclick="prevImage(event)"
-                    class="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-slate-300 z-50 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all">
-                    <i data-lucide="chevron-left" class="w-8 h-8"></i>
+            class="fixed inset-0 z-[200] hidden bg-slate-950/95 backdrop-blur-md transition-opacity duration-300 opacity-0">
+            <!-- Innerer Wrapper: oben verankert, Hoehe wird in openImageGallery auf die
+                 sichtbare Bildschirmhoehe gesetzt (im Wix-iframe ist 100dvh = iframe-Hoehe!) -->
+            <div id="lightbox-inner" class="absolute top-0 left-0 w-full flex flex-col items-center justify-center"
+                style="height: 100dvh;">
+                <!-- Close button -->
+                <button onclick="closeImageGallery()"
+                    class="absolute top-4 right-4 text-white hover:text-slate-300 z-50 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all">
+                    <i data-lucide="x" class="w-7 h-7"></i>
                 </button>
-                <img id="lightbox-img" src=""
-                    class="max-w-full max-h-full object-contain shadow-2xl rounded-2xl cursor-default transition-all"
-                    style="max-height: calc(100dvh - 120px);"
-                    alt="Galerie Bild" onclick="event.stopPropagation()">
-                <button onclick="nextImage(event)"
-                    class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-slate-300 z-50 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all">
-                    <i data-lucide="chevron-right" class="w-8 h-8"></i>
-                </button>
-            </div>
-            <!-- Counter -->
-            <div class="pb-6 text-white/80 font-bold text-sm tracking-widest bg-transparent pointer-events-none">
-                <span id="lightbox-counter">1 / 1</span>
+                <!-- Image Area -->
+                <div class="relative flex-1 w-full flex items-center justify-center px-6 sm:px-14 py-10 min-h-0"
+                    onclick="closeImageGallery()">
+                    <button onclick="prevImage(event)"
+                        class="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-slate-300 z-50 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all">
+                        <i data-lucide="chevron-left" class="w-8 h-8"></i>
+                    </button>
+                    <img id="lightbox-img" src=""
+                        class="max-w-full max-h-full object-contain shadow-2xl rounded-2xl cursor-default transition-all"
+                        style="max-height: calc(100dvh - 120px);"
+                        alt="Galerie Bild" onclick="event.stopPropagation()">
+                    <button onclick="nextImage(event)"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-slate-300 z-50 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all">
+                        <i data-lucide="chevron-right" class="w-8 h-8"></i>
+                    </button>
+                </div>
+                <!-- Counter -->
+                <div class="pb-6 text-white/80 font-bold text-sm tracking-widest bg-transparent pointer-events-none">
+                    <span id="lightbox-counter">1 / 1</span>
+                </div>
             </div>
         </div>
 
@@ -1503,9 +1508,16 @@
                 const modal = document.getElementById('lightbox-modal');
                 window.parent.postMessage({ type: 'scroll_to_top', offset: 0 }, '*');
                 window.scrollTo(0, 0);
+
+                // Im Wix-iframe ist innerHeight = volle iframe-Hoehe (mehrere 1000px).
+                // screen.height liefert die echte Geraete-Bildschirmhoehe -> Lightbox
+                // auf den oben sichtbaren Bereich begrenzen.
+                const vh = Math.min(window.innerHeight, window.screen.height);
+                document.getElementById('lightbox-inner').style.height = vh + 'px';
+                document.getElementById('lightbox-img').style.maxHeight = (vh - 120) + 'px';
+
                 document.body.style.overflow = 'hidden';
                 modal.classList.remove('hidden');
-                modal.classList.add('flex');
                 setTimeout(() => {
                     modal.classList.remove('opacity-0');
                 }, 10);
@@ -1518,7 +1530,6 @@
                 modal.classList.add('opacity-0');
                 setTimeout(() => {
                     modal.classList.add('hidden');
-                    modal.classList.remove('flex');
                     document.body.style.overflow = '';
                 }, 300);
                 document.removeEventListener('keydown', handleGalleryKeyboard);
