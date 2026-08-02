@@ -264,6 +264,80 @@
             box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
             flex-shrink: 0;
         }
+
+        /* ---- Deal-Radar ---- */
+        .toggle-pill {
+            display: flex;
+            align-items: center;
+            padding: 4px;
+            background: rgba(226,232,240,0.7);
+            border-radius: 14px;
+            border: 1px solid rgba(226,232,240,0.8);
+        }
+
+        .toggle-btn {
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 800;
+            color: #64748b;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .toggle-btn.active {
+            background: white;
+            color: #2563eb;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .rank-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            background: rgba(15,23,42,0.85);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 800;
+            z-index: 10;
+        }
+
+        .deal-card-img {
+            aspect-ratio: 16/10;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .deal-card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+        }
+
+        .deal-card:hover .deal-card-img img {
+            transform: scale(1.05);
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
     </style>
 </head>
 
@@ -599,6 +673,81 @@
                     </div>
                 </div>
             </header>
+
+            <!-- ===== Deal-Radar Toggle Bar ===== -->
+            <div class="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-sm mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 flex-shrink-0">
+                        <i data-lucide="radar" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-900">NewEra Mobility Deal-Radar</h3>
+                        <p class="text-xs text-slate-400">Live-Angebote & Marktpreis-Analysen ein- oder ausblenden</p>
+                    </div>
+                </div>
+                <button onclick="toggleRadarVisibility()" id="btnRadarMainToggle" class="px-4 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl text-xs font-extrabold transition-all border border-blue-200 flex items-center gap-2">
+                    <i data-lucide="eye" class="w-4 h-4"></i>
+                    <span id="radarToggleText">Deal-Radar ausblenden</span>
+                </button>
+            </div>
+
+            <!-- ===== Deal-Radar Content ===== -->
+            <section id="dealRadar" class="space-y-8 border-b border-slate-200 pb-8 transition-all">
+
+                <!-- Top 5 Angebote (Einklappbar) -->
+                <div class="space-y-4 bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer" onclick="toggleRadarSection('radarTopFiveContainer', 'radarTopFiveChevron')">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 flex-shrink-0">
+                                <i data-lucide="flame" class="w-4 h-4"></i>
+                            </div>
+                            <h2 class="text-lg font-extrabold text-slate-900">Top 5 Angebote</h2>
+                        </div>
+                        <div class="flex items-center gap-3" onclick="event.stopPropagation()">
+                            <div class="toggle-pill">
+                                <div id="radarBtnSortEur" class="toggle-btn active" onclick="radarSetTopSort('eur')">Ersparnis in €</div>
+                                <div id="radarBtnSortPct" class="toggle-btn" onclick="radarSetTopSort('pct')">Ersparnis in %</div>
+                            </div>
+                            <i id="radarTopFiveChevron" data-lucide="chevron-up" class="w-5 h-5 text-slate-400 transform transition-transform"></i>
+                        </div>
+                    </div>
+                    <div id="radarTopFiveContainer" class="pt-2">
+                        <div id="radarTopFiveGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4"></div>
+                    </div>
+                </div>
+
+                <!-- Modell-Angebote (Einklappbar) -->
+                <div class="space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 flex-shrink-0">
+                                <i data-lucide="car" class="w-5 h-5"></i>
+                            </div>
+                            <h2 class="text-lg font-extrabold text-slate-900">Modell-Angebote</h2>
+                        </div>
+                        <div class="w-full sm:w-80">
+                            <select id="radarModelSelect" class="filter-select w-full outline-none" onchange="radarOnModelChange()"></select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3" id="radarModelKpiRow"></div>
+
+                    <!-- Modell Angebotsliste (Einklappbar) -->
+                    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between cursor-pointer" onclick="toggleRadarSection('radarModelDealsList', 'radarDealsChevron')">
+                            <h4 class="text-sm font-extrabold text-slate-800 uppercase tracking-wider">Alle Angebote für dieses Modell</h4>
+                            <i id="radarDealsChevron" data-lucide="chevron-up" class="w-5 h-5 text-slate-400 transform transition-transform"></i>
+                        </div>
+                        <div id="radarModelDealsList" class="space-y-4"></div>
+                    </div>
+                </div>
+
+                <p class="flex items-start gap-2 text-xs text-slate-400 leading-relaxed max-w-4xl">
+                    <i data-lucide="calculator" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+                    <span><strong class="font-semibold text-slate-500">Hinweis zur Ersparnis:</strong>
+                    Der AT-Marktwert wird je Fahrzeug algorithmisch aus aktuellen und kürzlich verkauften, vergleichbaren Fahrzeugen am österreichischen Markt errechnet. Ihre Ersparnis ist die Differenz zu unserem All-in-Preis inkl. Transport, Anmeldung &amp; USt. — ein unverbindlicher Richtwert.</span>
+                </p>
+            </section>
 
             <div id="carGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12"></div>
             
@@ -1550,6 +1699,253 @@
 
             function changePage(p) { currentPage = p; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); window.parent.postMessage({ type: 'scroll_to_top', offset: 0 }, '*'); }
 
+            // ===================== Deal-Radar =====================
+            // Lädt Cluster/Deals/AT-Vergleichsdaten komplett aus deal_radar_data.json
+            // (wird von generate_deal_radar_data.py bei jedem Automation-Lauf neu
+            // geschrieben). Für die reichhaltige Fahrzeugkarten-Darstellung wird
+            // zusätzlich mit dem bereits geladenen `cars`-Array verknüpft (Farbe, PS,
+            // Ausstattungslinie, AWD, Kategorie). Kein Marktwert-Kurven-Chart (bewusst
+            // ausgelassen).
+            const fmtKm = new Intl.NumberFormat('de-DE');
+            const RADAR_DATA_URL = 'deal_radar_data.json';
+            let RADAR_DATA = null;
+            let radarTopSort = 'eur';
+            let radarSelectedCluster = null;
+
+            function radarDealCardHTML(d, rank) {
+                return `
+                <div class="premium-card rounded-2xl overflow-hidden flex flex-col justify-between relative group cursor-pointer" onclick="radarJumpToModel(${d.cluster_id})">
+                    <div class="rank-badge">#${rank}</div>
+                    <div class="deal-card-img">
+                        <img src="${d.img}" alt="${d.name}" onerror="this.style.display='none'">
+                    </div>
+                    <div class="p-4 flex flex-col gap-3 flex-1 justify-between">
+                        <div>
+                            <div class="font-extrabold text-sm text-slate-900 truncate">${d.name}</div>
+                            <div class="text-xs text-slate-400 font-medium truncate">${d.ausfuehrung}</div>
+                        </div>
+                        <div class="flex gap-3 text-[11px] font-bold text-slate-500 uppercase bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                            <span class="flex items-center gap-1"><i data-lucide="gauge" class="w-3 h-3"></i>${fmtKm.format(d.km)} km</span>
+                            <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i>${d.ez}</span>
+                        </div>
+                        <div class="flex items-center justify-between gap-2 p-3 rounded-xl bg-emerald-50 border border-emerald-100 mt-auto">
+                            <div>
+                                <div class="text-[9px] font-extrabold text-emerald-600 uppercase tracking-wider">Ersparnis</div>
+                                <div class="text-base font-extrabold text-emerald-600">${fmt.format(d.spar)}</div>
+                            </div>
+                            <div class="text-xs font-extrabold text-emerald-700 bg-white px-2 py-1 rounded-full border border-emerald-200">${d.pct}%</div>
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            function radarRenderTopFive() {
+                if (!RADAR_DATA || !RADAR_DATA.deals) return;
+                const sorted = [...RADAR_DATA.deals].sort((a, b) => radarTopSort === 'eur' ? b.spar - a.spar : b.pct - a.pct);
+                const top5 = sorted.slice(0, 5);
+                document.getElementById('radarTopFiveGrid').innerHTML = top5.map((d, i) => radarDealCardHTML(d, i + 1)).join('');
+                if (window.lucide) lucide.createIcons();
+            }
+
+            function radarSetTopSort(mode) {
+                radarTopSort = mode;
+                document.getElementById('radarBtnSortEur').classList.toggle('active', mode === 'eur');
+                document.getElementById('radarBtnSortPct').classList.toggle('active', mode === 'pct');
+                radarRenderTopFive();
+            }
+
+            function radarJumpToModel(cid) {
+                radarSelectedCluster = cid;
+                document.getElementById('radarModelSelect').value = String(cid);
+                radarRenderModelSection();
+                document.getElementById('radarModelSelect').closest('section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            function radarClusterLabel(c) {
+                const parts = [c.brand, c.model, c.equipment_line].filter(Boolean);
+                let label = parts.join(' ');
+                if (c.kraftstoff) label += ` (${c.kraftstoff})`;
+                return label;
+            }
+
+            function radarPopulateModelSelect() {
+                const sel = document.getElementById('radarModelSelect');
+                if (!RADAR_DATA || !RADAR_DATA.clusters || RADAR_DATA.clusters.length === 0) return;
+                sel.innerHTML = RADAR_DATA.clusters.map(c => `<option value="${c.id}">${radarClusterLabel(c)}</option>`).join('');
+                radarSelectedCluster = RADAR_DATA.clusters[0].id;
+                sel.value = String(radarSelectedCluster);
+            }
+
+            function radarOnModelChange() {
+                radarSelectedCluster = parseInt(document.getElementById('radarModelSelect').value, 10);
+                radarRenderModelSection();
+            }
+
+            function radarDealsForCluster(cid) {
+                return (RADAR_DATA.deals || []).filter(d => String(d.cluster_id) === String(cid));
+            }
+
+            function toggleRadarVisibility() {
+                const sec = document.getElementById('dealRadar');
+                const btnText = document.getElementById('radarToggleText');
+                const isHidden = sec.classList.contains('hidden');
+
+                if (isHidden) {
+                    sec.classList.remove('hidden');
+                    btnText.innerText = "Deal-Radar ausblenden";
+                } else {
+                    sec.classList.add('hidden');
+                    btnText.innerText = "Deal-Radar einblenden";
+                }
+                setTimeout(sendSettingsToParent, 200);
+            }
+
+            function toggleRadarSection(containerId, chevronId) {
+                const container = document.getElementById(containerId);
+                const chevron = document.getElementById(chevronId);
+                if (!container) return;
+
+                const isHidden = container.classList.contains('hidden');
+                if (isHidden) {
+                    container.classList.remove('hidden');
+                    if (chevron) chevron.style.transform = '';
+                } else {
+                    container.classList.add('hidden');
+                    if (chevron) chevron.style.transform = 'rotate(180deg)';
+                }
+                setTimeout(sendSettingsToParent, 200);
+            }
+
+            function radarRenderModelDealsList(deals) {
+                const el = document.getElementById('radarModelDealsList');
+                if (deals.length === 0) {
+                    el.innerHTML = `<div class="premium-card rounded-2xl p-6 text-center text-sm text-slate-400 font-semibold">Aktuell keine Angebote für dieses Modell.</div>`;
+                    return;
+                }
+
+                const sorted = [...deals].sort((a, b) => b.spar - a.spar);
+                el.innerHTML = sorted.map(d => {
+                    // Verknüpfung mit den vollständigen Daten aus 'cars'
+                    const fullCar = (typeof cars !== 'undefined') ? (cars.find(c => String(c.id) === String(d.id)) || d) : d;
+                    const cleanName = fullCar.name ? fullCar.name.replace(/[-–]\s*DE/gi, '').trim() : d.name;
+                    const kraftstoff = (typeof carFuel === "function") ? carFuel(fullCar) : (fullCar.kraftstoff || (fullCar.battery_capacity_kwh > 0 ? "Elektro" : "-"));
+                    const colorHex = (typeof getColorHex === "function") ? getColorHex(fullCar.color) : "#94a3b8";
+                    const isAwd = !!(fullCar.is_awd == 1 || fullCar.is_awd === true || fullCar.is_awd === '1');
+                    const ps = fullCar.ps || Math.round((fullCar.power_kw || 0) * 1.36) || '-';
+
+                    return `
+                    <div class="premium-card rounded-3xl p-5 md:p-6 flex flex-col justify-between hover:border-blue-300 transition-all">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-3">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wider">ID: ${fullCar.id}</span>
+                                    ${fullCar.equipment_line ? `<span class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wider">${fullCar.equipment_line}</span>` : ''}
+                                    ${isAwd ? `<span class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1"><i data-lucide="git-branch" class="w-3 h-3 text-slate-500"></i> AWD</span>` : ''}
+                                </div>
+                                ${fullCar.category === 'Auktionsfahrzeuge' ? `<span class="bg-amber-500 text-white px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider flex items-center gap-1"><i data-lucide="gavel" class="w-3 h-3"></i> AUKTION</span>` : `<span class="bg-emerald-600 text-white px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider flex items-center gap-1"><i data-lucide="ship" class="w-3 h-3"></i> IMPORT</span>`}
+                            </div>
+
+                            <h3 class="text-base md:text-lg font-extrabold text-slate-900 leading-tight mb-3">${cleanName}</h3>
+
+                            <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-bold text-slate-500 uppercase mb-5 bg-slate-50 p-3.5 rounded-2xl border border-slate-100">
+                                <span class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5 text-blue-600"></i> ${fullCar.ez}</span>
+                                <span class="flex items-center gap-1.5"><i data-lucide="gauge" class="w-3.5 h-3.5 text-blue-600"></i> ${fmtKm.format(fullCar.km_raw || fullCar.km)} KM</span>
+                                <span class="flex items-center gap-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-blue-600"></i> ${ps} PS</span>
+                                <span class="flex items-center gap-1.5"><i data-lucide="fuel" class="w-3.5 h-3.5 text-blue-600"></i> ${kraftstoff}</span>
+                                <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded-full border border-slate-300 shadow-sm" style="background-color: ${colorHex}"></span> <strong class="text-slate-700">${fullCar.color || '-'}</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-2.5 flex items-center justify-between">
+                                <span class="text-[10px] font-extrabold text-emerald-700 uppercase tracking-wider flex items-center gap-1"><i data-lucide="piggy-bank" class="w-4 h-4"></i> Ersparnis</span>
+                                <span class="text-sm md:text-base font-extrabold text-emerald-600">${fmt.format(d.spar)} <span class="text-xs text-emerald-500 font-bold">(${d.pct}%)</span></span>
+                            </div>
+
+                            <div class="flex flex-col-reverse lg:flex-row items-start lg:items-center justify-between gap-5 pt-4 mt-2 border-t border-slate-100">
+                                <div class="flex flex-wrap gap-2 w-full lg:w-auto">
+                                    <button onclick="openImageGallery('${fullCar.id}')" class="flex-1 lg:flex-none px-4 py-3 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold rounded-xl text-sm transition-all border border-slate-200 shadow-sm flex items-center justify-center gap-2">
+                                        <i data-lucide="image" class="w-4 h-4 text-slate-500"></i> Bilder
+                                    </button>
+                                    <button onclick="openDataModal('${fullCar.id}', event)" class="flex-1 lg:flex-none px-4 py-3 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold rounded-xl text-sm transition-all border border-slate-200 shadow-sm flex items-center justify-center gap-2">
+                                        <i data-lucide="file-text" class="w-4 h-4 text-slate-500"></i> Details
+                                    </button>
+                                    <button onclick="openModal('${cleanName.replace(/'/g, "\\'")}', '${fullCar.id}', '${fullCar.img}', event)" class="flex-1 lg:flex-none px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 transition-all">
+                                        <i data-lucide="message-square" class="w-4 h-4"></i> Anfrage
+                                    </button>
+                                </div>
+                                <div class="text-left lg:text-right w-full lg:w-auto bg-blue-50/40 lg:bg-transparent p-3 lg:p-0 rounded-2xl">
+                                    <span class="text-[11px] font-bold text-slate-500 uppercase tracking-widest block mb-0.5">Endpreis Brutto</span>
+                                    <div class="text-2xl md:text-3xl font-black text-blue-600 tracking-tight">${fmt.format(d.total_brutto_at)}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+                if (window.lucide) lucide.createIcons();
+            }
+
+            function radarRenderModelKpis(cluster, deals) {
+                const row = document.getElementById('radarModelKpiRow');
+                if (!row) return;
+                if (deals.length === 0) {
+                    row.innerHTML = '';
+                    return;
+                }
+                const minPrice = Math.min(...deals.map(d => d.total_brutto_at));
+                const avgSpar = deals.reduce((sum, d) => sum + d.spar, 0) / deals.length;
+                const dealsUnterMarktwert = deals.filter(d => d.spar > 0).length;
+
+                row.innerHTML = `
+                    <div class="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm flex flex-col justify-center">
+                        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Verfügbare Deals</span>
+                        <div class="text-2xl font-extrabold text-slate-800">${deals.length} <span class="text-sm text-slate-400 font-bold ml-1">Fahrzeuge</span></div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm flex flex-col justify-center">
+                        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Einstiegspreis (Brutto)</span>
+                        <div class="text-2xl font-extrabold text-blue-600">${fmt.format(minPrice)}</div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm flex flex-col justify-center">
+                        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Ø Ersparnis ggü. AT-Markt</span>
+                        <div class="text-2xl font-extrabold text-emerald-600">${fmt.format(avgSpar)}</div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm flex flex-col justify-center">
+                        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Unter Marktwert</span>
+                        <div class="text-2xl font-extrabold text-slate-800">${dealsUnterMarktwert} <span class="text-sm text-slate-400 font-bold ml-1">von ${deals.length}</span></div>
+                    </div>
+                `;
+            }
+
+            function radarRenderModelSection() {
+                if (!RADAR_DATA) return;
+                const cluster = RADAR_DATA.clusters.find(c => String(c.id) === String(radarSelectedCluster));
+                const deals = radarDealsForCluster(radarSelectedCluster);
+                radarRenderModelKpis(cluster, deals);
+                radarRenderModelDealsList(deals);
+            }
+
+            async function radarInit() {
+                try {
+                    if (typeof EMBEDDED_RADAR_DATA !== "undefined") {
+                        RADAR_DATA = EMBEDDED_RADAR_DATA;
+                    } else {
+                        const res = await fetch(RADAR_DATA_URL, { cache: "no-store" });
+                        if (!res.ok) throw new Error("HTTP " + res.status);
+                        RADAR_DATA = await res.json();
+                    }
+                } catch (e) {
+                    console.error('Deal-Radar: Daten konnten nicht geladen werden.', e);
+                    document.getElementById('dealRadar').style.display = 'none';
+                    return;
+                }
+
+                radarRenderTopFive();
+                radarPopulateModelSelect();
+                radarRenderModelSection();
+                if (window.lucide) lucide.createIcons();
+            }
+            // =================== /Deal-Radar =======================
+
             if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
                 const syncBtn = document.getElementById('syncGitHub');
                 if (syncBtn) syncBtn.style.display = 'none';
@@ -1561,6 +1957,13 @@
             } catch (e) {
                 console.error("Render error:", e);
                 document.getElementById('carGrid').innerHTML = '<div class="col-span-full p-8 text-center text-red-500 font-bold bg-red-50 rounded-2xl">Fehler beim Laden der Fahrzeuge. Bitte Seite neu laden.</div>';
+            }
+
+            try {
+                radarInit();
+            } catch (e) {
+                console.error("Deal-Radar init error:", e);
+                document.getElementById('dealRadar').style.display = 'none';
             }
 
             if (window.ResizeObserver && document.body) {
