@@ -559,8 +559,10 @@
                     </div>
                     <div class="flex flex-col sm:flex-row items-center gap-3">
                         
-                        <!-- Umschalter für Ansichtsmodus (Daten-Raster vs Kartenansicht) -->
-                        <div class="flex items-center p-1 bg-slate-200/70 rounded-xl border border-slate-200/80 w-full sm:w-auto">
+                        <!-- Umschalter für Ansichtsmodus (Daten-Raster vs Kartenansicht) --
+                             Daten-Raster ist auf Mobile (< 640px) nicht nutzbar (Tabellen-Layout bricht),
+                             daher bleibt der Umschalter dort komplett ausgeblendet -- nur Kartenansicht. -->
+                        <div class="hidden sm:flex items-center p-1 bg-slate-200/70 rounded-xl border border-slate-200/80 sm:w-auto">
                             <button id="btnViewCompact" onclick="setViewMode('compact')"
                                 class="flex-1 sm:flex-none px-2.5 py-1.5 sm:px-4 sm:py-2.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 sm:gap-2 text-slate-600 hover:text-slate-900">
                                 <i data-lucide="layout-grid" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> Daten-Raster
@@ -869,10 +871,14 @@
                 const cat = activeCategory();
                 return !cat || item.category === cat;
             }
-            // Mobil (< sm-Breakpoint 640px) startet mit Daten-Raster, Desktop mit Kartenansicht
-            let displayMode = window.matchMedia('(max-width: 639px)').matches ? 'compact' : 'cards';
+            // Daten-Raster ist auf Mobile (< sm-Breakpoint 640px) nicht nutzbar (Tabellen-Layout
+            // bricht) -- der Umschalter ist dort ausgeblendet, Start immer mit Kartenansicht.
+            let displayMode = 'cards';
 
             function setViewMode(mode) {
+                // Verteidigung falls setViewMode('compact') doch aufgerufen wird (z.B. alter Code-
+                // Pfad, Resize von Desktop auf Mobile) -- Datenraster bleibt auf Mobile gesperrt.
+                if (mode === 'compact' && window.matchMedia('(max-width: 639px)').matches) mode = 'cards';
                 displayMode = mode;
                 const btnCompact = document.getElementById('btnViewCompact');
                 const btnCards = document.getElementById('btnViewCards');
@@ -888,6 +894,14 @@
                 }
                 render();
             }
+
+            // Falls der Viewport nachträglich auf Mobile-Breite schrumpft (Fenster verkleinert,
+            // Gerät gedreht) während Daten-Raster aktiv war -- zurück auf Kartenansicht erzwingen.
+            window.addEventListener('resize', () => {
+                if (displayMode === 'compact' && window.matchMedia('(max-width: 639px)').matches) {
+                    setViewMode('cards');
+                }
+            });
 
             function getColorHex(colorName) {
                 if (!colorName) return '#94a3b8';
