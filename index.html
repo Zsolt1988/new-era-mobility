@@ -1302,7 +1302,7 @@
                 container.style.marginTop = '20px';
                 window.parent.postMessage({ type: 'scroll_to_top', offset: 50 }, '*');
 
-                const car = cars.find(c => c.id === currentCarId);
+                const car = cars.find(c => Number(c.id) === currentCarId);
                 const cleanName = name.replace(/[-–]\s*DE/gi, '').trim();
                 document.getElementById('modalCarName').innerText = cleanName;
                 document.getElementById('modalCarId').innerText = id;
@@ -1615,7 +1615,7 @@
 
             function runModalCalc() {
                 if (!currentCarId) return;
-                const car = cars.find(c => c.id === currentCarId);
+                const car = cars.find(c => Number(c.id) === currentCarId);
                 if (!car) return;
 
                 const costs = carCostBreakdown(car);
@@ -1637,7 +1637,7 @@
             }
 
             function sendInquiry() {
-                const car = cars.find(c => c.id === currentCarId);
+                const car = cars.find(c => Number(c.id) === currentCarId);
 
                 const data = {
                     type: 'vehicle_inquiry',
